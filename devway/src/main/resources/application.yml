@@ -1,0 +1,27 @@
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: ${MYSQL_DATASOURCE_URL}
+#    username: ${MYSQL_DATASOURCE_USERNAME}
+#    password: ${MYSQL_DATASOURCE_PASSWORD}
+
+
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web.client.RestTemplate: DEBUG
+#        http: DEBUG
+#
+#---
+#spring:
+#  profiles:
+#    active: prods
+#---
+#spring:
+#  profiles:
+#    active: dev
+#---
+#spring:
+#  profiles:
+#    active: local
