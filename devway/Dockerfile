@@ -4,10 +4,6 @@ FROM openjdk:17
 # Set the working directory in the container
 WORKDIR /app
 
-# Install xargs and other potentially missing utilities using apk
-RUN apk update && apk add --no-cache \
-    findutils
-
 # Copy the entire project directory (including gradlew and gradle/) into the working directory
 COPY . .
 
