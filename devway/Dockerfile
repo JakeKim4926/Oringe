@@ -4,6 +4,8 @@ FROM openjdk:17
 # Set the working directory in the container
 WORKDIR /app
 
+RUN ./gradlew build
+
 # Copy the JAR file from your target directory to the Docker image
 COPY build/libs/*.jar app.jar
 
