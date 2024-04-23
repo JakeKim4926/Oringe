@@ -27,6 +27,6 @@ services:
     volumes:
       - /home/ubuntu/certbot/www:/var/www/certbot
       - /home/ubuntu/certbot/conf:/etc/letsencrypt
-    entrypoint: "certbot certonly --webroot --webroot-path=/var/www/certbot --email wer1915@gmail.com --agree-tos --no-eff-email --staging -d k10b201.p.ssafy.io --rsa-key-size 2048"
+#    entrypoint: "certbot certonly --webroot --webroot-path=/var/www/certbot --email wer1915@gmail.com --agree-tos --no-eff-email --staging -d k10b201.p.ssafy.io --rsa-key-size 2048"
     depends_on:
       - nginx
