@@ -16,9 +16,8 @@ services:
       - "80:8080"
       - "443:443"
     volumes:
-      - ./certbot/letsencrypt:/etc/letsencrypt
-      - ./certbot/static:/var/www/html
-      - ./config/certbot.conf:/etc/nginx/conf.d/certbot.conf
+      - /home/ubuntu/certbot/www:/var/www/certbot  # This maps the Certbot webroot to Nginx
+      - /home/ubuntu/certbot/conf:/etc/letsencrypt # Optional: Maps the Certbot configuration if 
     depends_on:
       - app
 #    restart: unless-stopped
