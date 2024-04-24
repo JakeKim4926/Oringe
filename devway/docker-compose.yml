@@ -6,12 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8050:8050"
-    volumes:
-      - ./application.yml:/application.yml # Spring Boot 설정 파일을 컨테이너 내부로 매핑
-    environment:
-      - SPRING_CONFIG_LOCATION=/application.yml  # Spring Boot에 설정 파일 위치 알림
-
+      - "8050:8080"
 
   nginx:
     build:
