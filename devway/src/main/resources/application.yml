@@ -26,3 +26,4 @@ server.forward-headers-strategy=framework
 #spring:
 #  profiles:
 #    active: local
+server.port = 9715
