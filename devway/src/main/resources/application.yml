@@ -1,4 +1,6 @@
-server.forward-headers-strategy=framework
+server:
+  port: 9715
+  forward-headers-strategy: framework
 #spring:
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
@@ -26,4 +28,3 @@ server.forward-headers-strategy=framework
 #spring:
 #  profiles:
 #    active: local
-server.port = 9715
