@@ -1,6 +1,7 @@
 package com.ssafy.devway.domain.challenge.dto.response;
 
 import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

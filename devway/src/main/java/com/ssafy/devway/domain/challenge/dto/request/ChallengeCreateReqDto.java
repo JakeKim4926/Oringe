@@ -2,10 +2,14 @@ package com.ssafy.devway.domain.challenge.dto.request;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @AllArgsConstructor
@@ -22,24 +26,23 @@ public class ChallengeCreateReqDto {
 
     private Boolean challengeAlarm;
 
-    private LocalDateTime challengeAlarmTime;
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime challengeAlarmTime;
 
     private String challengeMemo;
 
-    private Integer challengeStatus;
-
     private String challengeAppName;
 
-    private LocalDateTime challengeAppTime;
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime challengeAppTime;
 
     private String challengeCallName;
 
     private String challengeCallNumber;
 
-    private LocalDateTime challengeWakeupTime;
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime challengeWakeupTime;
 
     private Integer challengeWalk;
-
-    private Long challengeDetailId;
 
 }

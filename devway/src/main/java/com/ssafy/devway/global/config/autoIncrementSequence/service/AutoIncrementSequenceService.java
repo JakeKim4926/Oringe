@@ -17,12 +17,13 @@ public class AutoIncrementSequenceService {
 
     private final MongoOperations mongoOperations;
 
-    public long generateSequence(String seqName) {
-        AutoIncrementSequence sequence = mongoOperations.findAndModify(query(where("_id").is(seqName)),
+    public Long generateSequence(String seqName) {
+        AutoIncrementSequence sequence = mongoOperations.findAndModify(
+            query(where("_id").is(seqName)),
             new Update().inc("seq", 1), options().returnNew(true).upsert(true),
             AutoIncrementSequence.class);
-        return !Objects.isNull(sequence) ? sequence.getSeq() : 1;
 
+        return !Objects.isNull(sequence) ? sequence.getSeq() : 1;
     }
 
 }

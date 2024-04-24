@@ -1,24 +1,13 @@
-package com.ssafy.devway.domain.challengeDetail.document;
+package com.ssafy.devway.domain.challengeDetail.dto.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
-import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
-@Getter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
 @Builder
-@ToString
-public class ChallengeDetail {
-
-    @Transient
-    public static final String SEQUENCE_NAME = "challengeDetail_sequence";
-
-    @Id
-    private Long challengeDetailId;
+public class ChallengeDetailReqDto {
 
     private Integer challengeDetailTitle;
 
@@ -41,6 +30,4 @@ public class ChallengeDetail {
     private Integer challengeDetailWakeupTime;
 
     private Integer challengeDetailWalk;
-
-
 }
