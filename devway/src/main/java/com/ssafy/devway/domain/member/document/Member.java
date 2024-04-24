@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 public class Member {
     @Transient
-    public static final String SEQUENCE_NAME = "sequence";
+    public static final String SEQUENCE_NAME = "member_sequence";
 
     @Id
     private Long memberId;

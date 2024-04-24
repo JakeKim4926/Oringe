@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 public class Record {
     @Transient
-    public static final String SEQUENCE_NAME = "sequence";
+    public static final String SEQUENCE_NAME = "record_sequence";
 
     @Id
     private Long recordId;
