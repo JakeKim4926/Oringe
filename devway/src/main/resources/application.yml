@@ -1,5 +1,12 @@
 server:
   port: 8050
+
+spring:
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: oringe
 #  forward-headers-strategy: framework
 #spring:
 #  datasource:
