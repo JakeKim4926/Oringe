@@ -32,7 +32,7 @@ services:
     depends_on:
       - nginx
   mongo:
-    image: mongo
+    image: mongo:latest
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -42,3 +42,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: devway201
       MONGO_INITDB_DATABASE: oringe
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
