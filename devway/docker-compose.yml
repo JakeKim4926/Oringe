@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "9715:9715"
+      - "8050:8050"
 
   nginx:
     build:
