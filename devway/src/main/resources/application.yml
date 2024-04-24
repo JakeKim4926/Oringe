@@ -8,23 +8,15 @@ server:
 #    username: ${MYSQL_DATASOURCE_USERNAME}
 #    password: ${MYSQL_DATASOURCE_PASSWORD}
 
-
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        web.client.RestTemplate: DEBUG
-#        http: DEBUG
-#
-#---
-#spring:
-#  profiles:
-#    active: prods
-#---
-#spring:
-#  profiles:
-#    active: dev
-#---
-#spring:
-#  profiles:
-#    active: local
+---
+spring:
+  profiles:
+    active: prods
+---
+spring:
+  profiles:
+    active: dev
+---
+spring:
+  profiles:
+    active: local
