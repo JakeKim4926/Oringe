@@ -7,16 +7,16 @@ server:
 #    url: ${MYSQL_DATASOURCE_URL}
 #    username: ${MYSQL_DATASOURCE_USERNAME}
 #    password: ${MYSQL_DATASOURCE_PASSWORD}
-
----
-spring:
-  profiles:
-    active: prods
----
-spring:
-  profiles:
-    active: dev
----
-spring:
-  profiles:
-    active: local
+#
+#---
+#spring:
+#  profiles:
+#    active: prods
+#---
+#spring:
+#  profiles:
+#    active: dev
+#---
+#spring:
+#  profiles:
+#    active: local
