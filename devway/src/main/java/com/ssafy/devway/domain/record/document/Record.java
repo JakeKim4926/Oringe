@@ -2,6 +2,7 @@ package com.ssafy.devway.domain.record.document;
 import com.ssafy.devway.domain.member.document.Member;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Record {
+    @Transient
+    public static final String SEQUENCE_NAME = "sequence";
+
     @Id
-    @GeneratedValue
     private Long recordId;
 
 //    private Challenge challenge;
