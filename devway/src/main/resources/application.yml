@@ -1,6 +1,6 @@
 server:
   port: 8050
-  forward-headers-strategy: framework
+#  forward-headers-strategy: framework
 #spring:
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
