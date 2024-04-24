@@ -3,6 +3,7 @@ import com.ssafy.devway.domain.member.document.Member;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +28,7 @@ public class Record {
 
     private Member member;
 
-    private String recordDate;
+    private LocalDate recordDate;
 
     private Boolean recordSuccess;
 

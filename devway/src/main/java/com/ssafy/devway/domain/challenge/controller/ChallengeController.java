@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 
 public class ChallengeController {
+
     private final ChallengeRepository challengeRepository;
     private final AutoIncrementSequenceService autoIncrementSequenceService;
 
-    @PostMapping("/add/challenge")
-    @Operation(summary = "")
-    public void insert() {
+    @PostMapping("/api/challenge")
+    @Operation(summary = "챌린지 생성")
+    public void addChallenge() {
         Challenge challenge = Challenge.builder()
             .challengeId(autoIncrementSequenceService.generateSequence(Challenge.SEQUENCE_NAME))
             .challengeTitle("dd")

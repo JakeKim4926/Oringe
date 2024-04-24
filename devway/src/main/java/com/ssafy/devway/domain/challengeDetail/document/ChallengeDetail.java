@@ -12,27 +12,39 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "challengeDetail")
+@Document
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ChallengeDetail {
+
     @Transient
     public static final String SEQUENCE_NAME = "challengeDetail_sequence";
 
     @Id
     private Long challengeDetailId;
+
     private Integer challengeDetailTitle;
+
     private Integer challengeDetailContent;
+
     private Integer challengeDetailTImage;
+
     private Integer challengeDetailImageContent;
+
     private Integer challengeDetailVideo;
+
     private Integer challengeDetailAppName;
+
     private Integer challengeDetailAppTime;
+
     private Integer challengeDetailCallName;
+
     private Integer challengeDetailCallNumber;
+
     private Integer challengeDetailWakeupTime;
+
     private Integer challengeDetailWalk;
 
 

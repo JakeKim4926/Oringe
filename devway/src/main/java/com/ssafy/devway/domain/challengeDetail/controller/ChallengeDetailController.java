@@ -11,13 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ChallengeDetailController {
+
     private final ChallengeDetailRepository challengeDetailRepository;
     private final AutoIncrementSequenceService autoIncrementSequenceService;
 
     @PostMapping("/add/detail")
     public void insert() {
         ChallengeDetail challenge = ChallengeDetail.builder()
-            .challengeDetailId(autoIncrementSequenceService.generateSequence(ChallengeDetail.SEQUENCE_NAME))
+            .challengeDetailId(
+                autoIncrementSequenceService.generateSequence(ChallengeDetail.SEQUENCE_NAME))
             .challengeDetailTitle(1)
             .build();
         challengeDetailRepository.save(challenge);
