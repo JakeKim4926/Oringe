@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'wns1915', url: 'https://gitlab.com/username/repo.git' // GitLab 리포지토리
+                git credentialsId: 'wns1915', url: 'https://lab.ssafy.com/wns1915/oringe.git' // GitLab 리포지토리
             }
         }
         stage('Build Docker Images') {
