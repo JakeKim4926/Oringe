@@ -20,13 +20,6 @@ pipeline {
                 }
             }
         }
-		stage('Check nginx.conf') {
-			steps {
-				script {
-					sh 'ls -l /home'
-				}
-			}
-		}
         stage('Deploy') {
             steps {
                 script {
