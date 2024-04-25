@@ -23,14 +23,14 @@ pipeline {
 		stage('Check nginx.conf') {
 			steps {
 				script {
-					sh 'ls -l /home/'
+					sh 'ls -l /home'
 				}
 			}
 		}
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker-compose -f /home/ubuntu/oringe/devway/docker-compose.yml up -d nginx'
+                    sh 'docker-compose -f /home/ubuntu/oringe/devway/docker-compose.yml up -d nginx '
                     sh 'docker-compose -f /home/ubuntu/oringe/devway/docker-compose.yml up -d certbot'
                 }
             }
