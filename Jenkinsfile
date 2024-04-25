@@ -13,14 +13,15 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    sh 'sudo docker-compose -f devway/docker-compose.yml up -d app'
+                    sh 'docker-compose -f devway/docker-compose.yml build'
+                    sh 'docker-compose -f devway/docker-compose.yml start'
                 }
             }
         }
         stage('Deploy') {
             steps {
                 script {
-                    sh 'sudo docker-compose -f devway/docker-compose.yml up -d nginx'
+                    sh 'docker-compose -f devway/docker-compose.yml up -d nginx'
                 }
             }
         }
