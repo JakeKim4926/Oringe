@@ -23,7 +23,7 @@ pipeline {
 		stage('Check nginx.conf') {
 			steps {
 				script {
-					sh 'ls -l devway/'
+					sh 'ls -l /devway'
 				}
 			}
 		}
