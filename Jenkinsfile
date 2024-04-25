@@ -13,8 +13,8 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    sh 'docker-compose -f devway/docker-compose.yml build'
-                    sh 'docker-compose -f devway/docker-compose.yml start'
+                    sh 'docker-compose -f devway/docker-compose.yml build app'
+                    sh 'docker-compose -f devway/docker-compose.yml start app'
                 }
             }
         }
@@ -24,11 +24,6 @@ pipeline {
                     sh 'docker-compose -f devway/docker-compose.yml up -d nginx'
                 }
             }
-        }
-    }
-    post {
-        always {
-            cleanWs() // 작업 공간 정리
         }
     }
 }
