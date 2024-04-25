@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChallengeDetailRepository extends MongoRepository<ChallengeDetail, Long> {
 
+    ChallengeDetail findByChallengeDetailId(Long challengeDetailId);
+
 }

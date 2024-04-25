@@ -1,53 +1,82 @@
 package com.ssafy.devway.domain.challenge.document;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.devway.domain.challengeDetail.document.ChallengeDetail;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Transient;
+import com.ssafy.devway.domain.member.document.Member;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection = "challenge")
+@Document
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Challenge {
+
     @Transient
     public static final String SEQUENCE_NAME = "challenge_sequence";
 
     @Id
+    @NotNull
     private Long challengeId;
+
+    @NotNull
     private String challengeTitle;
+
+    @NotNull
     private LocalDate challengeStart;
+
+    @NotNull
     private LocalDate challengeEnd;
+
+    @NotNull
     private List<Integer> challengeCycle;
+
+    @NotNull
     private Boolean challengeAlarm;
-    private LocalDateTime challengeAlarmTime;
+
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime challengeAlarmTime;
+
     private String challengeMemo;
-    private Integer challnegeStatus;
+
+    @NotNull
+    private Integer challengeStatus;
+
     private String challengeAppName;
-    private LocalDateTime challengeAppTime;
+
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime challengeAppTime;
+
     private String challengeCallName;
+
     private String challengeCallNumber;
-    private LocalDateTime challengeWakeupTime;
+
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime challengeWakeupTime;
+
     private Integer challengeWalk;
 
-    @JoinColumn(name="challengeDetailId")
+    @DBRef
+    @NotNull
+    private Member member;
+
+    @DBRef
+    @NotNull
     private ChallengeDetail challengeDetail;
 
 }

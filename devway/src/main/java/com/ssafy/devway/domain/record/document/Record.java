@@ -1,12 +1,13 @@
 package com.ssafy.devway.domain.record.document;
+
 import com.ssafy.devway.domain.member.document.Member;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Record {
+
     @Transient
     public static final String SEQUENCE_NAME = "record_sequence";
 
@@ -27,7 +29,7 @@ public class Record {
 
     private Member member;
 
-    private String recordDate;
+    private LocalDate recordDate;
 
     private Boolean recordSuccess;
 
