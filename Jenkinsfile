@@ -14,7 +14,7 @@ pipeline {
             steps {
                 script {
                     sh 'docker-compose -f devway/docker-compose.yml build app'
-                    sh 'docker-compose -f devway/docker-compose.yml start app'
+                    sh 'docker-compose -f devway/docker-compose.yml up -d app'
                 }
             }
         }
@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     sh 'docker-compose -f devway/docker-compose.yml build nginx'
-                    sh 'docker-compose -f devway/docker-compose.yml start nginx'
+                    sh 'docker-compose -f devway/docker-compose.yml up -d nginx'
                 }
             }
         }
