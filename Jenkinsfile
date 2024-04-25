@@ -15,14 +15,16 @@ pipeline {
                 script {
                     sh 'docker-compose -f devway/docker-compose.yml build app'
                     sh 'docker-compose -f devway/docker-compose.yml up -d app'
+					sh 'docker-compose -f devway/docker-compose.yml build --no-cache nginx'
+                    sh 'docker-compose -f devway/docker-compose.yml build --no-cache certbot'
                 }
             }
         }
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker-compose -f devway/docker-compose.yml build --no-cache nginx'
                     sh 'docker-compose -f devway/docker-compose.yml up -d nginx'
+                    sh 'docker-compose -f devway/docker-compose.yml up -d certbot'
                 }
             }
         }
