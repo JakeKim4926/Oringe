@@ -5,15 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFFFFF"
-    tools:context=".MainActivity">
-
+    android:gravity="center_vertical"
+    android:background="#FF6B00"
+    tools:context=".SplashActivity">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:id="@+id/imageViewSplash"
+        android:layout_width="400dp"
+        android:layout_height="300dp"
         android:layout_gravity="center"
-        android:src="@drawable/main_org" />
+        android:src="@drawable/splash" />
+
 
 </LinearLayout>
