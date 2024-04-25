@@ -10,25 +10,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/challengeDetail")
 @Tag(name = "템플릿", description = "ChallengeDetail API")
 public class ChallengeDetailController {
 
     private final ChallengeDetailService challengeDetailService;
 
-    @PostMapping("/challengeDetail")
+    @PostMapping
     @Operation(summary = "템플릿 순서 생성")
     public ResponseEntity<Long> postChallengeDetail(
         @RequestBody ChallengeDetailReqDto dto) {
         return ResponseEntity.ok(challengeDetailService.insertChallengeDetail(dto));
-    }
-
-    @PutMapping("/challengeDetail")
-    @Operation(summary = "템플릿 순서 수정")
-    public ResponseEntity<Long> putChallengeDetail(@RequestBody ChallengeDetailReqDto dto,
-        Long challengeDetailId) {
-        return ResponseEntity.ok(
-            challengeDetailService.updateChallengeDetail(dto, challengeDetailId));
     }
 
 }
