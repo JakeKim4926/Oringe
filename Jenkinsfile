@@ -13,7 +13,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    sh 'docker-compose -f devway/docker-compose.yml build app'
+                    sh 'docker-compose -f devway/docker-compose.yml up -d app'
                 }
             }
         }
