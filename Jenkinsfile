@@ -20,7 +20,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker-compose -f devway/docker-compose.yml up -d nginx certbot'
+                    sh 'docker-compose -f devway/docker-compose.yml up -d nginx certbot --verbose'
                 }
             }
         }
