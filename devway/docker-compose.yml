@@ -57,6 +57,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /jenkins:/var/jenkins_home
+      - /home:/home # 호스트의 /home 디렉토리를 컨테이너의 /home에 마운트
     ports:
       - 8080:8080
     privileged: true
