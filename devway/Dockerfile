@@ -13,13 +13,15 @@ COPY . .
 RUN chmod +x ./gradlew
 
 # Run the Gradle build
-RUN ./gradlew build
+RUN ./gradlew build && ls -la build/libs/
 
 # Remove any unwanted jars
 RUN rm build/libs/*-plain.jar
 
+RUN ls -la build/libs/
+
 # Copy the JAR file from build output to a simpler path
-COPY build/libs/*.jar app.jar
+RUN cp build/libs/*SNAPSHOT.jar app.jar
 
 # Run the JAR file
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app/app.jar"]
