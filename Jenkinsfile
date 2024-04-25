@@ -21,7 +21,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker-compose -f devway/docker-compose.yml build nginx'
+                    sh 'docker-compose -f devway/docker-compose.yml build nginx --no-cache'
                     sh 'docker-compose -f devway/docker-compose.yml up -d nginx'
                 }
             }
