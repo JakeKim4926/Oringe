@@ -23,7 +23,7 @@ pipeline {
 		stage('Check nginx.conf') {
 			steps {
 				script {
-					sh 'ls -l /home/ubuntu/'
+					sh 'ls -l /home/'
 				}
 			}
 		}
