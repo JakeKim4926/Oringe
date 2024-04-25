@@ -1,7 +1,6 @@
 package com.ssafy.devway.domain.challengeDetail.repository;
 
 import com.ssafy.devway.domain.challengeDetail.document.ChallengeDetail;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

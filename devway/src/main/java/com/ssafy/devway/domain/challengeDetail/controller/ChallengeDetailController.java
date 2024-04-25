@@ -1,11 +1,7 @@
 package com.ssafy.devway.domain.challengeDetail.controller;
 
-import com.ssafy.devway.domain.challenge.document.Challenge;
-import com.ssafy.devway.domain.challengeDetail.document.ChallengeDetail;
 import com.ssafy.devway.domain.challengeDetail.dto.request.ChallengeDetailReqDto;
-import com.ssafy.devway.domain.challengeDetail.repository.ChallengeDetailRepository;
 import com.ssafy.devway.domain.challengeDetail.service.ChallengeDetailService;
-import com.ssafy.devway.global.config.autoIncrementSequence.service.AutoIncrementSequenceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

@@ -11,7 +11,6 @@ import java.util.List;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -50,7 +49,7 @@ public class Challenge {
     @NotNull
     private Boolean challengeAlarm;
 
-    @JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime challengeAlarmTime;
 
     private String challengeMemo;
@@ -60,14 +59,14 @@ public class Challenge {
 
     private String challengeAppName;
 
-    @JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime challengeAppTime;
 
     private String challengeCallName;
 
     private String challengeCallNumber;
 
-    @JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime challengeWakeupTime;
 
     private Integer challengeWalk;
