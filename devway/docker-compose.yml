@@ -61,8 +61,7 @@ services:
     ports:
       - 8080:8080
     privileged: true
-    user:
-      "${UID} : ${CID}"
+    user: root
     environment:
       - TZ=Asia/Seoul
 
