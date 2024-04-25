@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8050:8050"
+    environment:
+      - TZ=Asia/Seoul
 
   nginx:
     build:
@@ -22,6 +24,8 @@ services:
     depends_on:
       - app
 #    restart: unless-stopped
+    environment:
+      - TZ=Asia/Seoul
 
   certbot:
     image: certbot/certbot
@@ -44,6 +48,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: devway201
       MONGO_INITDB_DATABASE: oringe
+      TZ: Asia/Seoul
     restart: unless-stopped
 
   jenkins:
@@ -56,6 +61,8 @@ services:
       - 8080:8080
     privileged: true
     user: root
+    environment:
+      - TZ=Asia/Seoul
 
 
 volumes:
