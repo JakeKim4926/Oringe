@@ -37,7 +37,31 @@ public class ChallengeDetailService {
         challengeDetailRepository.save(challengeDetail);
 
         return challengeDetail.getChallengeDetailId();
-
     }
 
+    /*
+     * 3.2 챌린지 순서 수정
+     * */
+    public Long updateChallengeDetail(ChallengeDetailReqDto dto, Long challengeDetailId) {
+        ChallengeDetail challengeDetail = challengeDetailRepository.findByChallengeDetailId(
+            challengeDetailId);
+        challengeDetail = ChallengeDetail.builder()
+            .challengeDetailId(challengeDetailId)
+            .challengeDetailTitle(dto.getChallengeDetailTitle())
+            .challengeDetailContent(dto.getChallengeDetailContent())
+            .challengeDetailImage(dto.getChallengeDetailImage())
+            .challengeDetailImageContent(dto.getChallengeDetailImageContent())
+            .challengeDetailVideo(dto.getChallengeDetailVideo())
+            .challengeDetailAppName(dto.getChallengeDetailAppName())
+            .challengeDetailAppTime(dto.getChallengeDetailAppTime())
+            .challengeDetailCallName(dto.getChallengeDetailCallName())
+            .challengeDetailCallNumber(dto.getChallengeDetailCallNumber())
+            .challengeDetailWakeupTime(dto.getChallengeDetailWakeupTime())
+            .challengeDetailWalk(dto.getChallengeDetailWalk())
+            .build();
+
+        challengeDetailRepository.save(challengeDetail);
+
+        return challengeDetailId;
+    }
 }

@@ -27,4 +27,12 @@ public class ChallengeDetailController {
         return ResponseEntity.ok(challengeDetailService.insertChallengeDetail(dto));
     }
 
+    @PutMapping("/challengeDetail")
+    @Operation(summary = "템플릿 순서 수정")
+    public ResponseEntity<Long> putChallengeDetail(@RequestBody ChallengeDetailReqDto dto,
+        Long challengeDetailId) {
+        return ResponseEntity.ok(
+            challengeDetailService.updateChallengeDetail(dto, challengeDetailId));
+    }
+
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.devway.domain.challengeDetail.document.ChallengeDetail;
 import com.ssafy.devway.domain.member.document.Member;
 
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -22,10 +21,11 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Challenge {
 
     @Transient
