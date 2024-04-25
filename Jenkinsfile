@@ -20,6 +20,13 @@ pipeline {
                 }
             }
         }
+		stage('Check nginx.conf') {
+			steps {
+				script {
+					sh 'ls -l /home/ubuntu/oringe/devway/nginx.conf'
+				}
+			}
+		}
         stage('Deploy') {
             steps {
                 script {
