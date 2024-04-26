@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface MemberRepository extends MongoRepository<Member, Long> {
     Member findByMemberId(Long MemberId);
 
+    Member findByMemberEmail(String MemberEmail);
+
 }
