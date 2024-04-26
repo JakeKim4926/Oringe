@@ -12,7 +12,6 @@ public interface ChallengeRepository extends MongoRepository<Challenge, Long> {
 
     Challenge findByChallengeId(Long challengeId);
 
-    List<Challenge> findByMember_MemberId(Long memberId);
-//
-//    List<Challenge> findTodayListByMemberIdAndDay(Long memberId, int day);
+    List<Challenge> findByMember_MemberIdOrderByChallengeIdDesc(Long memberId);
+
 }

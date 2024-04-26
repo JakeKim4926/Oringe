@@ -43,4 +43,6 @@ public class ChallengeCreateReqDto {
 
     private Integer challengeWalk;
 
+    private List<Integer> order;
+
 }

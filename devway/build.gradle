@@ -11,6 +11,18 @@ java {
 	sourceCompatibility = '17'
 }
 
+bootRun {
+	// 환경 변수 파일을 로드하고 JVM 시스템 프로퍼티로 설정
+	doFirst {
+		def dotenv = io.github.cdimascio.dotenv.Dotenv.load()
+		systemProperties = [
+				'MONGO_INITDB_ROOT_USERNAME': dotenv.get("MONGO_INITDB_ROOT_USERNAME"),
+				'MONGO_INITDB_ROOT_PASSWORD': dotenv.get("MONGO_INITDB_ROOT_PASSWORD"),
+				'MONGO_INITDB_ROOT_DATABASE': dotenv.get("MONGO_INITDB_ROOT_DATABASE")
+		]
+	}
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -27,10 +39,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+	implementation 'io.github.cdimascio:dotenv-java:2.2.0'
 }
 
 tasks.named('test') {

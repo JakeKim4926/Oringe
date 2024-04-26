@@ -1,29 +1,9 @@
 server:
   port: 8050
 
-#spring:
-#  data:
-#    mongodb:
-#      host: 127.0.0.1
-#      port: 27017
-#      database: oringe
-#  forward-headers-strategy: framework
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: ${MYSQL_DATASOURCE_URL}
-#    username: ${MYSQL_DATASOURCE_USERNAME}
-#    password: ${MYSQL_DATASOURCE_PASSWORD}
-#
-#---
-#spring:
-#  profiles:
-#    active: prods
-#---
-#spring:
-#  profiles:
-#    active: dev
-#---
-#spring:
-#  profiles:
-#    active: local
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:devway201@k10b201.p.ssafy.io:27017/
+      database: oringe
+
