@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "674424380265",
+    "project_id": "oringe-db498",
+    "storage_bucket": "oringe-db498.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674424380265:android:ea6da2ace6b4297acb7bf8",
+        "android_client_info": {
+          "package_name": "com.ssafy.oringe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674424380265-0a8997vglocp3r49hrf5l1af1ghvso5j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.oringe",
+            "certificate_hash": "7c31136209596bb2b9c3795207e79fcf54eb82b4"
+          }
+        },
+        {
+          "client_id": "674424380265-6g17qkn5v106tll2gi1t4217dt5mgtb2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7EX3hkSknB-B0qr3aoDzR8whC5F-M25w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674424380265-6g17qkn5v106tll2gi1t4217dt5mgtb2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

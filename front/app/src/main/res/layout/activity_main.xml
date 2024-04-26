@@ -8,7 +8,7 @@
     android:background="#FFFFFF"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".activity.common.MainActivity">
 
     <ImageView
         android:id="@+id/image_logo_org"

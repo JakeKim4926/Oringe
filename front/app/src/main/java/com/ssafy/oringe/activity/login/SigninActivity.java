@@ -1,4 +1,4 @@
-package com.ssafy.oringe;
+package com.ssafy.oringe.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +24,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.ssafy.oringe.R;
 
 import java.io.IOException;
 

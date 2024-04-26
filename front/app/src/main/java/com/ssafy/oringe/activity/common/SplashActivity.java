@@ -1,4 +1,4 @@
-package com.ssafy.oringe;
+package com.ssafy.oringe.activity.common;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.ssafy.oringe.R;
+import com.ssafy.oringe.activity.login.SigninActivity;
 
 import java.io.IOException;
 
