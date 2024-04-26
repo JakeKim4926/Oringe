@@ -23,7 +23,7 @@ services:
       - /home/ubuntu/certbot/conf:/etc/letsencrypt
     depends_on:
       - app
-#    restart: unless-stopped
+    restart: unless-stopped
     environment:
       - TZ=Asia/Seoul
 
@@ -45,9 +45,9 @@ services:
     volumes:
       - mongo_data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: devway201
-      MONGO_INITDB_DATABASE: oringe
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_ROOT_DATABASE}
       TZ: Asia/Seoul
     restart: unless-stopped
 
@@ -57,13 +57,13 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /jenkins:/var/jenkins_home
+      - /home:/home # 호스트의 /home 디렉토리를 컨테이너의 /home에 마운트
     ports:
       - 8080:8080
     privileged: true
     user: root
     environment:
       - TZ=Asia/Seoul
-
 
 volumes:
   mongo_data:

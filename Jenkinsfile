@@ -7,27 +7,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'wns1915', url: 'https://gitlab.com/username/repo.git' // GitLab 리포지토리
+                git credentialsId: 'wns1915', url: 'https://lab.ssafy.com/wns1915/oringe.git' // GitLab 리포지토리
             }
         }
         stage('Build Docker Images') {
             steps {
                 script {
-                    sh 'sudo docker-compose -f docker-compose.yml build app'
+                    sh 'docker-compose -f devway/docker-compose.yml build app'
+                    sh 'docker-compose -f devway/docker-compose.yml up -d app'
+					sh 'docker-compose -f devway/docker-compose.yml build --no-cache nginx'
+                    sh 'docker-compose -f devway/docker-compose.yml build --no-cache certbot'
                 }
             }
         }
         stage('Deploy') {
             steps {
                 script {
-                    sh 'sudo docker-compose -f docker-compose.yml up -d nginx certbot'
+                    sh 'docker-compose -f /home/ubuntu/oringe/devway/docker-compose.yml up -d nginx '
+                    sh 'docker-compose -f /home/ubuntu/oringe/devway/docker-compose.yml up -d certbot'
                 }
             }
-        }
-    }
-    post {
-        always {
-            cleanWs() // 작업 공간 정리
         }
     }
 }

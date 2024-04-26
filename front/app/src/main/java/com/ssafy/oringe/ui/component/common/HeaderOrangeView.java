@@ -32,7 +32,7 @@ public class HeaderOrangeView extends FrameLayout {
     }
 
     private void init(Context context) {
-        View view = LayoutInflater.from(context).inflate(R.layout.sample_header_view, this, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.sample_header_orange_view, this, false);
         addView(view);
 
         backButton = findViewById(R.id.backButton);
