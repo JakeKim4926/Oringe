@@ -33,7 +33,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class SigninActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class SigninActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     // 구글 로그인 버튼
     private SignInButton btn_google;
