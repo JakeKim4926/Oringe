@@ -47,7 +47,7 @@ public class SplashActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         String idToken = task.getResult().getToken();
                         sendTokenToServer(idToken);
-
+//                        proceedToMain();
                         // 신규 회원 -> 회원가입 페이지
                     } else {
                         Log.e("SplashActivity", "ID Token 가져올 수 없음", task.getException());
@@ -68,7 +68,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void sendTokenToServer(String idToken) {
         OkHttpClient client = new OkHttpClient();
-        String url = "http://10.0.2.2:8080/member/signin";
+        String url = "http://10.0.2.2:8050/api/signup";
 
         MediaType mediaType = MediaType.parse("application/json");
         String requestBody = "{\"idToken\":\"" + idToken + "\"}";

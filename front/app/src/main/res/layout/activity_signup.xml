@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/main"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="#FF6B00"
+  android:gravity="center_horizontal"
+  android:orientation="vertical"
+  tools:context=".SignupActivity">
+
+  <ImageView
+    android:id="@+id/image_logo_white"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/logo_white"
+    android:layout_marginBottom="120dp"/>
+
+  <LinearLayout
+    android:layout_width="350dp"
+    android:layout_height="300dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/main_oringe_list">
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="닉네임을 입력해 주세요."
+      android:textColor="#5FCBC2"
+      android:textStyle="bold"
+      android:textSize="18dp"
+      android:layout_marginBottom="50dp"
+      />
+  <EditText
+    android:id="@+id/et_nickname"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:hint="최대 10자"
+    tools:ignore="MissingConstraints"
+    android:layout_marginBottom="30dp"/>
+  <Button
+    android:id="@+id/btn_start"
+    android:layout_width="80dp"
+    android:layout_height="40dp"
+    android:text="시작"
+    tools:ignore="MissingConstraints"
+    android:background="@drawable/org_btn"
+    android:textColor="#FFFFFF"/>
+  </LinearLayout>
+</LinearLayout>
