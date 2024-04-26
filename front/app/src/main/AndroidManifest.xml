@@ -17,6 +17,12 @@
         android:theme="@style/Theme.Oringe"
         tools:targetApi="31">
         <activity
+            android:name=".activity.common.HeaderOrangeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.challenge.ChallengeCreateFormActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.login.SignupActivity"
             android:exported="false" />
         <activity
@@ -24,6 +30,20 @@
             android:exported="false" />
         <activity
             android:name=".activity.common.SplashActivity"
+            android:exported="false">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".activity.common.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.challenge.ChallengeListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,12 +51,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.common.MainActivity"
-            android:exported="true" />
-        <activity
-            android:exported="false"
-            android:name=".activity.challenge.ChallengeListActivity" />
     </application>
 
 </manifest>

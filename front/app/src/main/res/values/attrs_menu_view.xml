@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="MenuView">
+        <attr name="src" format="reference" />
+    </declare-styleable>
+</resources>
