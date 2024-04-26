@@ -1,6 +1,7 @@
 package com.ssafy.devway.domain.member.document;
 
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,9 +20,12 @@ public class Member {
     public static final String SEQUENCE_NAME = "member_sequence";
 
     @Id
+    @NotNull
     private Long memberId;
 
-    private String memberNickName;
+    @NotNull
+    private String memberEmail;
 
-    private Boolean memberIsFirst;
+    @NotNull
+    private String memberNickName;
 }
