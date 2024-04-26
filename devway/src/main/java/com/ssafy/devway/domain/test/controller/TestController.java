@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 public class TestController {
-    @GetMapping
+    @GetMapping("/oringe/api")
     public String home() {
         return "성소수준동아";
     }
