@@ -39,25 +39,24 @@ public class ChallengeService {
     /*
      * 2.1 챌린지 생성
      * */
-    public Challenge insertChallenge(ChallengeCreateReqDto dto, List<Integer> order,
-        Long memberId) {
+    public Challenge insertChallenge(ChallengeCreateReqDto dto, Long memberId) {
         Member member = memberRepository.findByMemberId(memberId);
         log.debug("member: " + member);
 
         ChallengeDetail challengeDetail = ChallengeDetail.builder()
             .challengeDetailId(
                 autoIncrementSequenceService.generateSequence(ChallengeDetail.SEQUENCE_NAME))
-            .challengeDetailTitle(order.get(0))
-            .challengeDetailContent(order.get(1))
-            .challengeDetailImage(order.get(2))
-            .challengeDetailImageContent(order.get(3))
-            .challengeDetailVideo(order.get(4))
-            .challengeDetailAppName(order.get(5))
-            .challengeDetailAppTime(order.get(6))
-            .challengeDetailCallName(order.get(7))
-            .challengeDetailCallNumber(order.get(8))
-            .challengeDetailWakeupTime(order.get(9))
-            .challengeDetailWalk(order.get(10))
+            .challengeDetailTitle(dto.getOrder().get(0))
+            .challengeDetailContent(dto.getOrder().get(1))
+            .challengeDetailImage(dto.getOrder().get(2))
+            .challengeDetailImageContent(dto.getOrder().get(3))
+            .challengeDetailVideo(dto.getOrder().get(4))
+            .challengeDetailAppName(dto.getOrder().get(5))
+            .challengeDetailAppTime(dto.getOrder().get(6))
+            .challengeDetailCallName(dto.getOrder().get(7))
+            .challengeDetailCallNumber(dto.getOrder().get(8))
+            .challengeDetailWakeupTime(dto.getOrder().get(9))
+            .challengeDetailWalk(dto.getOrder().get(10))
             .build();
         log.debug("challengeDetail: " + challengeDetail);
         challengeDetailRepository.save(challengeDetail);
@@ -102,7 +101,7 @@ public class ChallengeService {
      * */
     @Transactional(readOnly = true)
     public List<Challenge> selectChallengeList(Long memberId) {
-        return challengeRepository.findByMember_MemberId(memberId);
+        return challengeRepository.findByMember_MemberIdOrderByChallengeIdDesc(memberId);
     }
 
     /*
@@ -111,7 +110,8 @@ public class ChallengeService {
     @Transactional(readOnly = true)
     public List<Challenge> selectTodayChallengeList(Long memberId) {
         int day = LocalDate.now().getDayOfWeek().getValue(); // 오늘 요일
-        List<Challenge> challengeList = challengeRepository.findByMember_MemberId(memberId);
+        List<Challenge> challengeList = challengeRepository.findByMember_MemberIdOrderByChallengeIdDesc(
+            memberId);
         log.debug("challengeList: " + challengeList);
 
         List<Challenge> todayList = new ArrayList<>();

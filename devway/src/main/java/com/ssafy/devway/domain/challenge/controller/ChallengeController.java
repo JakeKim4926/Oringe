@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,8 +31,8 @@ public class ChallengeController {
     @PostMapping
     @Operation(summary = "챌린지 생성")
     public ResponseEntity<Challenge> postChallenge(
-        @RequestBody ChallengeCreateReqDto dto, List<Integer> order, Long memberId) {
-        return ResponseEntity.ok(challengeService.insertChallenge(dto, order, memberId));
+        @RequestBody ChallengeCreateReqDto dto, Long memberId) {
+        return ResponseEntity.ok(challengeService.insertChallenge(dto, memberId));
     }
 
     @GetMapping
