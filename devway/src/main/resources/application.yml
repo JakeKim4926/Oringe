@@ -4,33 +4,14 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb://root:devway201@k10b201.p.ssafy.io:27017
-      database: oringe
-      
-
+      host: k10b201.p.ssafy.io
+      port: 27017
+      username: ${MONGO_INITDB_ROOT_USERNAME}
+      password: ${MONGO_INITDB_ROOT_PASSWORD}
+      database: ${MONGO_INITDB_ROOT_DATABASE}
 #spring:
 #  data:
 #    mongodb:
-#      host: 127.0.0.1
-#      port: 27017
+#      uri: mongodb://root:devway201@k10b201.p.ssafy.io:27017
 #      database: oringe
-#  forward-headers-strategy: framework
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: ${MYSQL_DATASOURCE_URL}
-#    username: ${MYSQL_DATASOURCE_USERNAME}
-#    password: ${MYSQL_DATASOURCE_PASSWORD}
 #
-#---
-#spring:
-#  profiles:
-#    active: prods
-#---
-#spring:
-#  profiles:
-#    active: dev
-#---
-#spring:
-#  profiles:
-#    active: local
