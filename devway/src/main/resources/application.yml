@@ -4,7 +4,7 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb://root:devway201@k10b201.p.ssafy.io:27017/
+      uri: mongodb://root:devway201@mongo:27017/
       database: oringe
 
 forward-headers-strategy: framework
