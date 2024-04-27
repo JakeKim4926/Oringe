@@ -4,14 +4,5 @@ server:
 spring:
   data:
     mongodb:
-      host: k10b201.p.ssafy.io
-      port: 27017
-      username: ${MONGO_INITDB_ROOT_USERNAME}
-      password: ${MONGO_INITDB_ROOT_PASSWORD}
-      database: ${MONGO_INITDB_ROOT_DATABASE}
-#spring:
-#  data:
-#    mongodb:
-#      uri: mongodb://root:devway201@k10b201.p.ssafy.io:27017
-#      database: oringe
-#
+      uri: mongodb://root:devway201@k10b201.p.ssafy.io:27017
+      database: oringe
