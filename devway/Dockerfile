@@ -3,8 +3,6 @@ FROM openjdk:17
 
 RUN microdnf install findutils
 
-RUN apt-get update && apt-get install -y mongodb-clients
-
 # Set the working directory in the container
 WORKDIR /app
 

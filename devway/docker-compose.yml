@@ -11,6 +11,8 @@ services:
       - TZ=Asia/Seoul
     networks:
       - devway_network
+    depends_on:
+      - mongo
 
   nginx:
     build:
