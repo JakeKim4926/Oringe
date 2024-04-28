@@ -9,23 +9,26 @@
     android:orientation="vertical"
     tools:context=".activity.challenge.ChallengeListActivity">
 
+    <!--헤더-->
     <com.ssafy.oringe.ui.component.common.HeaderWhiteView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <TextView
+    <!--텍스트-->
+    <com.ssafy.oringe.ui.component.common.TitleView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
-        android:text="소현님의 챌린지"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
+        app:text="소현님의 챌린지"
+        app:textColor="@color/white"
+        app:textSize="7sp" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,36 +37,14 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <LinearLayout
+            <!--진행상황-->
+            <com.ssafy.oringe.ui.component.challenge.ChallengeStatusView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:layout_marginBottom="30dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_marginBottom="30dp" />
 
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:text="진행예정"
-                    android:textAlignment="center"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:text="진행중"
-                    android:textAlignment="center"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:text="진행완료"
-                    android:textAlignment="center"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
+            <!--목록-->
             <com.ssafy.oringe.ui.component.challenge.ChallengeListView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,6 +52,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp" />
 
+            <!--목록-->
             <com.ssafy.oringe.ui.component.challenge.ChallengeListView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -80,15 +62,15 @@
 
         </LinearLayout>
 
-        <ImageButton
+        <!--메뉴-->
+        <com.ssafy.oringe.ui.component.common.MenuView
+            android:id="@+id/menu_btn"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_gravity="end|bottom"
-            android:layout_marginRight="20dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/plus_btn" />
+            app:src="@drawable/plus_btn" />
 
     </FrameLayout>
 </LinearLayout>

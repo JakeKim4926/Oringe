@@ -1,6 +1,19 @@
 <resources>
 
-  <style name="Widget.Theme.Oringe.MyView" parent="">
-    <item name="android:background">@color/gray_400</item>
-  </style>
+    <style name="Widget.Theme.Oringe.TitleView" parent="">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="Widget.Theme.Oringe.MenuView" parent="">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+
+    <style name="Widget.Theme.Oringe.MyView" parent="">
+        <item name="android:background">@color/gray_400</item>
+        <item name="exampleColor">@color/light_blue_400</item>
+    </style>
+
+
 </resources>

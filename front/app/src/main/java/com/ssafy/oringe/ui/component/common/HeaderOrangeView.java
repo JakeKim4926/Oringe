@@ -1,6 +1,8 @@
 package com.ssafy.oringe.ui.component.common;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.activity.common.MainActivity;
 
 public class HeaderOrangeView extends FrameLayout {
 
@@ -35,17 +38,19 @@ public class HeaderOrangeView extends FrameLayout {
         View view = LayoutInflater.from(context).inflate(R.layout.sample_header_orange_view, this, false);
         addView(view);
 
+        // 뒤로 가기
         backButton = findViewById(R.id.backButton);
-        logoImageView = findViewById(R.id.logoImageView);
-
         backButton.setOnClickListener(v -> {
-            // 뒤로 가기 기능 구현
-            Toast.makeText(context, "Back Pressed", Toast.LENGTH_SHORT).show();
+            if (context instanceof Activity) {
+                ((Activity) context).onBackPressed();
+            }
         });
 
+        // 홈으로 가기
+        logoImageView = findViewById(R.id.logoImageView);
         logoImageView.setOnClickListener(v -> {
-            // 홈 버튼 기능 구현
-            Toast.makeText(context, "Home Pressed", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, MainActivity.class);
+            context.startActivity(intent);
         });
     }
 
