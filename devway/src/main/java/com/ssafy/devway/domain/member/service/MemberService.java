@@ -30,6 +30,7 @@ public class MemberService {
         }
 
         Member newMember = Member.builder()
+            .memberId(autoIncrementSequenceService.generateSequence(Member.SEQUENCE_NAME))
             .memberNickName(dto.getMemberNickname())
             .memberEmail(dto.getMemberEmail())
             .build();
