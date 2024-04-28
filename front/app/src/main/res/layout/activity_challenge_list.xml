@@ -15,10 +15,11 @@
         android:layout_height="wrap_content" />
 
     <!--텍스트-->
-    <com.ssafy.oringe.ui.component.challenge.TitleView
+    <com.ssafy.oringe.ui.component.common.TitleView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
         app:text="소현님의 챌린지"
         app:textColor="@color/white"
@@ -40,6 +41,7 @@
             <com.ssafy.oringe.ui.component.challenge.ChallengeStatusView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:layout_marginBottom="30dp" />
 
             <!--목록-->

@@ -14,8 +14,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.ssafy.oringe.R;
 
 public class ChallengeListActivity extends AppCompatActivity {
-    private ImageButton createChallengeBtn;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

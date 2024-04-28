@@ -21,8 +21,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
             )
         }
     }
@@ -59,6 +59,12 @@ dependencies {
 
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
+
+    // Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    // Retrofit Gson Converter
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
 
 }
 

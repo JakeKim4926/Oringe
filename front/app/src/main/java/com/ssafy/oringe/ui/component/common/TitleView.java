@@ -1,4 +1,4 @@
-package com.ssafy.oringe.ui.component.challenge;
+package com.ssafy.oringe.ui.component.common;
 
 import android.content.Context;
 import android.content.res.TypedArray;

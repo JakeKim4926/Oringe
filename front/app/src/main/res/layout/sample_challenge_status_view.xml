@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal">
 
-    <com.ssafy.oringe.ui.component.challenge.TitleView
+    <com.ssafy.oringe.ui.component.common.TitleView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:text="진행예정"
@@ -13,7 +13,7 @@
         app:textColor="@color/oringe_sub"
         tools:ignore="SmallSp" />
 
-    <com.ssafy.oringe.ui.component.challenge.TitleView
+    <com.ssafy.oringe.ui.component.common.TitleView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
@@ -23,7 +23,7 @@
         app:textColor="@color/gray_400"
         tools:ignore="SmallSp" />
 
-    <com.ssafy.oringe.ui.component.challenge.TitleView
+    <com.ssafy.oringe.ui.component.common.TitleView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:text="진행완료"
