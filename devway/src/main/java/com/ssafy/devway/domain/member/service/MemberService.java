@@ -24,25 +24,37 @@ public class MemberService {
      * */
     public Member signup(MemberSignupReqDto dto) {
         Member member = memberRepository.findByMemberEmail(dto.getMemberEmail());
-        if (member == null) { //가입 하지 않았으면 저장
-            Member newMember = Member.builder()
-                .memberId(autoIncrementSequenceService.generateSequence(Member.SEQUENCE_NAME))
-                .memberNickName(dto.getMemberNickname())
-                .memberEmail(dto.getMemberEmail())
-                .build();
-            memberRepository.save(newMember);
-            return newMember;
-        } else {
-            return member;
+
+        if(member != null){
+            throw new IllegalArgumentException("이미 가입 된 이메일입니다.");
         }
 
+        Member newMember = Member.builder()
+            .memberNickName(dto.getMemberNickname())
+            .memberEmail(dto.getMemberEmail())
+            .build();
+
+        memberRepository.save(newMember);
+        return member;
     }
+
+
 
     /*
      * 1.2 로그인 회원 조회
      * */
     public Member signin(String email) {
-        return memberRepository.findByMemberEmail(email);
+        Member member = memberRepository.findByMemberEmail(email);
+        if(member == null){
+            throw new IllegalArgumentException("해당 회원을 찾을 수 없습니다.");
+        }
+
+        return member;
+    }
+
+    public Boolean validMember(String memberEmail) {
+        Member findedMember = signin(memberEmail);
+        return findedMember != null;
     }
 
 }
