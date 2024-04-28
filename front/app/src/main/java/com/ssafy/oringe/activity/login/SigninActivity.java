@@ -10,6 +10,9 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -25,16 +28,20 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.activity.common.MainActivity;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class SigninActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class SigninActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     // 구글 로그인 버튼
     private SignInButton btn_google;
@@ -61,8 +68,6 @@ public class SigninActivity extends AppCompatActivity implements GoogleApiClient
             .requestEmail()
             .build();
 
-        Log.i("SigninActivity", "token = + " + String.valueOf(getString(com.firebase.ui.auth.R.string.default_web_client_id)));
-
         googleApiClient = new GoogleApiClient.Builder(this)
             .enableAutoManage(this, this)
             .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
@@ -70,13 +75,10 @@ public class SigninActivity extends AppCompatActivity implements GoogleApiClient
 
         btn_google = findViewById(R.id.btn_google);
 
-        // 구글 로그인 버튼을 클릭했을 때 이 곳을 수행
-        btn_google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(intent, REQ_SIGN_GOOLE);
-            }
+        // 구글 로그인 버튼을 클릭 했을 때 이 곳을 수행
+        btn_google.setOnClickListener(v -> {
+            Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+            startActivityForResult(intent, REQ_SIGN_GOOLE);
         });
     }
 
@@ -107,50 +109,64 @@ public class SigninActivity extends AppCompatActivity implements GoogleApiClient
                     // 로그인 성공
                     if (task.isSuccessful()) {
 
-                        // 서버로 토큰 전달
-                        sendTokenToServer(account.getIdToken());
-
-                        Toast.makeText(SigninActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                        startActivity(intent);
+                        checkUserRegistration(account.getEmail());
 
                     } else { // 로그인 실패 - 로그인 화면으로 돌아가기
-                        Log.e("LoginActivity", "로그인 실패", task.getException());
+                        Log.e("SigninActivity", "로그인 실패", task.getException());
                         Toast.makeText(SigninActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
     }
 
-
-    private void sendTokenToServer(String idToken) {
+    private void checkUserRegistration(String email) {
         OkHttpClient client = new OkHttpClient();
-        String url = "http://10.0.2.2:8050/api/signup";
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://10.0.2.2:8050/api/valid").newBuilder();
+        urlBuilder.addQueryParameter("memberEmail", email);
+        String url = urlBuilder.build().toString();
 
-        MediaType mediaType = MediaType.parse("application/json");
-        String requestBody = "{\"idToken\":\"" + idToken + "\"}";
-        RequestBody body = RequestBody.create(requestBody, mediaType);
-
-        Request request = new Request.Builder()
-            .url(url)
-            .post(body)
-            .build();
-
+        Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
-                e.printStackTrace();
+                Log.e("SigninActivity", "Email 검증 실패", e);
+                promptSignup();
             }
 
             @Override
             public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    Log.i("Server Response", response.body().string());
-                } else {
-                    Log.e("Server Error", "Response not successful");
+                if (!response.isSuccessful()) {
+                    runOnUiThread(() -> promptSignup());
+                    return;
+                }
+                try {
+                    String jsonResponse = response.body().string();
+                    JSONObject jsonObject = new JSONObject(jsonResponse);
+                    boolean isRegistered = jsonObject.getBoolean("data");
+
+                    runOnUiThread(() -> {
+                        if (isRegistered) {
+                            proceedToMain();
+                        } else {
+                            promptSignup();
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e("SigninActivity", "JSON 파싱 오류", e);
+                    runOnUiThread(() -> promptSignup());
                 }
             }
         });
+    }
+
+    private void proceedToMain() {
+        startActivity(new Intent(SigninActivity.this, MainActivity.class));
+        finish();
+    }
+
+    private void promptSignup() {
+        startActivity(new Intent(SigninActivity.this, SignupActivity.class));
+        finish();
     }
 
     @Override
