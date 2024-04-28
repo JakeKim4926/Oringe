@@ -8,12 +8,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.ssafy.oringe.activity.common.MainActivity;
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.activity.common.MainActivity;
 
 import java.io.IOException;
 
@@ -37,28 +38,23 @@ public class SignupActivity extends AppCompatActivity {
         et_nickname = findViewById(R.id.et_nickname);
         auth = FirebaseAuth.getInstance();
 
-        Log.d("SignupActivity", "signupActivity 진입");
-
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseUser user = auth.getCurrentUser();
-                Log.d("SignupActivity", "버튼 클릭됨");
 
                 if (user != null) {
-                    Log.d("SignupActivity", "email = " + user.getEmail());
                     String email = user.getEmail();
                     String nickname = et_nickname.getText().toString();
-                    Log.d("SignupActivity", "nickname = " + nickname);
 
                     if (!nickname.isEmpty()) {
                         sendUserInfoToServer(email, nickname);
                     } else {
-                        Toast.makeText(SignupActivity.this, "체리톡에서 사용할 영어이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this, "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Log.d("SignupActivity", "사용자 정보 없음");
-                    Toast.makeText(SignupActivity.this, "로그인 되어있지 않습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, "로그인 되어 있지 않습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -97,7 +93,6 @@ public class SignupActivity extends AppCompatActivity {
                     });
                 } else {
                     runOnUiThread(() -> {
-                        Log.d("HTTP Status Code", String.valueOf(response.code()));
                         Toast.makeText(SignupActivity.this, "회원가입 실패", Toast.LENGTH_SHORT).show();
                         Log.d("HTTP Status Code", String.valueOf(response.code()));
                     });
