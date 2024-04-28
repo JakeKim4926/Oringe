@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "674424380265-oq46crgrb6set32gv38oreu04f04ovn0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.oringe",
+            "certificate_hash": "38e45c62efe933bd773f76a2d62ba4c9d74d7334"
+          }
+        },
+        {
           "client_id": "674424380265-6g17qkn5v106tll2gi1t4217dt5mgtb2.apps.googleusercontent.com",
           "client_type": 3
         }

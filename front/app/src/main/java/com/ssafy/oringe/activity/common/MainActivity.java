@@ -22,21 +22,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+
 public class MainActivity extends AppCompatActivity {
 
     Button btn_record;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         //오늘의 남은 오린지
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
@@ -58,4 +56,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
