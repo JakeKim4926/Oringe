@@ -54,6 +54,7 @@
 
             <!--목록-->
             <com.ssafy.oringe.ui.component.challenge.ChallengeListView
+                android:id="@+id/challengeList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"

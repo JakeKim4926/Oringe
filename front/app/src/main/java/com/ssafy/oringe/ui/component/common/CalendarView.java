@@ -84,4 +84,10 @@ public class CalendarView extends LinearLayout {
 
         addView(view);
     }
+
+    // 내부 EditText에 대한 접근자 메서드
+    public String getEditText() {
+        EditText editText = findViewById(R.id.calendar_date);
+        return editText.getText().toString();
+    }
 }

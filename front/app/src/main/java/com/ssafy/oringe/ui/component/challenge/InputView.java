@@ -30,6 +30,7 @@ public class InputView extends LinearLayout {
         super(context, attrs);
         try {
             typedArray = context.obtainStyledAttributes(attrs, R.styleable.InputView);
+            text = typedArray.getText(R.styleable.InputView_input_text);
             singleLine = typedArray.getBoolean(R.styleable.InputView_singleLine, true);
             init(context);
         } finally {
@@ -48,6 +49,12 @@ public class InputView extends LinearLayout {
         textView.setSingleLine(singleLine);
 
         addView(view);
+    }
+
+    // EditText를 반환하는 메소드
+    public String getEditText() {
+        EditText editText = findViewById(R.id.input);
+        return editText.getText().toString();
     }
 
 
