@@ -51,6 +51,11 @@ public class TitleView extends LinearLayout {
         addView(view);
     }
 
+    public void setText(String text) {
+        TextView textView = findViewById(R.id.title);
+        textView.setText(text);
+    }
+
     public void setTextColor(int color) {
         TextView textView = findViewById(R.id.title);
         textView.setTextColor(color);

@@ -106,17 +106,16 @@
             android:id="@+id/dayLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <com.ssafy.oringe.ui.component.common.TitleView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:text="매주 월, 수, 금"
-                app:textColor="@color/oringe_sub"
-                app:textSize="5sp" />
+                app:text="요일"
+                app:textColor="@color/gray_600"
+                app:textSize="4sp" />
 
             <TableLayout
                 android:layout_width="wrap_content"

@@ -12,7 +12,7 @@ import retrofit2.http.Query;
 
 public interface ChallengeService {
         @POST("challenge")
-        Call<ResponseBody> sendData(@Body Challenge data);
+        Call<ResponseBody> sendData(@Body Challenge data, @Query("memberId") Long memberId);
 
         @GET("challenge/{memberId}")
         Call<List<Challenge>> getData(@Path("memberId") Long id, @Query("status") int status);
