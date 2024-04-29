@@ -15,5 +15,6 @@ public interface ChallengeService {
         Call<ResponseBody> sendData(@Body Challenge data);
 
         @GET("challenge/{memberId}")
-        Call<List<Challenge>> getData(@Path("memberId") Long id);
+        Call<List<Challenge>> getData(@Path("memberId") Long id, @Query("status") int status);
+
 }
