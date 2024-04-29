@@ -1,4 +1,4 @@
-package com.ssafy.devway.domain.test.controller;
+package com.ssafy.devway.block.test.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
