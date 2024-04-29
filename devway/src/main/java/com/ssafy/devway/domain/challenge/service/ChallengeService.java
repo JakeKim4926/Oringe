@@ -102,8 +102,16 @@ public class ChallengeService {
      * 2.2 챌린지 전체 조회
      * */
     @Transactional(readOnly = true)
-    public List<Challenge> selectChallengeList(Long memberId) {
-        return challengeRepository.findByMember_MemberIdOrderByChallengeIdDesc(memberId);
+    public List<Challenge> selectChallengeList(Long memberId, int status) {
+        List<Challenge> challengeList = challengeRepository.findByMember_MemberIdOrderByChallengeIdDesc(
+            memberId);
+        List<Challenge> statusList = new ArrayList<>();
+        for(Challenge challenge:challengeList) {
+            if (challenge.getChallengeStatus()==status) {
+                statusList.add(challenge);
+            }
+        }
+        return  statusList;
     }
 
     /*
