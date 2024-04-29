@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SimpleBlock<T extends Element> implements Block<T> {
+
     private List<T> elements = new ArrayList<>();
 
     @Override

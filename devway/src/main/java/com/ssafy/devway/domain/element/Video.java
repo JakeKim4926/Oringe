@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Video implements Element {
+
     private String path;
     private byte[] data;
 

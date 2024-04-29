@@ -3,7 +3,8 @@ package com.ssafy.devway.domain.element;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Text implements Element{
+public class Text implements Element {
+
     private String content;
     private int length;
 

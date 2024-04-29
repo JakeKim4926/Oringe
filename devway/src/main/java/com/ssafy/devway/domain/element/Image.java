@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Image implements Element {
+
     private String path;
     private String url;
 
