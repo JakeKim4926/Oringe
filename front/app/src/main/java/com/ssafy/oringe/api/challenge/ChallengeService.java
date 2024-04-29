@@ -17,4 +17,7 @@ public interface ChallengeService {
         @GET("challenge/{memberId}")
         Call<List<Challenge>> getData(@Path("memberId") Long id, @Query("status") int status);
 
+        @GET("challenge/today")
+        Call<List<Challenge>> getTodayChallengeList(@Query("memberId") Long memberId);
+
 }
