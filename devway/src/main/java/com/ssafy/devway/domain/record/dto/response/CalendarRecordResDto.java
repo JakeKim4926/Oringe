@@ -1,20 +1,19 @@
-package com.ssafy.devway.domain.challenge.dto.response;
-
-import java.time.LocalDate;
+package com.ssafy.devway.domain.record.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @Builder
-public class ChallengeDetailResDto {
+public class CalendarRecordResDto {
 
     private Long recordId;
 
     private Boolean recordSuccess;
 
     private LocalDate recordDate;
-
 }
