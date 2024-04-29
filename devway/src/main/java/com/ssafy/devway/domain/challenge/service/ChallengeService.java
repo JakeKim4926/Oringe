@@ -39,8 +39,10 @@ public class ChallengeService {
     /*
      * 2.1 챌린지 생성
      * */
-    public Challenge insertChallenge(ChallengeCreateReqDto dto, Long memberId) {
-        Member member = memberRepository.findByMemberId(memberId);
+    public Challenge insertChallenge(ChallengeCreateReqDto dto) {
+        System.out.println(dto);
+        Long id = Long.parseLong("11");
+        Member member = memberRepository.findByMemberId(id);
         log.debug("member: " + member);
 
         ChallengeDetail challengeDetail = ChallengeDetail.builder()

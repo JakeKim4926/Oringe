@@ -16,8 +16,10 @@ public class ChallengeCreateReqDto {
 
     private String challengeTitle;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate challengeStart;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate challengeEnd;
 
     private List<Integer> challengeCycle;

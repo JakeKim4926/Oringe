@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,13 +32,14 @@ public class ChallengeController {
     @PostMapping
     @Operation(summary = "챌린지 생성")
     public ResponseEntity<Challenge> postChallenge(
-        @RequestBody ChallengeCreateReqDto dto, Long memberId) {
-        return ResponseEntity.ok(challengeService.insertChallenge(dto, memberId));
+        @RequestBody ChallengeCreateReqDto dto) {
+        System.out.println(dto);
+        return ResponseEntity.ok(challengeService.insertChallenge(dto));
     }
 
-    @GetMapping
+    @GetMapping("/{memberId}")
     @Operation(summary = "챌린지 목록 조회")
-    public ResponseEntity<List<Challenge>> getChallengeList(Long memberId) {
+    public ResponseEntity<List<Challenge>> getChallengeList(@PathVariable Long memberId) {
         return ResponseEntity.ok(challengeService.selectChallengeList(memberId));
     }
 
