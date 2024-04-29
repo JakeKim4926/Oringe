@@ -47,7 +47,9 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:lineSpacingExtra="10dp"
+            android:fontFamily="@font/jamsil"/>
 
     </RelativeLayout>
 
@@ -73,17 +75,19 @@
             android:layout_marginStart="30dp"
             android:background="@drawable/record_btn"
             android:text="오린지 인증하기 ✏"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:gravity="center"
+        android:layout_margin="30dp"
         android:text="오늘의 챌린지"
         android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_gravity="left"
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:layout_width="350dp"
@@ -94,79 +98,69 @@
         android:padding="20dp">
 
         <LinearLayout
+            android:id="@+id/main_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="디지털 디톡스"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center"-->
+<!--                android:text="디지털 디톡스"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="15sp" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="50% 달성"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-        </LinearLayout>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center"-->
+<!--                android:text="50% 달성"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="15sp" />-->
+<!--        </LinearLayout>-->
 
-        <!--    <RelativeLayout-->
-        <!--      android:layout_width="match_parent"-->
-        <!--      android:layout_height="150dp"-->
-        <!--      android:gravity="center_horizontal">-->
+<!--        <ProgressBar-->
+<!--            android:id="@+id/progressBar2"-->
+<!--            style="?android:attr/progressBarStyleHorizontal"-->
+<!--            android:layout_width="280dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:progress="50"-->
+<!--            android:progressDrawable="@drawable/main_progressbar" />-->
 
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:progress="50"
-            android:progressDrawable="@drawable/main_progressbar" />
-        <!--      <ImageView-->
-        <!--        android:id="@+id/image_small_org"-->
-        <!--        android:layout_width="280dp"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:src="@drawable/small_org" />-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:background="@drawable/main_oringe_list"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal">-->
 
-        <!--    </RelativeLayout>-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/main_oringe_list"
-            android:gravity="center"
-            android:orientation="horizontal">
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="오늘은 달성하지 못했어요"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="15sp" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="오늘은 달성하지 못했어요"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
-            <ImageView
-                android:id="@+id/image_sad_org"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/sad_org" />
+<!--            <ImageView-->
+<!--                android:id="@+id/image_sad_org"-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="20dp"-->
+<!--                android:src="@drawable/sad_org" />-->
         </LinearLayout>
 
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.ssafy.oringe.ui.component.common.MenuView
         android:id="@+id/btn_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:backgroundTint="#FF6B00"
-        app:borderWidth="0dp"
-        app:srcCompat="@drawable/main_menu" />
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        app:src="@drawable/main_menu" />
 
 </LinearLayout>
 
