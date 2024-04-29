@@ -11,6 +11,8 @@ services:
       - TZ=Asia/Seoul
     networks:
       - devway_network
+    depends_on:
+      - mongo
 
   nginx:
     build:
@@ -51,9 +53,12 @@ services:
     volumes:
       - mongo_data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_ROOT_DATABASE}
+#      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+#      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+#      MONGO_INITDB_DATABASE: ${MONGO_INITDB_ROOT_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: devway201
+      MONGO_INITDB_DATABASE: oringe
       TZ: Asia/Seoul
     restart: unless-stopped
     networks:
