@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Data
-@ConfigurationProperties(prefix = "chatgpt")
+//@ConfigurationProperties(prefix = "chatgpt")
 public class ChatgptProperties {
 
   private String apiKey;
 
   private String url = "https://api.openai.com/v1/chat/completions";
 
-  private String model = "gpt-4-vision-preview";
+  private String model = "gpt-4";
 
   private Integer maxTokens = 500;
 
