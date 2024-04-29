@@ -6,6 +6,7 @@ import static com.ssafy.devway.text.CheckerMode.ALLOWED_ENGLISH_LOWERCASE;
 import static com.ssafy.devway.text.CheckerMode.ALLOWED_ENGLISH_UPPERCASE;
 import static com.ssafy.devway.text.CheckerMode.ALLOWED_KOREAN;
 
+import com.ssafy.devway.block.element.BlockElement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
