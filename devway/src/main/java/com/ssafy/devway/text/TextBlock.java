@@ -9,10 +9,13 @@ import static com.ssafy.devway.text.CheckerMode.ALLOWED_KOREAN;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TextBlock {
+public class TextBlock implements BlockElement {
 
   private String content;
 
+  public String getName() {
+    return "TEXT";
+  }
   public String getContent() {
     return content;
   }
