@@ -9,7 +9,7 @@ spring:
       username: ${MONGO_INITDB_ROOT_USERNAME}
       password: ${MONGO_INITDB_ROOT_PASSWORD}
       database: ${MONGO_INITDB_ROOT_DATABASE}
-      
+
   forward-headers-strategy: framework
 
 #spring:
