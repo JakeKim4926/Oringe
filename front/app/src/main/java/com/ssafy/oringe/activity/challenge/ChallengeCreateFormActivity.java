@@ -38,7 +38,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChallengeCreateFormActivity extends AppCompatActivity {
     private static final String API_URL = "http://10.0.2.2:8050/api/";
-    private ChallengeService challengeService;
 
     private Button cancel;
     private Button create;
