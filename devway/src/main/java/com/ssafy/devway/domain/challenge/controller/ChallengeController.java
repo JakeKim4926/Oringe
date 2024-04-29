@@ -39,8 +39,8 @@ public class ChallengeController {
 
     @GetMapping("/{memberId}")
     @Operation(summary = "챌린지 목록 조회")
-    public ResponseEntity<List<Challenge>> getChallengeList(@PathVariable Long memberId) {
-        return ResponseEntity.ok(challengeService.selectChallengeList(memberId));
+    public ResponseEntity<List<Challenge>> getChallengeList(@PathVariable Long memberId, @RequestParam int status) {
+        return ResponseEntity.ok(challengeService.selectChallengeList(memberId, status));
     }
 
     @GetMapping("/today")
