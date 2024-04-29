@@ -49,7 +49,7 @@ public class TextBlock {
     return matcher.matches();
   }
 
-  public boolean isOnlyUppercaseEnglish( ) {
+  public boolean isOnlyUppercaseEnglish() {
     Pattern pattern = Pattern.compile("^[A-Z]+$");
     Matcher matcher = pattern.matcher(content);
     return matcher.matches();
@@ -61,7 +61,7 @@ public class TextBlock {
     return matcher.matches();
   }
 
-  public boolean isOnlyKorean( ) {
+  public boolean isOnlyKorean() {
     Pattern pattern = Pattern.compile("^[가-힣]+$");
     Matcher matcher = pattern.matcher(content);
     return matcher.matches();

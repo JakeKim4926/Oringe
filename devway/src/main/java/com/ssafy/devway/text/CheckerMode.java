@@ -13,7 +13,7 @@ public enum CheckerMode {
   ALLOWED_BLANK(6),
   ALLOWED_SPECIAL_CHARACTER(7),
   DENIED_SPECIAL_CHARACTER(8),
-  DENIED_CHARACTER(9),
+  DENIED_CHARACTER(9);
 
 
   private final int textMode;
