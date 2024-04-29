@@ -3,17 +3,23 @@ package com.ssafy.oringe.activity.common;
 import android.content.Intent;
 import android.graphics.Typeface;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -29,8 +35,11 @@ import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
 import com.ssafy.oringe.ui.component.common.MenuView;
+import com.ssafy.oringe.ui.component.common.TitleView;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -47,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private Button btn_record;
 
+    private TextView titleView;
+    private TextView progressView;
+    private ProgressBar progressBarView;
+    private TextView successView;
+    private List<Challenge> challengeList;
+
+    private ViewGroup challengeListContainer; // 동적 뷰를 추가할 컨테이너
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         String email = user.getEmail();
         getMemberId(email);
         EdgeToEdge.enable(this);
+
+        challengeListContainer = findViewById(R.id.main_list);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -84,12 +104,12 @@ public class MainActivity extends AppCompatActivity {
                     Long loginId = memberResponse.getMemberId();
                     String loginNickName = memberResponse.getMemberNickName();
 
-                    // 챌린지 목록 가져오기
-                    getTodayChallengeList(loginId);
 
                     runOnUiThread(() -> {
                         TextView mainHi = findViewById(R.id.text_nickname_hi);
                         mainHi.setText(loginNickName + "님 \n 오늘도 오린지 하세요!");
+                        // 챌린지 목록 가져오기
+                        getTodayChallengeList(loginId);
                     });
                 } else {
                     Log.e("API_CALL", "Response Error : " + response.code());
@@ -103,62 +123,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getTodayChallengeList(Long memberId) {
+    public void getTodayChallengeList(Long memberId) {
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
         Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getTodayChallengeList(memberId);
         call.enqueue(new Callback<List<Challenge>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<List<Challenge>> call, Response<List<Challenge>> response) {
                 if (response.isSuccessful()) {
-                    List<Challenge> challenges = response.body();
-                    int challengeCount = challenges != null ? challenges.size() : 0;
-
-                    LinearLayout mainLayout = findViewById(R.id.main_list); // 메인 레이아웃 참조
-
-                    for (Challenge challenge : challenges) {
-                        // 챌린지용 LinearLayout 생성
-                        LinearLayout challengeLayout = new LinearLayout(MainActivity.this);
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        challengeLayout.setLayoutParams(layoutParams);
-                        challengeLayout.setOrientation(LinearLayout.VERTICAL);
-                        challengeLayout.setGravity(Gravity.CENTER);
-                        challengeLayout.setPadding(20, 20, 20, 20);
-                        challengeLayout.setBackgroundResource(R.drawable.main_oringe_list);
-
-                        // 챌린지 이름 및 달성률 TextView 추가
-                        TextView challengeName = new TextView(MainActivity.this);
-                        challengeName.setLayoutParams(new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        challengeName.setGravity(Gravity.CENTER);
-                        challengeName.setText(challenge.getChallengeTitle());
-                        challengeName.setTextColor(getResources().getColor(R.color.black));
-                        challengeName.setTextSize(15);
-
-                        TextView challengePercent = new TextView(MainActivity.this);
-                        challengePercent.setLayoutParams(new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        challengePercent.setGravity(Gravity.CENTER);
-                        challengePercent.setText("% 달성");
-                        challengePercent.setTextColor(getResources().getColor(R.color.black));
-                        challengePercent.setTextSize(15);
-
-                        // 프로그래스바 추가
-                        ProgressBar progressBar = new ProgressBar(MainActivity.this, null, android.R.attr.progressBarStyleHorizontal);
-                        LinearLayout.LayoutParams progressBarParams = new LinearLayout.LayoutParams(
-                            1000, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        progressBarParams.setMargins(0, 20, 0, 0);
-                        progressBar.setLayoutParams(progressBarParams);
-                        progressBar.setProgress(50);
-                        progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.main_progressbar));
-
-                        // LinearLayout에 챌린지 이름, 달성률, 프로그래스바 추가
-                        challengeLayout.addView(challengeName);
-                        challengeLayout.addView(challengePercent);
-                        challengeLayout.addView(progressBar);
-
-                        // 메인 레이아웃에 챌린지 레이아웃 추가
-                        mainLayout.addView(challengeLayout);
-                    }
+                    challengeList = response.body();
+                    int challengeCount = challengeList != null ? challengeList.size() : 0;
 
                     runOnUiThread(() -> {
                         TextView dateTextView = findViewById(R.id.text_today_oringe);
@@ -167,17 +145,55 @@ public class MainActivity extends AppCompatActivity {
                         dateTextView.setText(currentDate + " \n" + challengeCount + "개의 오린지가 남았어요");
                         dateTextView.setTextSize(15);
                         dateTextView.setTypeface(null, Typeface.BOLD);
+                        setData(challengeList);
                     });
                 } else {
-                    Log.e("API_CALL", "Response Error : " + response.code());
+                    runOnUiThread(() -> {
+                        Toast.makeText(MainActivity.this, "챌린지 조회 실패", Toast.LENGTH_SHORT).show();
+                        Log.d("HTTP Status Code", String.valueOf(response.code()));
+                    });
                 }
             }
 
             @Override
             public void onFailure(Call<List<Challenge>> call, Throwable t) {
-                Log.e("API_CALL", "Failed to get challenges", t);
+                t.printStackTrace();
             }
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setData(List<Challenge> challengeList) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        challengeListContainer.removeAllViews();
+        for (Challenge challenge : challengeList) {
+            // 각 challenge 객체에 대한 뷰를 동적으로 만들자!
+            View challengeView = inflater.inflate(R.layout.sample_main_list_view, challengeListContainer, false);
+
+            titleView = challengeView.findViewById(R.id.main_list_title);
+            progressView = challengeView.findViewById(R.id.main_list_progress);
+            progressBarView = challengeView.findViewById(R.id.main_list_progressbar);
+            successView = challengeView.findViewById(R.id.main_list_success);
+
+            LocalDate startDate = LocalDate.parse(challenge.getChallengeStart());
+            LocalDate endDate = LocalDate.parse(challenge.getChallengeEnd());
+            LocalDate today = LocalDate.now();
+
+            // 시작 날짜와 오늘 날짜 사이의 차이를 계산합니다.
+            long totaldate = ChronoUnit.DAYS.between(startDate, endDate);
+            long nowdate = ChronoUnit.DAYS.between(startDate, today);
+
+            titleView.setText(challenge.getChallengeTitle());
+            if(nowdate == 0){
+                progressView.setText("0"+ "% 진행중");
+                progressBarView.setProgress(0);
+            }else{
+                progressView.setText((int) ((double) nowdate / totaldate * 100) + "% 진행중");
+                progressBarView.setProgress((int) ((double) nowdate / totaldate * 100));
+            }
+
+            challengeListContainer.addView(challengeView);
+
+        }
+    }
 }
