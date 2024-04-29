@@ -1,12 +1,18 @@
 package com.ssafy.oringe.activity.challenge;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -29,12 +35,16 @@ import com.ssafy.oringe.ui.component.challenge.InputView;
 import com.ssafy.oringe.ui.component.common.CalendarView;
 import com.ssafy.oringe.ui.component.common.TitleView;
 
+import org.w3c.dom.Text;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
@@ -46,18 +56,24 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChallengeCreateFormActivity extends AppCompatActivity {
+    private String API_URL;
     /* member */
-    private static final String LOGIN_API_URL = "http://10.0.2.2:8050/api/";
     private FirebaseAuth auth;
     private Long memberId;
 
-    /* challenge */
-    private static final String API_URL = "http://10.0.2.2:8050/api/";
-
-    private Button cancel;
     private Button create;
+    private Button cancel;
+    private Switch toggle;
 
+    /* challenge */
     private boolean[] clicked;
+    private boolean isAlarm;
+    private String formattedTime;
+    private String title;
+    private String start;
+    private String end;
+    private List<Integer> cycle;
+    private List<Integer> templates;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -66,6 +82,7 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_challenge_create_form);
+        API_URL = getString(R.string.APIURL);
 
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -73,6 +90,55 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
         getMemberId(email);
 
         chooseCycle();
+
+        // 알람 토글
+        toggle = findViewById(R.id.challengeCreate_alarm);
+        TextView textView = findViewById(R.id.time_alarm);
+        Calendar myCalendar = Calendar.getInstance();
+
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                System.out.println(isChecked);
+                if(isChecked){
+                    textView.setVisibility(View.VISIBLE);
+                    View.OnClickListener timeClickListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            TimePickerDialog timePickerDialog = new TimePickerDialog(ChallengeCreateFormActivity.this,
+                                android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                    formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
+                                    textView.setText(formattedTime);
+                                }
+                            }, myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), true);
+
+                            timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            timePickerDialog.show();
+                        }
+                    };
+                    isAlarm = isChecked;
+                    textView.setOnClickListener(timeClickListener);
+                }else{
+                    textView.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "알람이 꺼졌습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // 생성
+        create = findViewById(R.id.create);
+        cycle = new ArrayList<>();
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 1; i < 8; i++) {
+                    if (clicked[i]) cycle.add(i);
+                }
+                createChallenge(cycle, formattedTime);
+            }
+        });
 
         // 취소
         cancel = findViewById(R.id.cancel);
@@ -85,19 +151,6 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
             }
         });
 
-        // 생성
-        create = findViewById(R.id.create);
-        List<Integer> cycle = new ArrayList<>();
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = 1; i < 8; i++) {
-                    if (clicked[i]) cycle.add(i);
-                }
-                createChallenge(cycle);
-            }
-        });
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.challenge_create_form), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -107,7 +160,7 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
 
     private void getMemberId(String memberEmail) {
         Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(LOGIN_API_URL)
+            .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
         Call<Member> call = retrofit.create(MemberService.class).getMemberByEmail(memberEmail);
@@ -156,8 +209,10 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
                 else if (day.equals("일")) i = 7;
 
                 clicked[i] = !clicked[i];
-                if (clicked[i]) dayView.setBackgroundColor(ContextCompat.getColor(ChallengeCreateFormActivity.this, R.color.oringe_sub));
-                else dayView.setBackgroundColor(ContextCompat.getColor(ChallengeCreateFormActivity.this, R.color.transparent));
+                if (clicked[i])
+                    dayView.setBackgroundColor(ContextCompat.getColor(ChallengeCreateFormActivity.this, R.color.oringe_sub));
+                else
+                    dayView.setBackgroundColor(ContextCompat.getColor(ChallengeCreateFormActivity.this, R.color.transparent));
             }
         };
         monView.setOnClickListener(clickListener);
@@ -169,23 +224,47 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
         sunView.setOnClickListener(clickListener);
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void createChallenge(List<Integer> cycle) {
+    public void createChallenge(List<Integer> cycle, String formattedTime) {
         View view = findViewById(R.id.challenge_create_form);
 
         InputView titleEdit = view.findViewById(R.id.input_title);
         CalendarView startEdit = view.findViewById(R.id.input_start_date);
         CalendarView endEdit = view.findViewById(R.id.input_end_date);
 
-        String title = titleEdit.getEditText();
-        String start = startEdit.getEditText();
-        String end = endEdit.getEditText();
+        title = titleEdit.getEditText();
+        start = startEdit.getEditText();
+        end = endEdit.getEditText();
         System.out.println(title);
         System.out.println(start);
         System.out.println(end);
 
+
+//        if (title==null) {
+//            Toast.makeText(getApplicationContext(), "제목을 채워주세요.", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (start==null) {
+//            Toast.makeText(getApplicationContext(), "시작일을 골라주세요.", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (end==null) {
+//            Toast.makeText(getApplicationContext(), "종료일을 골라주세요.", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (cycle.isEmpty()) {
+//            Toast.makeText(getApplicationContext(), "요일을 선택해주세요.", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (templates.isEmpty()) {
+//            Toast.makeText(getApplicationContext(), "요일을 선택해주세요.", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
+        LocalTime alarmTime = LocalTime.parse(formattedTime);
 
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
@@ -209,8 +288,8 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
             .challengeStart(startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
             .challengeEnd(endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
             .challengeCycle(cycle)
-            .challengeAlarm(false)
-            .challengeAlarmTime(LocalTime.MIDNIGHT.format(DateTimeFormatter.ofPattern("HH:mm")))
+            .challengeAlarm(isAlarm)
+            .challengeAlarmTime(alarmTime.format(DateTimeFormatter.ofPattern("HH:mm")))
             .challengeMemo("")
             .challengeAppName("")
             .challengeAppTime(LocalTime.MIDNIGHT.format(DateTimeFormatter.ofPattern("HH:mm")))

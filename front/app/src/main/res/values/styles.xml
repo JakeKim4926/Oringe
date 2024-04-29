@@ -10,11 +10,6 @@
         <item name="android:scaleType">fitXY</item>
     </style>
 
-    <style name="Widget.Theme.Oringe.MyView" parent="">
-        <item name="android:background">@color/gray_400</item>
-        <item name="exampleColor">@color/light_blue_400</item>
-    </style>
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!--custom font-family 적용-->
         <item name="android:textViewStyle">@style/customTextViewFontStyle</item>

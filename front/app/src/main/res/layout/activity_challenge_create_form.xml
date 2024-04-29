@@ -199,8 +199,18 @@
                 app:textSize="4sp" />
 
             <Switch
+                android:id="@+id/challengeCreate_alarm"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:checked="false"/>
+
+            <TextView
+                android:id="@id/time_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간설정"
+                android:textSize="10sp"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <!--메모-->

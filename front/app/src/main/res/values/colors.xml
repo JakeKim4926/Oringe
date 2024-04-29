@@ -7,9 +7,12 @@
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
     <color name="oringe_main">#FF6B00</color>
+    <color name="semi_oringe">#FFAC70</color>
+    <color name="mid_oringe">#FFE6D5</color>
     <color name="light_oringe">#fff8f3</color>
     <color name="oringe_text">#FF9344</color>
     <color name="oringe_sub">#5FCBC2</color>
+    <color name="pink">#FFB5B5</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="light_blue_900">#FF01579B</color>
     <color name="light_blue_A200">#FF40C4FF</color>
