@@ -23,8 +23,20 @@
             android:exported="false"
             android:name=".activity.login.SigninActivity" />
         <activity
-            android:exported="true"
+            android:exported="false"
             android:name=".activity.common.SplashActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".activity.common.MainActivity"
+            android:exported="false" />
+        <activity
+            android:exported="true"
+            android:name=".activity.challenge.ChallengeListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,11 +44,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.common.MainActivity"
+            android:name=".activity.challenge.ChallengeCreateFormActivity"
             android:exported="false" />
-        <activity
-            android:exported="false"
-            android:name=".activity.challenge.ChallengeListActivity" />
     </application>
 
 </manifest>

@@ -1,68 +1,73 @@
 package com.ssafy.oringe.activity.challenge;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.ssafy.oringe.R;
-import com.ssafy.oringe.activity.common.MainActivity;
+import com.ssafy.oringe.api.challenge.Challenge;
+import com.ssafy.oringe.api.challenge.ChallengeService;
+import com.ssafy.oringe.ui.component.challenge.InputView;
+import com.ssafy.oringe.ui.component.common.CalendarView;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
+import lombok.RequiredArgsConstructor;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChallengeCreateFormActivity extends AppCompatActivity {
-    private static final String API_URL = "https://k10b201.p.ssafy.io/oringe/api/challenge";
+    private static final String API_URL = "http://10.0.2.2:8050/api/";
+    private ChallengeService challengeService;
 
     private Button cancel;
     private Button create;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_challenge_create_form);
 
+        // 취소
         cancel = findViewById(R.id.cancel);
-        create = findViewById(R.id.create);
-
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // AlertDialog를 생성하고 설정합니다.
-                new AlertDialog.Builder(ChallengeCreateFormActivity.this)
-                    .setTitle("취소 확인") // 제목 설정
-                    .setMessage("취소하시겠습니까?") // 메시지 설정
-                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(ChallengeCreateFormActivity.this, ChallengeListActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("취소", null)
-                    .show();
+                Toast.makeText(getApplicationContext(), "취소되었습니다!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ChallengeCreateFormActivity.this, ChallengeListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // 생성
+        create = findViewById(R.id.create);
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               createChallenge();
             }
         });
 
@@ -73,57 +78,86 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
         });
     }
 
-//    public void createChallenge() {
-//        create.setOnClickListener(new View.OnClickListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            @Override
-//            public void onClick(View v) {
-//                // 입력된 데이터 가져오기
-//                EditText titleEdit = findViewById(R.id.title);
-//                EditText startEdit = findViewById(R.id.start_date);
-//                EditText endEdit = findViewById(R.id.end_date);
-//
-//                String title = titleEdit.getText().toString();
-//                String start = startEdit.getText().toString();
-//                String end = endEdit.getText().toString();
-//                LocalDate startDate = LocalDate.parse(start);
-//                LocalDate endDate = LocalDate.parse(end);
-//
-//
-//                // 여기서 startDate와 endDate를 어떻게 가져올지 구현해야 합니다.
-//                // 예시: String startDate = "2022-01-01"; String endDate = "2022-12-31";
-//
-//                // Retrofit 인스턴스 생성
-//                Retrofit retrofit = new Retrofit.Builder()
-//                    .baseUrl(API_URL) // 실제 서버 URL로 변경해야 합니다.
-//                    .addConverterFactory(GsonConverterFactory.create())
-//                    .build();
-//
-//                // 서버로 보낼 객체 생성
-//                Challenge challenge = new Challenge(title, startDate, endDate);
-//
-//                // 서버 요청
-//                service.createChallenge(challenge).enqueue(new Callback<Void>() {
-//                    @Override
-//                    public void onResponse(Call<Void> call, Response<Void> response) {
-//                        if (response.isSuccessful()) {
-//                            // 요청 성공 처리
-//                            Toast.makeText(ChallengeCreateFormActivity.this, "도전과제 생성 성공", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            // 서버 에러 처리
-//                            Toast.makeText(ChallengeCreateFormActivity.this, "서버 에러", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<Void> call, Throwable t) {
-//                        // 네트워크 에러 처리
-//                        Toast.makeText(ChallengeCreateFormActivity.this, "네트워크 에러", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        });
-//    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void createChallenge() {
+        View view = findViewById(R.id.challenge_create_form);
 
+        InputView titleEdit = view.findViewById(R.id.input_title);
+        CalendarView startEdit = view.findViewById(R.id.input_start_date);
+        CalendarView endEdit = view.findViewById(R.id.input_end_date);
+
+        String title = titleEdit.getEditText();
+        String start = startEdit.getEditText();
+        String end = endEdit.getEditText();
+        System.out.println(title);
+        System.out.println(start);
+        System.out.println(end);
+
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(0);
+        list.add(0);
+        list.add(0);
+        list.add(0);
+        list.add(0);
+        list.add(0);
+        list.add(0);
+        list.add(0);
+        list.add(2);
+        list.add(0);
+
+        Challenge challenge = Challenge.builder()
+            .challengeTitle(title)
+            .challengeStart(startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+            .challengeEnd(endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+            .challengeCycle(list)
+            .challengeAlarm(false)
+            .challengeAlarmTime(LocalTime.MIDNIGHT.format(DateTimeFormatter.ofPattern("HH:mm")))
+            .challengeMemo("")
+            .challengeAppName("")
+            .challengeAppTime(LocalTime.MIDNIGHT.format(DateTimeFormatter.ofPattern("HH:mm")))
+            .challengeCallName("")
+            .challengeCallNumber("")
+            .challengeWakeupTime(LocalTime.MIDNIGHT.format(DateTimeFormatter.ofPattern("HH:mm")))
+            .challengeWalk(0)
+            .order(list)
+            .build();
+
+        System.out.println(challenge);
+        long id = Long.parseLong("11");
+        Call<ResponseBody> call = retrofit.create(ChallengeService.class).sendData(challenge);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                System.out.println(response.code());
+                if (response.isSuccessful()) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(ChallengeCreateFormActivity.this, "챌린지 생성!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(ChallengeCreateFormActivity.this, ChallengeListActivity.class));
+                        Log.d("HTTP Status Code", String.valueOf(response.code()));
+                        finish();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(ChallengeCreateFormActivity.this, "챌린지 생성 실패", Toast.LENGTH_SHORT).show();
+                        Log.d("HTTP Status Code", String.valueOf(response.code()));
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+    }
 
 }
