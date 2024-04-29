@@ -1,7 +1,5 @@
 package com.ssafy.oringe.api.challenge;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
