@@ -9,6 +9,10 @@ services:
       - "8050:8050"
     environment:
       - TZ=Asia/Seoul
+    networks:
+      - devway_network
+    depends_on:
+      - mongo
 
   nginx:
     build:
@@ -26,6 +30,8 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Asia/Seoul
+    networks:
+      - devway_network
 
   certbot:
     image: certbot/certbot
@@ -36,6 +42,8 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     depends_on:
       - nginx
+    networks:
+      - devway_network
 
   mongo:
     image: mongo:latest
@@ -45,11 +53,16 @@ services:
     volumes:
       - mongo_data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_ROOT_DATABASE}
+#      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+#      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+#      MONGO_INITDB_DATABASE: ${MONGO_INITDB_ROOT_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: devway201
+      MONGO_INITDB_DATABASE: oringe
       TZ: Asia/Seoul
     restart: unless-stopped
+    networks:
+      - devway_network
 
   jenkins:
     image: jenkins/jenkins:lts
@@ -64,6 +77,12 @@ services:
     user: root
     environment:
       - TZ=Asia/Seoul
+    networks:
+      - devway_network
 
 volumes:
   mongo_data:
+
+networks:
+  devway_network:
+    external: true

@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="InputView">
+        <attr name="input_text" format="string" />
+        <attr name="singleLine" format="boolean" />
+    </declare-styleable>
+</resources>
