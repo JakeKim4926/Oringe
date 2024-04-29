@@ -18,13 +18,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.ssafy.oringe.R;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
+import com.ssafy.oringe.api.member.Member;
+import com.ssafy.oringe.api.member.MemberService;
 import com.ssafy.oringe.ui.component.common.TitleView;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,6 +39,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChallengeListActivity extends AppCompatActivity {
+    /* member */
+    private static final String LOGIN_API_URL = "http://10.0.2.2:8050/api/";
+    private FirebaseAuth auth;
+    private Long memberId;
+    private String memberNickname;
+
+    /* challenge */
     private static final String API_URL = "http://10.0.2.2:8050/api/";
     private TextView titleView;
     private ImageView alarmView;
@@ -46,6 +58,7 @@ public class ChallengeListActivity extends AppCompatActivity {
     private TitleView didView;
     private TitleView doView;
     private TitleView willView;
+    private int currentStatus;
 
 
     @Override
@@ -54,12 +67,18 @@ public class ChallengeListActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_challenge_list);
 
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        String email = user.getEmail();
+        getMemberId(email);
+        currentStatus = 2;
+
         willView = findViewById(R.id.challengeList_will);
         doView = findViewById(R.id.challengeList_ing);
         didView = findViewById(R.id.challengeList_did);
 
         challengeListContainer = findViewById(R.id.challengeList); // XML에서 레이아웃을 찾음
-        getChallengeList(2);
+
         View.OnClickListener tabListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,11 +90,10 @@ public class ChallengeListActivity extends AppCompatActivity {
                 // 클릭된 뷰의 색상 변경
                 ((TitleView) v).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.oringe_sub));
 
-                int status = -1;
-                if (v == willView) status = 1;
-                else if (v == doView) status = 2;
-                else if (v == didView) status = 3;
-                getChallengeList(status);
+                if (v == willView) currentStatus = 1;
+                else if (v == doView) currentStatus = 2;
+                else if (v == didView) currentStatus = 3;
+                getChallengeList(currentStatus);
             }
         };
 
@@ -91,14 +109,52 @@ public class ChallengeListActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (memberId != null) {
+            getChallengeList(currentStatus);
+        }
+    }
+
+    private void getMemberId(String memberEmail) {
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(LOGIN_API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+        Call<Member> call = retrofit.create(MemberService.class).getMemberByEmail(memberEmail);
+        call.enqueue(new Callback<Member>() {
+            @Override
+            public void onResponse(Call<Member> call, Response<Member> response) {
+                if (response.isSuccessful()) {
+                    Member memberResponse = response.body();
+                    memberId = memberResponse.getMemberId();
+                    memberNickname = memberResponse.getMemberNickName();
+
+                    runOnUiThread(() -> {
+                        TitleView whoView = findViewById(R.id.challengeList_who);
+                        whoView.setText(memberNickname + "님의 챌린지");
+                        getChallengeList(2);
+                    });
+                } else {
+                    Log.e("API_CALL", "Response Error : " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Member> call, Throwable t) {
+                Log.e("API_CALL", "Failed to get member details", t);
+            }
+        });
+    }
+
     public void getChallengeList(int status) {
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-        long id = Long.parseLong("11");
-        Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(Long.parseLong("11"), status);
+        Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(memberId, status);
         call.enqueue(new Callback<List<Challenge>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -148,10 +204,23 @@ public class ChallengeListActivity extends AppCompatActivity {
             // 시작 날짜와 오늘 날짜 사이의 차이를 계산합니다.
             long daysBetween = ChronoUnit.DAYS.between(startDate, today);
 
+            List<Integer> cycle = challenge.getChallengeCycle();
+            List<String> days = new ArrayList<>();
+            String str = "";
+            for (int day : cycle) {
+                if (day == 1) str += "월 ";
+                else if (day == 2) str += "화 ";
+                else if (day == 3) str += "수 ";
+                else if (day == 4) str += "목 ";
+                else if (day == 5) str += "금 ";
+                else if (day == 6) str += "토 ";
+                else if (day == 7) str += "일 ";
+            }
+
             titleView.setText(challenge.getChallengeTitle());
             alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE); // 알람이 true일 때만 보이도록
             dDayView.setText("D-" + daysBetween);
-            cycleView.setText("매일");
+            cycleView.setText(str);
             dateRangeView.setText(challenge.getChallengeStart() + " ~ " + challenge.getChallengeEnd());
 
             challengeListContainer.addView(challengeView);
