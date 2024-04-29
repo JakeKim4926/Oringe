@@ -27,8 +27,8 @@ public class MemberController {
     }
 
     @GetMapping("/signin")
-    public ResponseEntity<Member> signin(String email){
-        return ResponseEntity.ok(memberService.signin(email));
+    public ResponseEntity<Member> signin(String memberEmail){
+        return ResponseEntity.ok(memberService.signin(memberEmail));
     }
 
     @GetMapping("/valid")
