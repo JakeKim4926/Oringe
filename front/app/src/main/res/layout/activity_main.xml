@@ -38,6 +38,7 @@
             android:src="@drawable/bubble" />
 
         <TextView
+            android:id="@+id/text_nickname_hi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@id/image_bubble"
@@ -45,7 +46,6 @@
             android:layout_marginStart="60dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="성주님 \n 오늘도 오린지 하세요!"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
