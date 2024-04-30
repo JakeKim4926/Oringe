@@ -12,6 +12,5 @@ public class DevwayApplication {
   public static void main(String[] args) {
 
     TextBlock topic1 = new TextBlock();
-    topic1.isOnlyLowercaseEnglish();
     SpringApplication.run(DevwayApplication.class, args);}
 }
