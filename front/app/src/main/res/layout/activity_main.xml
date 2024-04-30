@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -10,111 +10,121 @@
     android:orientation="vertical"
     tools:context=".activity.common.MainActivity">
 
-    <ImageView
-        android:id="@+id/image_logo_org"
-        android:layout_width="wrap_content"
-        android:layout_height="?attr/actionBarSize"
-        android:src="@drawable/logo_org" />
-
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:gravity="center_horizontal">
-
-        <ImageView
-            android:id="@+id/image_main_org"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/main_org" />
-
-        <ImageView
-            android:id="@+id/image_bubble"
-            android:layout_width="280dp"
-            android:layout_height="100dp"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/image_main_org"
-            android:src="@drawable/bubble" />
-
-        <TextView
-            android:id="@+id/text_nickname_hi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@id/image_bubble"
-            android:layout_alignTop="@id/image_bubble"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:lineSpacingExtra="10dp"
-            android:fontFamily="@font/jamsil"/>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/text_today_oringe"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:background="@drawable/main_today_radius"
-            android:lineSpacingExtra="10dp"
-            android:padding="20dp"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-
-        <Button
-            android:id="@+id/btn_record"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:background="@drawable/record_btn"
-            android:text="오린지 인증하기 ✏"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"/>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="30dp"
-        android:text="오늘의 챌린지"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:layout_gravity="left"
-        android:textStyle="bold"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/main_list"
+            android:id="@+id/challengeList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/image_logo_org"
+                android:layout_width="wrap_content"
+                android:layout_height="?attr/actionBarSize"
+                android:src="@drawable/logo_org" />
 
-    </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/image_main_org"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/main_org"/>
+
+                <ImageView
+                    android:id="@+id/image_bubble"
+                    android:layout_width="280dp"
+                    android:layout_height="100dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/image_main_org"
+                    android:src="@drawable/bubble" />
+
+                <TextView
+                    android:id="@+id/text_nickname_hi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@id/image_bubble"
+                    android:layout_alignTop="@id/image_bubble"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/jamsil"
+                    android:gravity="center"
+                    android:lineSpacingExtra="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/text_today_oringe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:background="@drawable/main_today_radius"
+                    android:lineSpacingExtra="10dp"
+                    android:padding="20dp"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btn_record"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:background="@drawable/record_btn"
+                    android:text="오린지 인증하기 ✏"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:text="오늘의 챌린지"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:id="@+id/main_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
     <com.ssafy.oringe.ui.component.common.MenuView
         android:id="@+id/btn_list"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_gravity="bottom|end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         app:src="@drawable/main_menu" />
-
-</LinearLayout>
+</RelativeLayout>
 

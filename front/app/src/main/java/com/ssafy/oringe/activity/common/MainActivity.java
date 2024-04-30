@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         TextView dateTextView = findViewById(R.id.text_today_oringe);
                         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
                         String currentDate = dateFormat.format(new Date());
-                        dateTextView.setText(currentDate + " \n" + challengeCount + "개의 오린지가 남았어요");
+                        dateTextView.setText(currentDate + " \n" + challengeCount + "개의 오린지가 있어요");
                         dateTextView.setTextSize(15);
                         dateTextView.setTypeface(null, Typeface.BOLD);
                         setData(challengeList);
