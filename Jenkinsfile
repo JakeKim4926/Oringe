@@ -21,6 +21,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+					sh 'docker-compose -f /home/ubuntu/oringe/devway/docker-compose.yml build --no-cache nginx '
                     sh 'docker-compose -f /home/ubuntu/oringe/devway/docker-compose.yml up -d nginx '
                     sh 'docker-compose -f /home/ubuntu/oringe/devway/docker-compose.yml up -d certbot'
                 }
