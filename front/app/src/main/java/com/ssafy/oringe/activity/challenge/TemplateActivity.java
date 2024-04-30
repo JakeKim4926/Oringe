@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -167,45 +169,75 @@ public class TemplateActivity extends AppCompatActivity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (digitalChallenge) {
-                    // 모달 띄우기
-                    AlertDialog.Builder dlg = new AlertDialog.Builder(TemplateActivity.this);
-                    dlg.setTitle("제한할 앱과\n제한시간을 입력하세요");
-
-                    dlg.show();
-                } else if (callChallenge) {
-                    // 모달 띄우기
-                    AlertDialog.Builder dlg = new AlertDialog.Builder(TemplateActivity.this);
-                    dlg.setTitle("통화 대상과\n번호를 입력하세요");
-
-                    dlg.show();
-                } else if (wakeupChallenge) {
-                    // 모달 띄우기
-                    AlertDialog.Builder dlg = new AlertDialog.Builder(TemplateActivity.this);
-                    dlg.setTitle("목표 시간을 입력하세요");
-
-                    dlg.show();
-                } else if (walkChallenge) {
-                    // 모달 띄우기
-                    AlertDialog.Builder dlg = new AlertDialog.Builder(TemplateActivity.this);
-                    dlg.setTitle("목표 걸음 수를 입력하세요");
-
-                    dlg.show();
-                }
+                // 다음 액티비티로 데이터를 담아 이동하기 위함
                 Intent intent = new Intent(TemplateActivity.this, ChallengeCreateFormActivity.class);
-
-                // Bundle을 사용하여 Map을 Intent에 추가
                 Bundle extras = new Bundle();
-                extras.putSerializable("orderMap", (Serializable) setOrder());
-                intent.putExtras(extras);
 
-                // Activity 시작
-                startActivity(intent);
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.sample_modal_view, null);
+                LinearLayout container = dialogView.findViewById(R.id.modal);
+                EditText inputEditText = dialogView.findViewById(R.id.modal_input);
+
+                AlertDialog.Builder dlg = new AlertDialog.Builder(TemplateActivity.this);
+                dlg.setView(dialogView);
+
+                if (digitalChallenge) {
+                    dlg.setTitle("디지털 디톡스");
+                    addEditText(container, "제한할 앱 이름을 입력하세요.");
+                    addEditText(container, "제한 시간을 입력하세요.");
+                } else if (callChallenge) {
+                    dlg.setTitle("소중한 사람과 통화하기");
+                    addEditText(container, "통화 대상 이름을 입력하세요.");
+                    addEditText(container, "통화 대상 전화번호를 입력하세요.");
+                } else if (wakeupChallenge) {
+                    dlg.setTitle("기상");
+                    addEditText(container, "기상 시간을 입력하세요.");
+                } else if (walkChallenge) {
+                    dlg.setTitle("걷기");
+                    addEditText(container, "목표 걸음 수를 입력하세요.");
+                }
+
+                dlg.setPositiveButton("완료", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < container.getChildCount(); i++) {
+                            View view = container.getChildAt(i);
+                            if (view instanceof EditText) {
+                                EditText editText = (EditText) view;
+                                String input = editText.getText().toString();
+                                // 여기서 input을 처리
+                            }
+                        }
+
+                        String userInput = inputEditText.getText().toString();
+
+                        // 여기서 userInput과 setOrder()에서 반환된 데이터를 다음 액티비티로 전달
+                        Intent intent = new Intent(TemplateActivity.this, ChallengeCreateFormActivity.class);
+                        Bundle extras = new Bundle();
+                        extras.putString("userInput", userInput);
+                        extras.putSerializable("orderMap", (Serializable) setOrder());
+                        intent.putExtras(extras);
+
+                        startActivity(intent); // Intent 실행은 모든 데이터가 준비된 후에 실행
+                    }
+                });
+                dlg.setNegativeButton("취소", null);
+                dlg.show();
+
             }
         });
 
 
     }
+
+    // 모달 관련
+    private void addEditText(LinearLayout container, String hint) {
+        EditText editText = new EditText(TemplateActivity.this);
+        editText.setHint(hint);
+        container.addView(editText);
+    }
+
+
 
     // 로그인 정보
     private void getMemberId(String memberEmail) {
