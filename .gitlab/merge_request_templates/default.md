@@ -1,6 +1,6 @@
-- 제목 : branch : 기능명
+- Title: branch: feature name
   ex) feat : login
-  **(확인 후 지우고 업로드 해주세요!)**
+  **(Please check, clear and upload!)**
 
   <br/>
 
@@ -14,10 +14,10 @@
 
   <br/>
 
-## 🔎 작업 내용
+## 🔎 What you're working on
 
-- 기능에서 어떤 부분이
+- Please describe if it's implemented
 
-- 구현되었는지 설명해주세요
+- What part of the feature is
 
   <br/>
