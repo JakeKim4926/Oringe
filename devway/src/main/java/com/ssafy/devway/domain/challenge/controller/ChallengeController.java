@@ -33,7 +33,6 @@ public class ChallengeController {
     @Operation(summary = "챌린지 생성")
     public ResponseEntity<Challenge> postChallenge(
         @RequestBody ChallengeCreateReqDto dto, @RequestParam Long memberId) {
-        System.out.println(dto);
         return ResponseEntity.ok(challengeService.insertChallenge(dto, memberId));
     }
 
