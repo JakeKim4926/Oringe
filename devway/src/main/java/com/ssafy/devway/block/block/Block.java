@@ -11,23 +11,23 @@ import lombok.ToString;
 @Data
 public class Block<T extends BlockElement> implements BlockCRUD {
 
-  T data;
-  List<Block<T>> list = new ArrayList<>();
+    T data;
+    List<Block<T>> list = new ArrayList<>();
 
 
-  @Override
-  public List<Block<T>> getList() {
-    return list;
-  }
+    @Override
+    public List<Block<T>> getList() {
+        return list;
+    }
 
-  @Override
-  public void addList(Block block) {
-    list.add(block);
-  }
+    @Override
+    public void addList(Block block) {
+        list.add(block);
+    }
 
-  @Override
-  public void deleteList() {
-    list.clear();
-  }
+    @Override
+    public void deleteList() {
+        list.clear();
+    }
 }
 

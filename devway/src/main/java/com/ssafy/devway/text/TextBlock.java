@@ -27,11 +27,7 @@ public class TextBlock implements BlockElement {
     this.content = content;
   }
 
-  public Boolean stringChecker(CheckerMode check_mode) {
-    if (check_mode == null) {
-      return false;  // 유효하지 않은 mode 값을 처리
-    }
-
+  public Boolean stringChecker(CheckerMode check_mode) { //블랙리스트
     switch (check_mode) {
       case ALLOWED_ALL:
         return true;
@@ -55,7 +51,7 @@ public class TextBlock implements BlockElement {
         return false;  // 예외 처리
     }
   }
-  public boolean isOnlyLowercaseEnglish() {
+  public Boolean isOnlyLowercaseEnglish() {
     return content.matches("^[a-z]+$");
   }
 
@@ -86,29 +82,5 @@ public class TextBlock implements BlockElement {
   public boolean containsNoCharacters() {
     return content.isEmpty();
   }
-
-//  public boolean isOnlyLowercaseEnglish() {
-//    Pattern pattern = Pattern.compile("^[a-z]+$");
-//    Matcher matcher = pattern.matcher(content);
-//    return matcher.matches();
-//  }
-//
-//  public boolean isOnlyUppercaseEnglish() {
-//    Pattern pattern = Pattern.compile("^[A-Z]+$");
-//    Matcher matcher = pattern.matcher(content);
-//    return matcher.matches();
-//  }
-//
-//  public boolean isOnlyEnglish() {
-//    Pattern pattern = Pattern.compile("^[a-zA-Z]+$");
-//    Matcher matcher = pattern.matcher(content);
-//    return matcher.matches();
-//  }
-//
-//  public boolean isOnlyKorean() {
-//    Pattern pattern = Pattern.compile("^[가-힣]+$");
-//    Matcher matcher = pattern.matcher(content);
-//    return matcher.matches();
-//  }
 
 }
