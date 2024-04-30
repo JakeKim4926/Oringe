@@ -9,7 +9,9 @@ import static com.ssafy.devway.text.CheckerMode.ALLOWED_KOREAN;
 import com.ssafy.devway.block.element.BlockElement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.ToString;
 
+@ToString
 public class TextBlock implements BlockElement {
 
   private String content;
@@ -25,13 +27,8 @@ public class TextBlock implements BlockElement {
     this.content = content;
   }
 
-  public Boolean stringChecker(int check_mode) {
-    CheckerMode mode = CheckerMode.fromInt(check_mode);
-    if (mode == null) {
-      return false;  // 유효하지 않은 mode 값을 처리
-    }
-
-    switch (mode) {
+  public Boolean stringChecker(CheckerMode check_mode) { //블랙리스트
+    switch (check_mode) {
       case ALLOWED_ALL:
         return true;
       case ALLOWED_ENGLISH_LOWERCASE:
@@ -42,33 +39,48 @@ public class TextBlock implements BlockElement {
         return isOnlyEnglish();
       case ALLOWED_KOREAN:
         return isOnlyKorean();
+      case ALLOWED_BLANK:
+        return isBlank();
+      case ALLOWED_SPECIAL_CHARACTER:
+        return containsSpecialCharacters();
+      case DENIED_SPECIAL_CHARACTER:
+        return doesNotContainSpecialCharacters();
+      case DENIED_CHARACTER:
+        return containsNoCharacters();
       default:
         return false;  // 예외 처리
     }
   }
-
-  public boolean isOnlyLowercaseEnglish() {
-    Pattern pattern = Pattern.compile("^[a-z]+$");
-    Matcher matcher = pattern.matcher(content);
-    return matcher.matches();
+  public Boolean isOnlyLowercaseEnglish() {
+    return content.matches("^[a-z]+$");
   }
 
   public boolean isOnlyUppercaseEnglish() {
-    Pattern pattern = Pattern.compile("^[A-Z]+$");
-    Matcher matcher = pattern.matcher(content);
-    return matcher.matches();
+    return content.matches("^[A-Z]+$");
   }
 
   public boolean isOnlyEnglish() {
-    Pattern pattern = Pattern.compile("^[a-zA-Z]+$");
-    Matcher matcher = pattern.matcher(content);
-    return matcher.matches();
+    return content.matches("^[a-zA-Z]+$");
   }
 
   public boolean isOnlyKorean() {
-    Pattern pattern = Pattern.compile("^[가-힣]+$");
-    Matcher matcher = pattern.matcher(content);
-    return matcher.matches();
+    return content.matches("^[가-힣]+$");
+  }
+
+  public boolean isBlank() {
+    return content.trim().isEmpty();
+  }
+
+  public boolean containsSpecialCharacters() {
+    return content.matches(".*[^a-zA-Z0-9\\s].*");
+  }
+
+  public boolean doesNotContainSpecialCharacters() {
+    return !containsSpecialCharacters();
+  }
+
+  public boolean containsNoCharacters() {
+    return content.isEmpty();
   }
 
 }
