@@ -199,8 +199,18 @@
                 app:textSize="4sp" />
 
             <Switch
+                android:id="@+id/challengeCreate_alarm"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:checked="false"/>
+
+            <TextView
+                android:id="@id/time_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간설정"
+                android:textSize="10sp"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <!--메모-->
@@ -241,6 +251,7 @@
                 android:orientation="horizontal">
 
                 <com.ssafy.oringe.ui.component.common.TitleView
+                    android:id="@+id/template_set"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:text="템플릿 설정"
@@ -253,6 +264,7 @@
                     android:layout_weight="1" />
 
                 <com.ssafy.oringe.ui.component.common.TitleView
+                    android:id="@+id/template_modify"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:text="수정"
@@ -267,7 +279,7 @@
                 android:orientation="horizontal">
 
                 <View
-                    android:id="@+id/templates"
+                    android:id="@+id/challenge_create_templates"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@color/gray_400" />

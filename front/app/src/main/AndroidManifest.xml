@@ -11,36 +11,52 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/logo_org"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@drawable/logo_org"
         android:supportsRtl="true"
         android:theme="@style/Theme.Oringe"
-        android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="31">
         <activity
-            android:exported="false"
-            android:name=".activity.login.SignupActivity" />
+            android:name=".activity.login.SignupActivity"
+            android:exported="false" />
         <activity
-            android:exported="false"
-            android:name=".activity.login.SigninActivity" />
+            android:name=".activity.login.SigninActivity"
+            android:exported="false" />
         <activity
-            android:exported="true"
-            android:name=".activity.common.SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:name=".activity.common.SplashActivity"
+            android:exported="false">
+            <!--             <intent-filter>-->
+            <!--             <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
+            <!--             <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--             </intent-filter>-->
         </activity>
         <activity
             android:name=".activity.common.MainActivity"
             android:exported="false" />
         <activity
-            android:exported="false"
-            android:name=".activity.challenge.ChallengeListActivity">
+            android:name=".activity.challenge.ChallengeListActivity"
+            android:exported="false">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".activity.challenge.ChallengeCreateFormActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.challenge.TemplateActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

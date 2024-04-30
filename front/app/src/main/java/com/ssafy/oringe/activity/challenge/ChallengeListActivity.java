@@ -39,14 +39,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChallengeListActivity extends AppCompatActivity {
+    private String API_URL;
     /* member */
-    private static final String LOGIN_API_URL = "http://10.0.2.2:8050/api/";
     private FirebaseAuth auth;
     private Long memberId;
     private String memberNickname;
 
     /* challenge */
-    private static final String API_URL = "http://10.0.2.2:8050/api/";
     private TextView titleView;
     private ImageView alarmView;
     private TextView dDayView;
@@ -66,13 +65,18 @@ public class ChallengeListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_challenge_list);
+        API_URL = getString(R.string.APIURL);
 
+        // 로그인 정보
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         String email = user.getEmail();
         getMemberId(email);
+
+        // 맨 처음에는 진행중 리스트 조회
         currentStatus = 2;
 
+        // 진행예정,진행중,진행완료
         willView = findViewById(R.id.challengeList_will);
         doView = findViewById(R.id.challengeList_ing);
         didView = findViewById(R.id.challengeList_did);
@@ -97,7 +101,6 @@ public class ChallengeListActivity extends AppCompatActivity {
             }
         };
 
-        // 각 탭에 리스너 설정
         didView.setOnClickListener(tabListener);
         doView.setOnClickListener(tabListener);
         willView.setOnClickListener(tabListener);
@@ -117,9 +120,10 @@ public class ChallengeListActivity extends AppCompatActivity {
         }
     }
 
+    // 로그인 정보
     private void getMemberId(String memberEmail) {
         Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(LOGIN_API_URL)
+            .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
         Call<Member> call = retrofit.create(MemberService.class).getMemberByEmail(memberEmail);
@@ -148,6 +152,7 @@ public class ChallengeListActivity extends AppCompatActivity {
         });
     }
 
+    // status에 맞는 챌린지 리스트 조회
     public void getChallengeList(int status) {
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
@@ -182,10 +187,16 @@ public class ChallengeListActivity extends AppCompatActivity {
         });
     }
 
+    // 챌린지 리스트 뷰에 추가
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setData(List<Challenge> challengeList) {
         LayoutInflater inflater = LayoutInflater.from(this);
         challengeListContainer.removeAllViews();
+//        if (challengeList.size() == 0) {
+//            View challengeView = inflater.inflate(R.layout.sample_nothing_view, challengeListContainer, false);
+//            TextView textView = challengeView.findViewById(R.id.nothing);
+//            challengeListContainer.addView(textView);
+//        } else {
         for (Challenge challenge : challengeList) {
             // 각 challenge 객체에 대한 뷰를 동적으로 만들자!
             View challengeView = inflater.inflate(R.layout.sample_list_view, challengeListContainer, false);
@@ -196,13 +207,13 @@ public class ChallengeListActivity extends AppCompatActivity {
             cycleView = challengeView.findViewById(R.id.challengeList_cycle);
             dateRangeView = challengeView.findViewById(R.id.challengeList_dateRange);
 
-            System.out.println("challenge " + challenge);
-            System.out.println(challenge.getChallengeTitle());
             LocalDate startDate = LocalDate.parse(challenge.getChallengeStart());
+            LocalDate endDate = LocalDate.parse(challenge.getChallengeEnd());
             LocalDate today = LocalDate.now();
 
             // 시작 날짜와 오늘 날짜 사이의 차이를 계산합니다.
             long daysBetween = ChronoUnit.DAYS.between(startDate, today);
+            long daysBetween2 = ChronoUnit.DAYS.between(today, endDate);
 
             List<Integer> cycle = challenge.getChallengeCycle();
             List<String> days = new ArrayList<>();
@@ -219,12 +230,17 @@ public class ChallengeListActivity extends AppCompatActivity {
 
             titleView.setText(challenge.getChallengeTitle());
             alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE); // 알람이 true일 때만 보이도록
-            dDayView.setText("D-" + daysBetween);
+            if (daysBetween < 0 && daysBetween2 >0) {
+                dDayView.setText("D-" + daysBetween);
+            } else if (daysBetween > 0 && daysBetween2 < 0) {
+                dDayView.setText("완료");
+            }
             cycleView.setText(str);
             dateRangeView.setText(challenge.getChallengeStart() + " ~ " + challenge.getChallengeEnd());
 
             challengeListContainer.addView(challengeView);
 
         }
+//        }
     }
 }

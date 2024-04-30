@@ -67,8 +67,7 @@ public class CalendarView extends LinearLayout {
                 current = (EditText) v;
                 DatePickerDialog datePickerDialog = new DatePickerDialog(context, myDatepicker,
                     myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog
-                    .show();
+                datePickerDialog.show();
 
                 // 최소 오늘~1년 후까지만 선택 가능
                 Calendar minDate = Calendar.getInstance();
@@ -85,7 +84,6 @@ public class CalendarView extends LinearLayout {
         addView(view);
     }
 
-    // 내부 EditText에 대한 접근자 메서드
     public String getEditText() {
         EditText editText = findViewById(R.id.calendar_date);
         return editText.getText().toString();
