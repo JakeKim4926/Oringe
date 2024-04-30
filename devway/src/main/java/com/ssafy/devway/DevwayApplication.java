@@ -10,10 +10,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DevwayApplication {
 
   public static void main(String[] args) {
-
-    TextBlock topic1 = new TextBlock();
-    topic1.setContent("asdfㅁㄴㅇㄹ1234");
-    topic1.countChar('1');
-    topic1.setContent("123123");
     SpringApplication.run(DevwayApplication.class, args);}
 }
