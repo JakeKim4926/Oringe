@@ -50,25 +50,20 @@
                 android:orientation="horizontal" />
         </HorizontalScrollView>
 
-        <LinearLayout
+        <!--상세 템플릿-->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:orientation="vertical">
+            android:layout_height="470dp"
+            android:layout_marginTop="30dp">
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/template"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/category_color_mid"
-                android:paddingLeft="30dp"
-                android:paddingTop="10dp"
-                android:paddingRight="30dp"
-                android:paddingBottom="10dp"
-                android:textAlignment="center"
-                android:text="제목" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical"/>
+        </ScrollView>
     </LinearLayout>
 
 
@@ -86,20 +81,6 @@
         android:layout_marginBottom="50dp"
         android:gravity="end"
         android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button_border_sub"
-            android:paddingLeft="12dp"
-            android:paddingTop="5dp"
-            android:paddingRight="12dp"
-            android:paddingBottom="5dp"
-            android:text="미리보기"
-            android:textColor="@color/oringe_sub"
-            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/create"

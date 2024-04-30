@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.ssafy.oringe" >
+    package="com.ssafy.oringe">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -15,7 +15,7 @@
         android:roundIcon="@drawable/logo_org"
         android:supportsRtl="true"
         android:theme="@style/Theme.Oringe"
-        tools:targetApi="31" >
+        tools:targetApi="31">
         <activity
             android:name=".activity.login.SignupActivity"
             android:exported="false" />
@@ -24,31 +24,38 @@
             android:exported="false" />
         <activity
             android:name=".activity.common.SplashActivity"
-            android:exported="true" >
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
+            android:exported="false">
+            <!--             <intent-filter>-->
+            <!--             <action android:name="android.intent.action.MAIN" />-->
 
 
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+            <!--             <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--             </intent-filter>-->
         </activity>
         <activity
             android:name=".activity.common.MainActivity"
             android:exported="false" />
         <activity
             android:name=".activity.challenge.ChallengeListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.challenge.ChallengeCreateFormActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.challenge.TemplateActivity"
             android:exported="false">
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->
 
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
 <!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".activity.challenge.ChallengeCreateFormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.challenge.TemplateActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
     </application>
 

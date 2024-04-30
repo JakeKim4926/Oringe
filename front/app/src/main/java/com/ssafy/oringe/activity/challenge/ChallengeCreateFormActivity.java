@@ -45,6 +45,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
@@ -100,7 +101,7 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 System.out.println(isChecked);
-                if(isChecked){
+                if (isChecked) {
                     textView.setVisibility(View.VISIBLE);
                     View.OnClickListener timeClickListener = new View.OnClickListener() {
                         @Override
@@ -120,12 +121,42 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
                     };
                     isAlarm = isChecked;
                     textView.setOnClickListener(timeClickListener);
-                }else{
+                } else {
                     textView.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "알람이 꺼졌습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        // 템플릿 순서 받기
+        templates = new ArrayList<>();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            Map<String, Integer> orderMap = (Map<String, Integer>) extras.getSerializable("orderMap");
+            System.out.println(orderMap);
+            String[] arr = { "challengeDetailTitle", "challengeDetailContent",
+                "challengeDetailImage", "challengeDetailImageContent",
+                "challengeDetailVideo", "Digital",
+                "Call",
+                "WakeUp", "Walk" };
+            boolean isThere = false;
+            for(String str : arr) {
+                isThere = false;
+                int k = -1;
+                loop: for(String key:orderMap.keySet()) {
+                    if (key.equals(str)) {
+                        isThere = true;
+                        k = orderMap.get(key);
+                        break loop;
+                    }
+                }
+                if (isThere) templates.add(k);
+                else templates.add(0);
+            }
+        }
+        System.out.println("challengeDetail: "+templates);
+
+
 
         // 생성
         create = findViewById(R.id.create);
@@ -264,32 +295,19 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
 
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
-        LocalTime alarmTime = LocalTime.parse(formattedTime);
 
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(0);
-        list.add(0);
-        list.add(0);
-        list.add(0);
-        list.add(0);
-        list.add(0);
-        list.add(0);
-        list.add(0);
-        list.add(2);
-        list.add(0);
 
         Challenge challenge = Challenge.builder()
             .challengeTitle(title)
-            .challengeStart(startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-            .challengeEnd(endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+            .challengeStart(start)
+            .challengeEnd(end)
             .challengeCycle(cycle)
             .challengeAlarm(isAlarm)
-            .challengeAlarmTime(alarmTime.format(DateTimeFormatter.ofPattern("HH:mm")))
+            .challengeAlarmTime(isAlarm ? formattedTime : null)
             .challengeMemo("")
             .challengeAppName("")
             .challengeAppTime(LocalTime.MIDNIGHT.format(DateTimeFormatter.ofPattern("HH:mm")))
@@ -297,7 +315,7 @@ public class ChallengeCreateFormActivity extends AppCompatActivity {
             .challengeCallNumber("")
             .challengeWakeupTime(LocalTime.MIDNIGHT.format(DateTimeFormatter.ofPattern("HH:mm")))
             .challengeWalk(0)
-            .order(list)
+            .order(templates)
             .build();
 
         System.out.println(challenge);
