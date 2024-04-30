@@ -14,5 +14,6 @@ public class DevwayApplication {
     TextBlock topic1 = new TextBlock();
     topic1.setContent("asdfㅁㄴㅇㄹ1234");
     topic1.countChar('1');
+    topic1.setContent("123123");
     SpringApplication.run(DevwayApplication.class, args);}
 }

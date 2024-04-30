@@ -9,12 +9,14 @@ import static com.ssafy.devway.text.CheckerMode.ALLOWED_KOREAN;
 import com.ssafy.devway.block.element.BlockElement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.Setter;
 import lombok.ToString;
 
 @ToString
 public class TextBlock implements BlockElement {
 
     private String content;
+    private int length_limit = 100000;
 
     public String getName() {
         return "TEXT";
@@ -25,8 +27,23 @@ public class TextBlock implements BlockElement {
     }
 
     public void setContent(String content) {
-        this.content = content;
+        if (content.length() <= length_limit)
+            this.content = content;
+        else {
+            System.out.println("입력된 문자열이 길이 제한을 초과합니다.");
+        }
     }
+    public void setLengthLimit(int length_limit) {
+        this.length_limit = length_limit;
+    }
+
+    public int getLengthLimit() {
+        return length_limit;
+    }
+    public int getContentLength() {
+        return content.length();
+    }
+
     // 오직 한글만 있는지 검사
     public boolean onlyKorean() {
         return content.matches("^[가-힣]+$");
@@ -57,6 +74,10 @@ public class TextBlock implements BlockElement {
         }
         return count;
     }
+    public boolean matchesPattern(String regex) {
+        return content.matches(regex);
+    }
+
 
 //    public Boolean stringChecker(CheckerMode check_mode) { //블랙리스트 방식으로
 //        switch (check_mode) {
