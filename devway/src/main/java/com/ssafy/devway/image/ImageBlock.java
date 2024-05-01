@@ -62,4 +62,15 @@ public class ImageBlock implements BlockElement {
         }
     }
 
+    // 바이트 배열을 이미지 파일로 저장
+    public void saveBytesToImageFile(byte[] imageData, String destinationPath) {
+        Path path = Paths.get(destinationPath);
+        try (OutputStream out = Files.newOutputStream(path)) {
+            out.write(imageData);
+            System.out.println("이미지 파일 저장 완료: " + destinationPath);
+        } catch (IOException e) {
+            System.out.println("이미지 파일 저장 실패: " + e.getMessage());
+        }
+    }
+
 }
