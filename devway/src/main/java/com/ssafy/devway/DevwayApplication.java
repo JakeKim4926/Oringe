@@ -1,8 +1,10 @@
 package com.ssafy.devway;
 
 import com.ssafy.devway.block.block.Block;
+import com.ssafy.devway.image.ImageBlock;
 import com.ssafy.devway.text.CheckerMode;
 import com.ssafy.devway.text.TextBlock;
+import java.awt.Image;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -11,7 +13,6 @@ public class DevwayApplication {
 
   public static void main(String[] args) {
 
-    TextBlock topic1 = new TextBlock();
-    topic1.isOnlyLowercaseEnglish();
+      ImageBlock img = new ImageBlock();
     SpringApplication.run(DevwayApplication.class, args);}
 }
