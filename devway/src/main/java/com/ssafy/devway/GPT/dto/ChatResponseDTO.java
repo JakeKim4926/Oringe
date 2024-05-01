@@ -1,8 +1,6 @@
-package com.ssafy.devway.ChatGPT.dto;
+package com.ssafy.devway.GPT.dto;
 
-import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

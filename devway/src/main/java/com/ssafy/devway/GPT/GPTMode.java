@@ -1,4 +1,4 @@
-package com.ssafy.devway.ChatGPT;
+package com.ssafy.devway.GPT;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
