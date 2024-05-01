@@ -17,8 +17,8 @@ public enum TTSCountry {
   US_H_FEMALE("en-US-Standard-H"),
   US_I_MALE("en-US-Standard-I"),
   US_J_MALE("en-US-Standard-J"),
-  UK_A_FEMALE("en-GB-Standard-A"),
   // United Kingdom
+  UK_A_FEMALE("en-GB-Standard-A"),
   UK_B_MALE("en-GB-Standard-B"),
   UK_C_FEMALE("en-GB-Standard-C"),
   UK_D_MALE("en-GB-Standard-D"),
