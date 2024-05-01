@@ -231,7 +231,7 @@ public class ChallengeListActivity extends AppCompatActivity {
             titleView.setText(challenge.getChallengeTitle());
             alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE); // 알람이 true일 때만 보이도록
             if (daysBetween < 0 && daysBetween2 >0) {
-                dDayView.setText("D-" + daysBetween);
+                dDayView.setText("D" + daysBetween);
             } else if (daysBetween > 0 && daysBetween2 < 0) {
                 dDayView.setText("완료");
             }

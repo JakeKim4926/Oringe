@@ -24,7 +24,7 @@ public class Challenge {
     private String challengeCallName;
     private String challengeCallNumber;
     private String challengeWakeupTime;
-    private Integer challengeWalk;
+    private String challengeWalk;
     private List<Integer> order;
 
 }
