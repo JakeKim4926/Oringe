@@ -52,6 +52,7 @@ public class TemplateActivity extends AppCompatActivity {
     private boolean digitalChallenge;
     private String challenge;
     private HashMap<String, String> inputData;
+    private ArrayList<String> normalTemplates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class TemplateActivity extends AppCompatActivity {
         API_URL = getString(R.string.APIURL);
 
         inputData = new HashMap<>();
+        normalTemplates = new ArrayList<>();
 
         // 로그인 정보
         auth = FirebaseAuth.getInstance();
@@ -267,6 +269,7 @@ public class TemplateActivity extends AppCompatActivity {
         int k = 1;
         System.out.println("chooseTemplates: " + chooseTemplates);
         for (String name : chooseTemplates) {
+            normalTemplates.add(name);
             for (Map.Entry<String, String> entry : matchChallengeDetail.entrySet()) {
                 if (entry.getValue().equals(name)) {
                     ordermap.put(entry.getKey(), k++);
@@ -317,9 +320,11 @@ public class TemplateActivity extends AppCompatActivity {
             intent.putExtra("challenge", title);
             intent.putExtra("inputData", inputData);
             intent.putExtra("orderMap", setOrder());
+            intent.putExtra("normalTemplates", normalTemplates);
             System.out.println("title: " + challenge);
             System.out.println("inputData: " + inputData);
             System.out.println("orderMap: " + setOrder());
+            System.out.println("normalTemplates: " + normalTemplates);
             setResult(Activity.RESULT_OK, intent);
             finish();
         });

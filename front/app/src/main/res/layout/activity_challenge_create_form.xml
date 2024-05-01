@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".activity.challenge.ChallengeCreateFormActivity2">
+    tools:context=".activity.challenge.ChallengeCreateActivity">
 
     <!--헤더-->
     <com.ssafy.oringe.ui.component.common.HeaderOrangeView
@@ -245,6 +245,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/challengeCreate_setTemplateLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -261,34 +262,16 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <com.ssafy.oringe.ui.component.common.TitleView
-                    android:id="@+id/challnegeCreate_template_modify"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:text="수정"
-                    app:textColor="@color/oringe_main"
-                    app:textSize="4sp" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/challengeCreate_templateLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/challnegeCreate_template_set"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingTop="3dp"
-                    android:paddingBottom="3dp"
-                    android:textColor="@color/oringe_main"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:background="@drawable/button_border_orange_thin" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

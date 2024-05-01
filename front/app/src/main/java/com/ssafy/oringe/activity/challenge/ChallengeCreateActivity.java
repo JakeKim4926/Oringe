@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -73,6 +74,7 @@ public class ChallengeCreateActivity extends AppCompatActivity {
     private String whatChallenge;
     private HashMap<String, String> inputData;
     private HashMap<String, Integer> orderMap;
+    private ArrayList<String> normalTemplates;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -98,6 +100,7 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         // 템플릿 설정
         inputData = new HashMap<>();
         orderMap = new HashMap<>();
+        normalTemplates = new ArrayList<>();
         setTemplates();
 
         // 챌린지 생성
@@ -170,6 +173,7 @@ public class ChallengeCreateActivity extends AppCompatActivity {
                 whatChallenge = data.getStringExtra("challenge");
                 inputData = (HashMap<String, String>) data.getSerializableExtra("inputData");
                 orderMap = (HashMap<String, Integer>) data.getSerializableExtra("orderMap");
+                normalTemplates = data.getStringArrayListExtra("normalTemplates");
             }
         }
     }
@@ -282,8 +286,16 @@ public class ChallengeCreateActivity extends AppCompatActivity {
     // 템플릿 생성 및 수정
     private void setTemplates() {
         System.out.println("템플릿 생성 및 수정");
-        TextView templateView = findViewById(R.id.challnegeCreate_template_set);
-        TitleView modifyView = findViewById(R.id.challnegeCreate_template_modify);
+
+        LinearLayout setLayout = findViewById(R.id.challengeCreate_setTemplateLayout);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View updateView = inflater.inflate(R.layout.sample_modify_view, null);
+        TextView modifyView = updateView.findViewById(R.id.modify_template);
+        TextView plusView = updateView.findViewById(R.id.plus_template);
+        TextView registerView = updateView.findViewById(R.id.register_template);
+
+        LinearLayout plusLayout = findViewById(R.id.challengeCreate_templateLayout);
 
         View.OnClickListener moveTemplate = new View.OnClickListener() {
             @Override
@@ -292,13 +304,17 @@ public class ChallengeCreateActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE);
             }
         };
-        templateView.setOnClickListener(moveTemplate);
+        plusView.setOnClickListener(moveTemplate);
         modifyView.setOnClickListener(moveTemplate);
 
         if (orderMap.isEmpty()) {
-            templateView.setText("템플릿 설정하러 가기");
+            plusView.setText("템플릿 설정하러 가기");
+            setLayout.addView(plusView);
         } else {
-            templateView.setText(whatChallenge);
+            for(String str : normalTemplates) {
+                registerView.setText(str);
+                plusLayout.addView(registerView);
+            }
         }
     }
 
