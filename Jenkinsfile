@@ -17,7 +17,7 @@ pipeline {
 							sh '''
 							cd /home/ubuntu/oringe
 							echo url=https://$GIT_USERNAME:$GIT_PASSWORD@lab.ssafy.com/wns1915/oringe.git > .git/credentials
-							git config credential.helper 'store --file=.git/credentials'
+							git config credential.helper 'store --file=.git/credentials-oringe'
 							git pull origin release
 							'''
 						}
