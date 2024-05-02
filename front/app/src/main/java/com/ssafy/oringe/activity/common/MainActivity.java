@@ -1,10 +1,12 @@
 package com.ssafy.oringe.activity.common;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 
@@ -30,6 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import com.ssafy.oringe.R;
 import com.ssafy.oringe.activity.challenge.ChallengeListActivity;
+import com.ssafy.oringe.activity.record.RecordCreateActivity;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.member.Member;
@@ -84,8 +87,9 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        Button btn_record = findViewById(R.id.btn_record);
+        btn_record.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecordCreateActivity.class)));
 
-        //챌린지리스트로 가기
         MenuView btn_list = findViewById(R.id.btn_list);
         btn_list.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChallengeListActivity.class)));
     }
@@ -104,6 +108,11 @@ public class MainActivity extends AppCompatActivity {
                     Long loginId = memberResponse.getMemberId();
                     String loginNickName = memberResponse.getMemberNickName();
 
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putLong("loginId", loginId);
+                    editor.putString("loginNickName", loginNickName);
+                    editor.apply();
 
                     runOnUiThread(() -> {
                         TextView mainHi = findViewById(R.id.text_nickname_hi);
