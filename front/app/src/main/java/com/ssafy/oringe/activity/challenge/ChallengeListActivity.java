@@ -1,7 +1,9 @@
 package com.ssafy.oringe.activity.challenge;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.member.Member;
@@ -32,6 +35,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +45,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ChallengeListActivity extends AppCompatActivity {
     private String API_URL;
     /* member */
-    private FirebaseAuth auth;
     private Long memberId;
     private String memberNickname;
 
@@ -68,10 +71,10 @@ public class ChallengeListActivity extends AppCompatActivity {
         API_URL = getString(R.string.APIURL);
 
         // 로그인 정보
-        auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        String email = user.getEmail();
-        getMemberId(email);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        memberId = sharedPref.getLong("loginId", 0);
+        memberNickname = sharedPref.getString("loginNickName", "(알 수 없음)");
+        getMemberNickname();
 
         // 맨 처음에는 진행중 리스트 조회
         currentStatus = 2;
@@ -121,44 +124,21 @@ public class ChallengeListActivity extends AppCompatActivity {
     }
 
     // 로그인 정보
-    private void getMemberId(String memberEmail) {
-        Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-        Call<Member> call = retrofit.create(MemberService.class).getMemberByEmail(memberEmail);
-        call.enqueue(new Callback<Member>() {
-            @Override
-            public void onResponse(Call<Member> call, Response<Member> response) {
-                if (response.isSuccessful()) {
-                    Member memberResponse = response.body();
-                    memberId = memberResponse.getMemberId();
-                    memberNickname = memberResponse.getMemberNickName();
+    private void getMemberNickname() {
+        TitleView whoView = findViewById(R.id.challengeList_who);
+        whoView.setText(memberNickname + "님의 챌린지");
+        getChallengeList(2);
 
-                    runOnUiThread(() -> {
-                        TitleView whoView = findViewById(R.id.challengeList_who);
-                        whoView.setText(memberNickname + "님의 챌린지");
-                        getChallengeList(2);
-                    });
-                } else {
-                    Log.e("API_CALL", "Response Error : " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Member> call, Throwable t) {
-                Log.e("API_CALL", "Failed to get member details", t);
-            }
-        });
     }
 
     // status에 맞는 챌린지 리스트 조회
     public void getChallengeList(int status) {
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build();
-
         Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(memberId, status);
         call.enqueue(new Callback<List<Challenge>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -230,7 +210,7 @@ public class ChallengeListActivity extends AppCompatActivity {
 
             titleView.setText(challenge.getChallengeTitle());
             alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE); // 알람이 true일 때만 보이도록
-            if (daysBetween < 0 && daysBetween2 >0) {
+            if (daysBetween < 0 && daysBetween2 > 0) {
                 dDayView.setText("D" + daysBetween);
             } else if (daysBetween > 0 && daysBetween2 < 0) {
                 dDayView.setText("완료");
