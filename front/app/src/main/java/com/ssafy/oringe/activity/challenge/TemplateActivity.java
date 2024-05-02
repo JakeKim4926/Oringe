@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
 
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -104,8 +106,10 @@ public class TemplateActivity extends AppCompatActivity {
 
     // 로그인 정보
     private void getMemberId(String memberEmail) {
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
         Call<Member> call = retrofit.create(MemberService.class).getMemberByEmail(memberEmail);
