@@ -11,6 +11,8 @@ import com.ssafy.devway.domain.member.document.Member;
 import com.ssafy.devway.domain.member.repository.MemberRepository;
 import com.ssafy.devway.global.config.autoIncrementSequence.service.AutoIncrementSequenceService;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +41,8 @@ public class ChallengeService {
     /*
      * 2.1 챌린지 생성
      * */
-    public Challenge insertChallenge(ChallengeCreateReqDto dto) {
-        System.out.println(dto);
-        Long id = Long.parseLong("11");
-        Member member = memberRepository.findByMemberId(id);
+    public Challenge insertChallenge(ChallengeCreateReqDto dto, Long memberId) {
+        Member member = memberRepository.findByMemberId(memberId);
         log.debug("member: " + member);
 
         ChallengeDetail challengeDetail = ChallengeDetail.builder()
@@ -53,12 +53,10 @@ public class ChallengeService {
             .challengeDetailImage(dto.getOrder().get(2))
             .challengeDetailImageContent(dto.getOrder().get(3))
             .challengeDetailVideo(dto.getOrder().get(4))
-            .challengeDetailAppName(dto.getOrder().get(5))
-            .challengeDetailAppTime(dto.getOrder().get(6))
-            .challengeDetailCallName(dto.getOrder().get(7))
-            .challengeDetailCallNumber(dto.getOrder().get(8))
-            .challengeDetailWakeupTime(dto.getOrder().get(9))
-            .challengeDetailWalk(dto.getOrder().get(10))
+            .Digital(dto.getOrder().get(5))
+            .Call(dto.getOrder().get(6))
+            .WakeUp(dto.getOrder().get(7))
+            .Walk(dto.getOrder().get(8))
             .build();
         log.debug("challengeDetail: " + challengeDetail);
         challengeDetailRepository.save(challengeDetail);
@@ -74,6 +72,9 @@ public class ChallengeService {
             status = 3;
         }
 
+        LocalTime alarmTime = dto.getChallengeAlarmTime();
+        alarmTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+        System.out.println(dto.getChallengeAlarmTime());
         Challenge challenge = Challenge.builder()
             .challengeId(autoIncrementSequenceService.generateSequence(Challenge.SEQUENCE_NAME))
             .challengeTitle(dto.getChallengeTitle())
@@ -102,8 +103,16 @@ public class ChallengeService {
      * 2.2 챌린지 전체 조회
      * */
     @Transactional(readOnly = true)
-    public List<Challenge> selectChallengeList(Long memberId) {
-        return challengeRepository.findByMember_MemberIdOrderByChallengeIdDesc(memberId);
+    public List<Challenge> selectChallengeList(Long memberId, int status) {
+        List<Challenge> challengeList = challengeRepository.findByMember_MemberIdOrderByChallengeIdDesc(
+            memberId);
+        List<Challenge> statusList = new ArrayList<>();
+        for(Challenge challenge:challengeList) {
+            if (challenge.getChallengeStatus()==status) {
+                statusList.add(challenge);
+            }
+        }
+        return  statusList;
     }
 
     /*

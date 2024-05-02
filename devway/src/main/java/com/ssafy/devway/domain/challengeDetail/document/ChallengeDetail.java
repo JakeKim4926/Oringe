@@ -30,17 +30,13 @@ public class ChallengeDetail {
 
     private Integer challengeDetailVideo;
 
-    private Integer challengeDetailAppName;
+    private Integer Digital;
 
-    private Integer challengeDetailAppTime;
+    private Integer Call;
 
-    private Integer challengeDetailCallName;
+    private Integer WakeUp;
 
-    private Integer challengeDetailCallNumber;
-
-    private Integer challengeDetailWakeupTime;
-
-    private Integer challengeDetailWalk;
+    private Integer Walk;
 
 
 }
