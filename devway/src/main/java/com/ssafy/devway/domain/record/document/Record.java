@@ -21,7 +21,7 @@ import java.util.List;
 @ToString
 public class Record {
 
-    @Transient.
+    @Transient
     public static final String SEQUENCE_NAME = "record_sequence";
 
     @Id
