@@ -15,7 +15,7 @@ pipeline {
                 script {
 						withCredentials([usernamePassword(credentialsId: 'wns1915', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
 							sh '''
-							cd /home/ubuntu/chelitalk
+							cd /home/ubuntu/oringe
 							echo url=https://$GIT_USERNAME:$GIT_PASSWORD@lab.ssafy.com/wns1915/oringe.git' > .git/credentials
 							git config credential.helper 'store --file=.git/credentials'
 							git pull origin release
