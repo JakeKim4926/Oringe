@@ -1,6 +1,5 @@
-package com.ssafy.devway.ChatGPT.dto;
+package com.ssafy.devway.GPT.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
