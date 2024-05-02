@@ -7,7 +7,21 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'wns1915', url: 'https://lab.ssafy.com/wns1915/oringe.git' // GitLab 리포지토리
+                git branch: 'release', credentialsId: 'wns1915', url: 'https://lab.ssafy.com/wns1915/oringe.git' // GitLab 리포지토리
+            }
+        }
+		stage('Update Local Repository') {
+            steps {
+                script {
+						withCredentials([usernamePassword(credentialsId: 'wns1915', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+							sh '''
+							cd /home/ubuntu/chelitalk
+							echo url=https://$GIT_USERNAME:$GIT_PASSWORD@lab.ssafy.com/wns1915/oringe.git' > .git/credentials
+							git config credential.helper 'store --file=.git/credentials'
+							git pull origin release
+							'''
+						}
+                }
             }
         }
         stage('Build Docker Images') {
