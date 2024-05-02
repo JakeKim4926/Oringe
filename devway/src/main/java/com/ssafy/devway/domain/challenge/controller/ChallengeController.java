@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/challenge")
+@RequestMapping("/oringe/api/challenge")
 @Tag(name = "챌린지", description = "Challenge API")
 public class ChallengeController {
 

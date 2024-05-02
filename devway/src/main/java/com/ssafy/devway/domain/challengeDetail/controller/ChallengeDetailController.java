@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/challengeDetail")
+@RequestMapping("/oringe/api/challengeDetail")
 @Tag(name = "템플릿", description = "ChallengeDetail API")
 public class ChallengeDetailController {
 
