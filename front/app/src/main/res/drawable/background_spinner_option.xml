@@ -15,7 +15,7 @@
             </item>
 
             <item
-                android:drawable="@drawable/main_oringe_list"
+                android:drawable="@drawable/drop_down"
                 android:gravity="center|end"
                 android:width="24dp"
                 android:height="24dp" />

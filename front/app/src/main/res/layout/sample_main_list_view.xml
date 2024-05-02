@@ -55,32 +55,11 @@
             android:textColor="@color/black"
             android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/main_list_no_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="오늘은 달성하지 못했어요"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-
         <ImageView
-            android:id="@+id/main_list_no_org"
+            android:id="@+id/main_list_org"
             android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/sad_org" />
-        <TextView
-            android:id="@+id/main_list_yes_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="오늘 달성 완료!"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:layout_height="20dp"/>
 
-        <ImageView
-            android:id="@+id/main_list_yes_org"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/main_org" />
     </LinearLayout>
 
 </LinearLayout>
