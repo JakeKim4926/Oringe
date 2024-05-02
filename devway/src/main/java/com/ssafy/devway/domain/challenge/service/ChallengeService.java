@@ -73,7 +73,10 @@ public class ChallengeService {
         }
 
         LocalTime alarmTime = dto.getChallengeAlarmTime();
-        alarmTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+        if (dto.getChallengeAlarm()) {
+            alarmTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+        }
+
         System.out.println(dto.getChallengeAlarmTime());
         Challenge challenge = Challenge.builder()
             .challengeId(autoIncrementSequenceService.generateSequence(Challenge.SEQUENCE_NAME))
