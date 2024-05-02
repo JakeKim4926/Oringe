@@ -44,6 +44,19 @@
         android:text="이미지"
         android:textStyle="bold" />
     <TextView
+        android:id="@+id/template_category_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/category_border_pink"
+        android:paddingLeft="12dp"
+        android:paddingTop="5dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/black"
+        android:text="음성"
+        android:textStyle="bold" />
+    <TextView
         android:id="@+id/template_category_video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,19 +68,6 @@
         android:paddingBottom="5dp"
         android:textColor="@color/black"
         android:text="영상"
-        android:textStyle="bold" />
-    <TextView
-        android:id="@+id/template_category_gpt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/category_border_pink"
-        android:paddingLeft="12dp"
-        android:paddingTop="5dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="5dp"
-        android:textColor="@color/black"
-        android:text="GPT"
         android:textStyle="bold" />
     <TextView
         android:id="@+id/template_category_recommend"

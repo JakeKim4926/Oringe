@@ -172,11 +172,11 @@ public class ChallengeListActivity extends AppCompatActivity {
     public void setData(List<Challenge> challengeList) {
         LayoutInflater inflater = LayoutInflater.from(this);
         challengeListContainer.removeAllViews();
-//        if (challengeList.size() == 0) {
-//            View challengeView = inflater.inflate(R.layout.sample_nothing_view, challengeListContainer, false);
-//            TextView textView = challengeView.findViewById(R.id.nothing);
-//            challengeListContainer.addView(textView);
-//        } else {
+        if (challengeList.isEmpty()) {
+            View challengeView = inflater.inflate(R.layout.sample_nothing_view, challengeListContainer, false);
+            TextView textView = challengeView.findViewById(R.id.nothing);
+            challengeListContainer.addView(challengeView);
+        } else {
         for (Challenge challenge : challengeList) {
             // 각 challenge 객체에 대한 뷰를 동적으로 만들자!
             View challengeView = inflater.inflate(R.layout.sample_list_view, challengeListContainer, false);
@@ -221,6 +221,6 @@ public class ChallengeListActivity extends AppCompatActivity {
             challengeListContainer.addView(challengeView);
 
         }
-//        }
+        }
     }
 }
