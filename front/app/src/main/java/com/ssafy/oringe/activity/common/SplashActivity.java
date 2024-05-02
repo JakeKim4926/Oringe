@@ -24,6 +24,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -71,44 +79,79 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void sendEmailToServer(String email) {
-        OkHttpClient client = new OkHttpClient();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://10.0.2.2:8050/api/valid").newBuilder();
-        urlBuilder.addQueryParameter("memberEmail", email);
-        String url = urlBuilder.build().toString();
+        try {
 
-        Request request = new Request.Builder().url(url).build();
-        client.newCall(request).enqueue(new okhttp3.Callback() {
+            OkHttpClient client = getSecureOkHttpClient();
 
-            @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-                Log.e("SplashActivity", "Email 검증 실패", e);
-                promptLogin();
-            }
+            HttpUrl.Builder urlBuilder = HttpUrl.parse("https://k10b201.p.ssafy.io/oringe/api/valid").newBuilder();
+            urlBuilder.addQueryParameter("memberEmail", email);
+            String url = urlBuilder.build().toString();
 
-            @Override
-            public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    runOnUiThread(() -> promptLogin());
-                    return;
+            Request request = new Request.Builder().url(url).build();
+            client.newCall(request).enqueue(new okhttp3.Callback() {
+
+                @Override
+                public void onFailure(okhttp3.Call call, IOException e) {
+                    Log.e("SplashActivity", "Email 검증 실패", e);
+                    promptLogin();
                 }
-                try {
-                    String jsonResponse = response.body().string();
-                    JSONObject jsonObject = new JSONObject(jsonResponse);
-                    boolean isRegistered = jsonObject.getBoolean("data");
 
-                    runOnUiThread(() -> {
-                        if (isRegistered) {
-                            proceedToMain();
-                        } else {
-                            promptSignup();
-                        }
-                    });
-                } catch (JSONException e) {
-                    Log.e("SplashActivity", "JSON 파싱 오류", e);
-                    runOnUiThread(() -> promptLogin());
+                @Override
+                public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        runOnUiThread(() -> promptLogin());
+                        return;
+                    }
+                    try {
+                        String jsonResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(jsonResponse);
+                        boolean isRegistered = jsonObject.getBoolean("data");
+
+                        runOnUiThread(() -> {
+                            if (isRegistered) {
+                                proceedToMain();
+                            } else {
+                                promptSignup();
+                            }
+                        });
+                    } catch (JSONException e) {
+                        Log.e("SplashActivity", "JSON 파싱 오류", e);
+                        runOnUiThread(() -> promptLogin());
+                    }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            Log.e("SplashActivity", "///// OkHttp Client Error /////", e);
+        }
+    }
+
+    private OkHttpClient getSecureOkHttpClient() throws Exception {
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        InputStream caInput = getResources().openRawResource(R.raw.k10b201oringe);
+        Certificate ca;
+        try {
+            ca = cf.generateCertificate(caInput);
+        } finally {
+            caInput.close();
+        }
+
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry("ca", ca);
+
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+        tmf.init(keyStore);
+
+        X509TrustManager trustManager = (X509TrustManager) tmf.getTrustManagers()[0];
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new javax.net.ssl.TrustManager[]{trustManager}, null);
+
+        return new OkHttpClient.Builder()
+            .sslSocketFactory(sslContext.getSocketFactory(), trustManager)
+            .build();
     }
 
     private void proceedToMain() {
@@ -126,3 +169,4 @@ public class SplashActivity extends AppCompatActivity {
         finish();
     }
 }
+
