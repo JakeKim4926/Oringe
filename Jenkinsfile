@@ -14,10 +14,13 @@ pipeline {
             steps {
                 script {
 						withCredentials([usernamePassword(credentialsId: 'wns1915', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-							sh '''
-							cd /home/ubuntu/oringe
-							git pull https://$GIT_USERNAME:$GIT_PASSWORD@lab.ssafy.com/wns1915/oringe.git release
-							'''
+							    sh '''
+								ENCODED_USERNAME=$(echo $GIT_USERNAME | sed 's/@/%40/g')
+								cd /home/ubuntu/oringe
+								echo url=https://${ENCODED_USERNAME}:${GIT_PASSWORD}@lab.ssafy.com/wns1915/oringe.git > .git/credentials-oringe
+								git config credential.helper 'store --file=.git/credentials-oringe'
+								git pull origin release
+								'''
 						}
                 }
             }
