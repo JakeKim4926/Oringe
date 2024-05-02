@@ -6,21 +6,19 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -35,17 +33,12 @@ import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
-import com.ssafy.oringe.ui.component.challenge.InputView;
 import com.ssafy.oringe.ui.component.common.CalendarView;
-import com.ssafy.oringe.ui.component.common.TitleView;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -60,6 +53,9 @@ public class ChallengeCreateActivity extends AppCompatActivity {
     private String API_URL;
     private FirebaseAuth auth;
     private Long memberId;
+
+    private ViewGroup templateListContainer; // 동적 뷰를 추가할 컨테이너
+    private ViewGroup modifyContainer; // 동적 뷰를 추가할 컨테이너
 
     /* challenge */
     private boolean[] clicked;
@@ -98,6 +94,9 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         chooseCycle();
 
         // 템플릿 설정
+        templateListContainer = findViewById(R.id.challengeCreate_templateLayout);
+        modifyContainer = findViewById(R.id.challengeCreate_modifyLayout);
+
         inputData = new HashMap<>();
         orderMap = new HashMap<>();
         normalTemplates = new ArrayList<>();
@@ -134,6 +133,7 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         });
 
     }
+
 
     // 아이템의 상태를 저장
     @Override
@@ -175,6 +175,7 @@ public class ChallengeCreateActivity extends AppCompatActivity {
                 orderMap = (HashMap<String, Integer>) data.getSerializableExtra("orderMap");
                 normalTemplates = data.getStringArrayListExtra("normalTemplates");
             }
+            setTemplates();
         }
     }
 
@@ -287,16 +288,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
     private void setTemplates() {
         System.out.println("템플릿 생성 및 수정");
 
-        LinearLayout setLayout = findViewById(R.id.challengeCreate_setTemplateLayout);
-
-        LayoutInflater inflater = getLayoutInflater();
-        View updateView = inflater.inflate(R.layout.sample_modify_view, null);
-        TextView modifyView = updateView.findViewById(R.id.modify_template);
-        TextView plusView = updateView.findViewById(R.id.plus_template);
-        TextView registerView = updateView.findViewById(R.id.register_template);
-
-        LinearLayout plusLayout = findViewById(R.id.challengeCreate_templateLayout);
-
         View.OnClickListener moveTemplate = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,17 +295,30 @@ public class ChallengeCreateActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE);
             }
         };
-        plusView.setOnClickListener(moveTemplate);
-        modifyView.setOnClickListener(moveTemplate);
 
+        LayoutInflater inflater = getLayoutInflater();
+        templateListContainer.removeAllViews();
+        modifyContainer.removeAllViews();
+
+        System.out.println("비었나?" + orderMap);
+        System.out.println("비었나?" + normalTemplates);
         if (orderMap.isEmpty()) {
+            View addInstance = inflater.inflate(R.layout.sample_add_template_view, templateListContainer, false);
+            TextView plusView = addInstance.findViewById(R.id.plus_template);
             plusView.setText("템플릿 설정하러 가기");
-            setLayout.addView(plusView);
+            plusView.setOnClickListener(moveTemplate);
+            templateListContainer.addView(addInstance);
         } else {
-            for(String str : normalTemplates) {
+            for (String str : normalTemplates) {
+                View seeInstance = inflater.inflate(R.layout.sample_see_template_view, templateListContainer, false);
+                TextView registerView = seeInstance.findViewById(R.id.register_template);
                 registerView.setText(str);
-                plusLayout.addView(registerView);
+                templateListContainer.addView(seeInstance);
             }
+            View modifyInstance = inflater.inflate(R.layout.sample_modify_view, modifyContainer, false);
+            TextView modifyView = modifyInstance.findViewById(R.id.modify_template);
+            modifyView.setOnClickListener(moveTemplate);
+            modifyContainer.addView(modifyInstance);
         }
     }
 
@@ -327,15 +331,15 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         System.out.println("orderMap: "+orderMap);
         View view = findViewById(R.id.challnegeCreate);
 
-        InputView titleEdit = view.findViewById(R.id.challnegeCreate_input_title);
+        EditText titleEdit = view.findViewById(R.id.challnegeCreate_input_title);
         CalendarView startEdit = view.findViewById(R.id.challnegeCreate_input_start);
         CalendarView endEdit = view.findViewById(R.id.challnegeCreate_input_end);
-        InputView memoEdit = view.findViewById(R.id.challnegeCreate_input_memo);
+        EditText memoEdit = view.findViewById(R.id.challnegeCreate_input_memo);
 
-        title = titleEdit.getEditText();
+        title = titleEdit.getText().toString();
         start = startEdit.getEditText();
         end = endEdit.getEditText();
-        memo = memoEdit.getEditText();
+        memo = memoEdit.getText().toString();
         templates = new ArrayList<>();
 
         String[] arr = {"challengeDetailTitle", "challengeDetailContent",
@@ -372,15 +376,15 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         if (whatChallenge != null) {
             switch (whatChallenge) {
                 case "디지털 디톡스":
-                    builder.challengeAppName(inputData.get("제한할 앱 이름을 입력하세요."));
-                    builder.challengeAppTime(inputData.get("제한 시간을 입력하세요."));
+                    builder.challengeAppName(inputData.get("제한할 앱 이름을 입력하세요.\n(ex. 인스타그램)"));
+                    builder.challengeAppTime(inputData.get("제한 시간을 입력하세요.\n(1시간 단위만 가능)"));
                     break;
                 case "소중한 사람과 통화하기":
                     builder.challengeCallName(inputData.get("통화 대상 이름을 입력하세요."));
                     builder.challengeCallNumber(inputData.get("통화 대상 전화번호를 입력하세요."));
                     break;
                 case "기상":
-                    builder.challengeWakeupTime(inputData.get("기상 시간을 입력하세요."));
+                    builder.challengeWakeupTime(inputData.get("기상 시간을 입력하세요.\n(ex. 07:00)"));
                     break;
                 case "걷기":
                     builder.challengeWalk(inputData.get("목표 걸음 수를 입력하세요."));

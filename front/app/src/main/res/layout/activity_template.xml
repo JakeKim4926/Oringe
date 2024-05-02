@@ -32,9 +32,16 @@
         <com.ssafy.oringe.ui.component.common.TitleView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
             app:text="나만의 템플릿을 골라보세요."
             app:textSize="5.5sp" />
+
+        <com.ssafy.oringe.ui.component.common.TitleView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            app:text="최대 5개까지만 가능합니다."
+            app:textColor="@color/oringe_sub"
+            app:textSize="4.5sp" />
 
         <!--카테고리-->
         <HorizontalScrollView

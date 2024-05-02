@@ -49,10 +49,11 @@
                 app:textColor="@color/gray_600"
                 app:textSize="4sp" />
 
-            <com.ssafy.oringe.ui.component.challenge.InputView
+            <EditText
                 android:id="@+id/challnegeCreate_input_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="13"
                 android:layout_gravity="center_vertical" />
         </LinearLayout>
 
@@ -201,7 +202,7 @@
                 android:id="@+id/challengeCreate_alarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="false"/>
+                android:checked="false" />
 
             <TextView
                 android:id="@+id/challnegeCreate_input_alarmTime"
@@ -209,7 +210,7 @@
                 android:layout_height="wrap_content"
                 android:text="시간설정"
                 android:textSize="10sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <!--메모-->
@@ -228,12 +229,14 @@
                 app:textColor="@color/gray_600"
                 app:textSize="4sp" />
 
-            <com.ssafy.oringe.ui.component.challenge.InputView
+            <EditText
                 android:id="@+id/challnegeCreate_input_memo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                app:singleLine="false" />
+                android:maxLength="50"
+                android:inputType="textMultiLine"/>
+
         </LinearLayout>
 
         <!--템플릿-->
@@ -241,18 +244,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:gravity="center_vertical"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/challengeCreate_setTemplateLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <com.ssafy.oringe.ui.component.common.TitleView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     app:text="템플릿 설정"
                     app:textColor="@color/gray_600"
                     app:textSize="4sp" />
@@ -262,17 +264,20 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
+                <LinearLayout
+                    android:id="@+id/challengeCreate_modifyLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/challengeCreate_templateLayout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                android:orientation="vertical" />
 
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

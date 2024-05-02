@@ -81,7 +81,7 @@ public class ChallengeListActivity extends AppCompatActivity {
         doView = findViewById(R.id.challengeList_ing);
         didView = findViewById(R.id.challengeList_did);
 
-        challengeListContainer = findViewById(R.id.challengeList); // XML에서 레이아웃을 찾음
+        challengeListContainer = findViewById(R.id.challengeList_list); // XML에서 레이아웃을 찾음
 
         View.OnClickListener tabListener = new View.OnClickListener() {
             @Override

@@ -1,18 +1,25 @@
 package com.ssafy.oringe.activity.challenge;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -26,8 +33,10 @@ import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -45,7 +54,7 @@ public class TemplateActivity extends AppCompatActivity {
     private ViewGroup categoryContainer;
     private ViewGroup templateContainer;
     private List<String> chooseTemplates;
-    private List<Map<String, String>> chooseResult;
+    private int finalAppHour;
     private boolean walkChallenge;
     private boolean wakeupChallenge;
     private boolean callChallenge;
@@ -232,6 +241,10 @@ public class TemplateActivity extends AppCompatActivity {
                 v.setTag(clicked); // 새로운 선택 상태를 저장
 
                 if (clicked) {
+                    if (!chooseTemplates.isEmpty() && chooseTemplates.size()>4) {
+                        Toast.makeText(getApplicationContext(), "최대 5개까지만 가능합니다!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     ((TextView) v).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray_600));
                     ((TextView) v).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.category_color_gray));
                     chooseTemplates.add(((TextView) v).getText().toString());
@@ -267,7 +280,6 @@ public class TemplateActivity extends AppCompatActivity {
 
         HashMap<String, Integer> ordermap = new HashMap<>();
         int k = 1;
-        System.out.println("chooseTemplates: " + chooseTemplates);
         for (String name : chooseTemplates) {
             normalTemplates.add(name);
             for (Map.Entry<String, String> entry : matchChallengeDetail.entrySet()) {
@@ -297,15 +309,15 @@ public class TemplateActivity extends AppCompatActivity {
         dlg.setView(dialogView);
 
         if (digitalChallenge) {
-            addEditText(container, "제한할 앱 이름을 입력하세요.");
-            addEditText(container, "제한 시간을 입력하세요.");
+            addEditText(container, "제한할 앱 이름을 입력하세요.\n(ex. 인스타그램)", InputType.TYPE_CLASS_TEXT);
+            addEditText(container, "제한 시간을 입력하세요.\n(1시간 단위만 가능)", InputType.TYPE_CLASS_NUMBER);
         } else if (callChallenge) {
-            addEditText(container, "통화 대상 이름을 입력하세요.");
-            addEditText(container, "통화 대상 전화번호를 입력하세요.");
+            addEditText(container, "통화 대상 이름을 입력하세요.",InputType.TYPE_CLASS_TEXT);
+            addEditText(container, "통화 대상 전화번호를 입력하세요.", InputType.TYPE_CLASS_PHONE);
         } else if (wakeupChallenge) {
-            addEditText(container, "기상 시간을 입력하세요.");
+            addEditText(container, "기상 시간을 입력하세요.\n(ex. 07:00)", InputType.TYPE_CLASS_TEXT);
         } else if (walkChallenge) {
-            addEditText(container, "목표 걸음 수를 입력하세요.");
+            addEditText(container, "목표 걸음 수를 입력하세요.", InputType.TYPE_CLASS_NUMBER);
         }
 
         dlg.setPositiveButton("완료", (dialog, which) -> {
@@ -319,11 +331,13 @@ public class TemplateActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.putExtra("challenge", title);
             intent.putExtra("inputData", inputData);
-            intent.putExtra("orderMap", setOrder());
+            HashMap<String, Integer> orderMap = setOrder();
+            intent.putExtra("orderMap", orderMap);
             intent.putExtra("normalTemplates", normalTemplates);
+            System.out.println("기타 챌린지: ");
             System.out.println("title: " + challenge);
             System.out.println("inputData: " + inputData);
-            System.out.println("orderMap: " + setOrder());
+            System.out.println("orderMap: " + orderMap);
             System.out.println("normalTemplates: " + normalTemplates);
             setResult(Activity.RESULT_OK, intent);
             finish();
@@ -332,16 +346,96 @@ public class TemplateActivity extends AppCompatActivity {
         dlg.show();
     }
 
-    private void addEditText(LinearLayout container, String hint) {
-        EditText editText = new EditText(TemplateActivity.this);
+    private void addEditText(LinearLayout container, String hint, int inputType) {
+        EditText editText = new EditText(container.getContext());
+        editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         editText.setHint(hint);
+        editText.setInputType(inputType);
         container.addView(editText);
     }
 
+//    private void addSeekBar(LinearLayout container, String label) {
+//        TextView labelView = new TextView(this);
+//        labelView.setText(label);
+//        container.addView(labelView);
+//
+//        SeekBar seekBar = new SeekBar(this);
+//        seekBar.setMax(24);  // 24시간 표현 (0시부터 23시)
+//
+//        final TextView valueText = new TextView(this);
+//        valueText.setText("0시간");  // 초기 값 설정
+//        container.addView(valueText);
+//        finalAppHour = 0;
+//
+//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                int hour = progress + 1;  // 0시부터 시작하는 것을 1시부터 시작하도록 조정
+//                valueText.setText(hour + " 시간");
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                finalAppHour = seekBar.getProgress() + 1;  // 최종 선택된 시간을 저장
+//            }
+//        });
+//
+//        container.addView(seekBar);
+//    }
+//
+//    public int getFinalSelectedHour() {
+//        return finalAppHour;  // 최종 선택된 시간을 반환
+//    }
+//
+//    private void addTimePicker(LinearLayout container, String label) {
+//        // Label 추가
+//        TextView labelView = new TextView(this);
+//        labelView.setText(label);
+//        labelView.setLayoutParams(new LinearLayout.LayoutParams(
+//            LinearLayout.LayoutParams.WRAP_CONTENT,
+//            LinearLayout.LayoutParams.WRAP_CONTENT));
+//        container.addView(labelView);
+//
+//        // EditText 추가 (시간을 보여줄)
+//        EditText timeEditText = new EditText(this);
+//        timeEditText.setFocusable(false);
+//        timeEditText.setLayoutParams(new LinearLayout.LayoutParams(
+//            LinearLayout.LayoutParams.MATCH_PARENT,
+//            LinearLayout.LayoutParams.WRAP_CONTENT));
+//        container.addView(timeEditText);
+//
+//        // EditText 클릭 시 TimePickerDialog 실행
+//        timeEditText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Calendar calendar = Calendar.getInstance();
+//                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+//                int minute = calendar.get(Calendar.MINUTE);
+//
+//                TimePickerDialog timePickerDialog = new TimePickerDialog(TemplateActivity.this, new TimePickerDialog.OnTimeSetListener() {
+//                    @Override
+//                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//                        // 사용자가 선택한 시간을 EditText에 설정
+//                        timeEditText.setText(String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute));
+//                    }
+//                }, hour, minute, true);  // 마지막 인자는 24시간 표시 여부
+//
+//                timePickerDialog.show();
+//            }
+//        });
+//    }
+
     private void returnOrderMapOnly() {
         Intent intent = new Intent();
-        intent.putExtra("orderMap", setOrder());
-        System.out.println("only orderMap: " + setOrder());
+        HashMap<String, Integer> orderMap = setOrder();
+        intent.putExtra("orderMap", orderMap);
+        intent.putExtra("normalTemplates", normalTemplates);
+        System.out.println("returnOrderMapOnly: "+orderMap);
+        System.out.println("returnOrderMapOnly: "+normalTemplates);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
