@@ -2,10 +2,12 @@ package com.ssafy.oringe.activity.challenge;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.member.Member;
@@ -40,6 +43,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,7 +55,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 222;
     /* member */
     private String API_URL;
-    private FirebaseAuth auth;
     private Long memberId;
 
     private ViewGroup templateListContainer; // 동적 뷰를 추가할 컨테이너
@@ -82,10 +85,8 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         API_URL = getString(R.string.APIURL);
 
         // 로그인 정보
-        auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        String email = user.getEmail();
-        getMemberId(email);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        memberId = sharedPref.getLong("loginId", 0);
 
         // 알람 토글
         setAlarm();
@@ -179,30 +180,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         }
     }
 
-    // 로그인 정보
-    private void getMemberId(String memberEmail) {
-        Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-        Call<Member> call = retrofit.create(MemberService.class).getMemberByEmail(memberEmail);
-        call.enqueue(new Callback<Member>() {
-            @Override
-            public void onResponse(Call<Member> call, Response<Member> response) {
-                if (response.isSuccessful()) {
-                    Member memberResponse = response.body();
-                    memberId = memberResponse.getMemberId();
-                } else {
-                    Log.e("API_CALL", "Response Error : " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Member> call, Throwable t) {
-                Log.e("API_CALL", "Failed to get member details", t);
-            }
-        });
-    }
 
     // 알람 설정
     private void setAlarm() {
@@ -392,9 +369,11 @@ public class ChallengeCreateActivity extends AppCompatActivity {
             }
         }
 
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build();
         Challenge challenge = builder.build();
         System.out.println("challenge: " + challenge);
