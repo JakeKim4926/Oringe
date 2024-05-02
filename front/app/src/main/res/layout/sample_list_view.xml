@@ -22,15 +22,16 @@
                 android:id="@+id/challengeList_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="260dp"
                 android:textStyle="bold"
                 android:layout_marginRight="10dp"
                 android:textColor="@color/oringe_text"
-                android:textSize="21sp" />
+                android:textSize="19sp" />
 
             <ImageView
                 android:id="@+id/challengeList_alarm"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
                 android:contentDescription="ALARM"
                 android:src="@drawable/alarm" />
 
@@ -52,8 +53,10 @@
             android:id="@+id/challengeList_cycle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="1.5dp"
             android:textColor="@color/oringe_sub"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold"/>
 
         <LinearLayout
@@ -64,7 +67,8 @@
             <TextView
                 android:id="@+id/challengeList_dateRange"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="13sp"/>
         </LinearLayout>
     </LinearLayout>
 
