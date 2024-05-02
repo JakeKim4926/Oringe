@@ -5,6 +5,7 @@
     android:id="@+id/template"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".activity.challenge.TemplateActivity">
 
@@ -25,7 +26,7 @@
         <com.ssafy.oringe.ui.component.common.TitleView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="35dp"
             app:text="템플릿을 선택하여"
             app:textSize="5.5sp" />
 
@@ -38,6 +39,7 @@
         <com.ssafy.oringe.ui.component.common.TitleView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="30dp"
             app:text="최대 5개까지만 가능합니다."
             app:textColor="@color/oringe_sub"
@@ -60,8 +62,9 @@
         <!--상세 템플릿-->
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="470dp"
-            android:layout_marginTop="30dp">
+            android:layout_height="450dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp">
 
             <LinearLayout
                 android:id="@+id/template_templateDetail"

@@ -9,8 +9,9 @@
         android:id="@+id/modify_template"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:text="수정"
-        android:textStyle="bold"
+        android:textStyle="bold|italic"
         android:textColor="@color/oringe_main" />
 
 </LinearLayout>

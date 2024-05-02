@@ -38,8 +38,11 @@ import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
 import com.ssafy.oringe.ui.component.common.CalendarView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -319,6 +322,12 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         memo = memoEdit.getText().toString();
         templates = new ArrayList<>();
 
+        // 날짜 비교
+        if (compareDates(start, end)) {
+            Toast.makeText(this, "시작일과 종료일을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String[] arr = {"challengeDetailTitle", "challengeDetailContent",
             "challengeDetailImage", "challengeDetailImageContent",
             "challengeDetailVideo", "Digital", "Call", "WakeUp", "Walk"};
@@ -356,15 +365,15 @@ public class ChallengeCreateActivity extends AppCompatActivity {
                     builder.challengeAppName(inputData.get("제한할 앱 이름을 입력하세요.\n(ex. 인스타그램)"));
                     builder.challengeAppTime(inputData.get("제한 시간을 입력하세요.\n(1시간 단위만 가능)"));
                     break;
-                case "소중한 사람과 통화하기":
+                case "전화":
                     builder.challengeCallName(inputData.get("통화 대상 이름을 입력하세요."));
-                    builder.challengeCallNumber(inputData.get("통화 대상 전화번호를 입력하세요."));
+                    builder.challengeCallNumber(inputData.get("통화 대상 전화번호를 입력하세요.\n(ex. 01012345678)"));
                     break;
                 case "기상":
                     builder.challengeWakeupTime(inputData.get("기상 시간을 입력하세요.\n(ex. 07:00)"));
                     break;
                 case "걷기":
-                    builder.challengeWalk(inputData.get("목표 걸음 수를 입력하세요."));
+                    builder.challengeWalk(inputData.get("목표 걸음 수를 입력하세요.\n(ex. 10000)"));
                     break;
             }
         }
@@ -402,5 +411,17 @@ public class ChallengeCreateActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean compareDates(String startDate, String endDate) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            Date start = format.parse(startDate);
+            Date end = format.parse(endDate);
+            return start.after(end); // 시작 날짜가 종료 날짜보다 뒤면 true 반환
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
