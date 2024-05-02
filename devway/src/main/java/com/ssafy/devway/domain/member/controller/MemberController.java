@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/oringe/api")
 @Tag(name = "회원", description = "member API")
 public class MemberController {
     private final MemberService memberService;
