@@ -98,8 +98,9 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                     List<Challenge> challengeList = response.body();
                     String[] titles = new String[challengeList.size() + 1];
                     titles[0] = "인증할 챌린지를 선택하세요.";
-                    for (int i = 1; i <= challengeList.size(); i++) {
-                        titles[i] = challengeList.get(i).getChallengeTitle();
+                    for (int i = 0; i < challengeList.size(); i++) {
+                        titles[i + 1] = challengeList.get(i).getChallengeTitle();
+                        System.out.println(titles[i + 1]);
                     }
                     callback.onChallengeListReceived(titles);
                 } else {
