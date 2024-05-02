@@ -1,17 +1,15 @@
-package com.ssafy.devway.ChatGPT;
+package com.ssafy.devway.GPT;
 
 import com.google.gson.Gson;
-import com.ssafy.devway.ChatGPT.dto.ChatRequestDTO;
-import com.ssafy.devway.ChatGPT.dto.ChatResponseDTO;
-import com.ssafy.devway.ChatGPT.dto.Message;
-import com.ssafy.devway.ChatGPT.property.ChatgptProperties;
+import com.ssafy.devway.GPT.dto.ChatRequestDTO;
+import com.ssafy.devway.GPT.dto.ChatResponseDTO;
+import com.ssafy.devway.GPT.dto.Message;
+import com.ssafy.devway.GPT.property.ChatgptProperties;
 import com.ssafy.devway.block.element.BlockElement;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

@@ -1,8 +1,6 @@
-package com.ssafy.devway.ChatGPT.property;
+package com.ssafy.devway.GPT.property;
 
 import lombok.Data;
-import lombok.Getter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
