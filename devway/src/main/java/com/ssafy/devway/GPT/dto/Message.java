@@ -1,9 +1,7 @@
-package com.ssafy.devway.ChatGPT.dto;
+package com.ssafy.devway.GPT.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @AllArgsConstructor
