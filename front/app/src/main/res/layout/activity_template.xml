@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/template_create"
+    android:id="@+id/template"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -32,9 +32,16 @@
         <com.ssafy.oringe.ui.component.common.TitleView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
             app:text="나만의 템플릿을 골라보세요."
             app:textSize="5.5sp" />
+
+        <com.ssafy.oringe.ui.component.common.TitleView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            app:text="최대 5개까지만 가능합니다."
+            app:textColor="@color/oringe_sub"
+            app:textSize="4.5sp" />
 
         <!--카테고리-->
         <HorizontalScrollView
@@ -44,7 +51,7 @@
             android:scrollbars="none">
 
             <LinearLayout
-                android:id="@+id/category"
+                android:id="@+id/template_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" />
@@ -57,7 +64,7 @@
             android:layout_marginTop="30dp">
 
             <LinearLayout
-                android:id="@+id/template"
+                android:id="@+id/template_templateDetail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
@@ -83,7 +90,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/create"
+            android:id="@+id/template_create"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_border_orange"

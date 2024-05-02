@@ -3,21 +3,14 @@ package com.ssafy.oringe.ui.component.common;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.ssafy.oringe.R;
-import com.ssafy.oringe.activity.challenge.ChallengeCreateFormActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

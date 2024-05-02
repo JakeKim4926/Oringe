@@ -81,7 +81,7 @@ public class ChallengeListActivity extends AppCompatActivity {
         doView = findViewById(R.id.challengeList_ing);
         didView = findViewById(R.id.challengeList_did);
 
-        challengeListContainer = findViewById(R.id.challengeList); // XML에서 레이아웃을 찾음
+        challengeListContainer = findViewById(R.id.challengeList_list); // XML에서 레이아웃을 찾음
 
         View.OnClickListener tabListener = new View.OnClickListener() {
             @Override
@@ -231,7 +231,7 @@ public class ChallengeListActivity extends AppCompatActivity {
             titleView.setText(challenge.getChallengeTitle());
             alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE); // 알람이 true일 때만 보이도록
             if (daysBetween < 0 && daysBetween2 >0) {
-                dDayView.setText("D-" + daysBetween);
+                dDayView.setText("D" + daysBetween);
             } else if (daysBetween > 0 && daysBetween2 < 0) {
                 dDayView.setText("완료");
             }

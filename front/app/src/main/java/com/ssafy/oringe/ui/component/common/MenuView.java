@@ -10,10 +10,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.ssafy.oringe.R;
-import com.ssafy.oringe.activity.challenge.ChallengeCreateFormActivity;
+import com.ssafy.oringe.activity.challenge.ChallengeCreateActivity;
 import com.ssafy.oringe.activity.challenge.ChallengeListActivity;
-
-import java.lang.ref.Reference;
 
 public class MenuView extends LinearLayout {
     private int src;
@@ -48,7 +46,7 @@ public class MenuView extends LinearLayout {
             imageButton.setImageResource(src);
             if (src == R.drawable.plus_btn) {
                 imageButton.setOnClickListener(v -> {
-                    Intent intent = new Intent(context, ChallengeCreateFormActivity.class);
+                    Intent intent = new Intent(context, ChallengeCreateActivity.class);
                     context.startActivity(intent);
                 });
             } else if (src == R.drawable.main_menu) {
