@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CallLog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,6 @@ import com.ssafy.oringe.R;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class RecordCallActivity extends AppCompatActivity {
 
@@ -39,14 +37,14 @@ public class RecordCallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_record_call);
+        setContentView(R.layout.activity_record_create);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        callListContainer = findViewById(R.id.call);
+        callListContainer = findViewById(R.id.record_create);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
@@ -70,39 +68,55 @@ public class RecordCallActivity extends AppCompatActivity {
     }
 
 
-    public Boolean getCallHistory(){
-        String[] callSet = new String[] { CallLog.Calls.DATE, CallLog.Calls.TYPE, CallLog.Calls.NUMBER, CallLog.Calls.DURATION };
+    public Boolean getCallHistory() {
+        String[] callSet = new String[]{CallLog.Calls.DATE, CallLog.Calls.TYPE, CallLog.Calls.NUMBER, CallLog.Calls.DURATION};
 
-        Cursor c = getContentResolver().query(CallLog.Calls.CONTENT_URI, callSet, null, null, null);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        long todayStart = calendar.getTimeInMillis();
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        long todayEnd = calendar.getTimeInMillis();
 
-        if ( c == null)
-        {
+        String selection = CallLog.Calls.DATE + " BETWEEN ? AND ? AND " + CallLog.Calls.NUMBER + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(todayStart), String.valueOf(todayEnd), "01012345679ys"};
+
+        Cursor c = getContentResolver().query(CallLog.Calls.CONTENT_URI, callSet, selection, selectionArgs, null);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View callView = inflater.inflate(R.layout.sample_record_call_view, callListContainer, false);
+        nameView = callView.findViewById(R.id.call_name);
+        timeView = callView.findViewById(R.id.call_time);
+        dateView = callView.findViewById(R.id.call_date);
+        doneView = callView.findViewById(R.id.call_done);
+        if (c == null || c.getCount() == 0) {
+            doneView.setText("통화 내역이 없습니다.");
+            callListContainer.addView(callView);
             return false;
         }
-        c.moveToFirst();
-        do{
-            long callDate = c.getLong(0);
-            SimpleDateFormat datePattern = new SimpleDateFormat("yyyy-MM-dd");
-            String date_str = datePattern.format(new Date(callDate));
-            LayoutInflater inflater = LayoutInflater.from(this);
-            View callView = inflater.inflate(R.layout.sample_record_call_view, callListContainer, false);
 
-            nameView = callView.findViewById(R.id.call_name);
-            timeView = callView.findViewById(R.id.call_time);
-            dateView = callView.findViewById(R.id.call_date);
-            doneView = callView.findViewById(R.id.call_done);
+        if (c.moveToFirst()) {
+            do {
+                long callDate = c.getLong(0);
+                SimpleDateFormat datePattern = new SimpleDateFormat("yyyy-MM-dd");
+                String date_str = datePattern.format(new Date(callDate));
 
-            nameView.setText("📞 "+c.getString(2));
-            int callSeconds = Integer.parseInt(c.getString(3));
-            if(callSeconds >= 60){
-                timeView.setText(callSeconds/60 +"분 " + callSeconds%60 + "초");
-            }else{
-                timeView.setText(callSeconds+"초");
-            }
-            dateView.setText(date_str);
-            doneView.setText(" 통화했습니다.");
-            callListContainer.addView(callView);
-        } while (c.moveToNext());
+                nameView.setText("📞 " + c.getString(2));
+                int callSeconds = Integer.parseInt(c.getString(3));
+                if (callSeconds >= 60) {
+                    timeView.setText(callSeconds / 60 + "분 " + callSeconds % 60 + "초");
+                } else {
+                    timeView.setText(callSeconds + "초");
+                }
+                dateView.setText(date_str);
+                doneView.setText(" 통화했습니다.");
+                callListContainer.addView(callView);
+            } while (c.moveToNext());
+        }
         c.close();
         return true;
     }
