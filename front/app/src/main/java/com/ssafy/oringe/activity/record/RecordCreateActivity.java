@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.ssafy.oringe.R;
 import com.ssafy.oringe.activity.common.MainActivity;
+import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
 
@@ -30,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,13 +40,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecordCreateActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private static final String API_URL = "http://10.0.2.2:8050/api/";
+    private String API_URL;
     private List<Challenge> challengeList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_record_create);
+        API_URL = getString(R.string.APIURL);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -77,9 +81,12 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     }
 
     public void getChallengeList(Long memberId, ChallengeListCallback callback) {
+
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build();
         System.out.println("memberID: " + memberId);
         Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(memberId, 2);

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="APIURL">http://10.0.2.2:8050/api/</string>
+    <string name="APIURL">https://k10b201.p.ssafy.io/oringe/api/</string>
 </resources>

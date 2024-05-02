@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.ssafy.oringe.R;
 import com.ssafy.oringe.activity.challenge.ChallengeListActivity;
 import com.ssafy.oringe.activity.record.RecordCreateActivity;
+import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.member.Member;
@@ -47,6 +48,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,7 +57,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String API_URL = "http://10.0.2.2:8050/api/";
+    private static final String API_URL = "https://k10b201.p.ssafy.io/oringe/api/";
     private FirebaseAuth auth;
     private Button btn_record;
 
@@ -94,9 +96,11 @@ public class MainActivity extends AppCompatActivity {
         btn_list.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChallengeListActivity.class)));
     }
 
+    OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl(API_URL)
         .addConverterFactory(GsonConverterFactory.create())
+        .client(client)
         .build();
     private void getMemberId(String memberEmail) {
         Call<Member> call = retrofit.create(MemberService.class).getMemberByEmail(memberEmail);
@@ -136,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build();
 
         Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getTodayChallengeList(memberId);
@@ -176,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         challengeListContainer.removeAllViews();
         for (Challenge challenge : challengeList) {
-            // 각 challenge 객체에 대한 뷰를 동적으로 만들자!
             View challengeView = inflater.inflate(R.layout.sample_main_list_view, challengeListContainer, false);
 
             titleView = challengeView.findViewById(R.id.main_list_title);
@@ -188,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
             LocalDate endDate = LocalDate.parse(challenge.getChallengeEnd());
             LocalDate today = LocalDate.now();
 
-            // 시작 날짜와 오늘 날짜 사이의 차이를 계산합니다.
             long totaldate = ChronoUnit.DAYS.between(startDate, endDate);
             long nowdate = ChronoUnit.DAYS.between(startDate, today);
 
