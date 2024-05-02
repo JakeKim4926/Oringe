@@ -9,14 +9,20 @@ import static com.ssafy.devway.text.CheckerMode.ALLOWED_KOREAN;
 import com.ssafy.devway.block.element.BlockElement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 @ToString
 public class TextBlock implements BlockElement {
 
     private String content;
     private int length_limit = 100000;
+
+    public TextBlock(String content) {
+        this.content = content;
+    }
 
     public String getName() {
         return "TEXT";
@@ -42,6 +48,9 @@ public class TextBlock implements BlockElement {
     }
     public int getContentLength() {
         return content.length();
+    }
+    public boolean isLengthOver(int len){
+        return content.length() >= len;
     }
 
     // 오직 한글만 있는지 검사
@@ -77,7 +86,6 @@ public class TextBlock implements BlockElement {
     public boolean matchesPattern(String regex) {
         return content.matches(regex);
     }
-
 
 //    public Boolean stringChecker(CheckerMode check_mode) { //블랙리스트 방식으로
 //        switch (check_mode) {
