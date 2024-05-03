@@ -82,14 +82,23 @@ public class RecordService {
     return ResponseEntity.ok(byRecordId);
   }
 
-  public ResponseEntity<Record> setSuccess(Long recordId) {
+  public ResponseEntity<?> getSuccess(Long recordId) {
     Record byRecordId = recordRespository.findByRecordId(recordId);
     if (byRecordId == null) {
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    return ResponseEntity.ok(byRecordId.getRecordSuccess());
+  }
+
+  public ResponseEntity<?> setSuccess(Long recordId) {
+    Record byRecordId = recordRespository.findByRecordId(recordId);
+    if (byRecordId == null) {
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     byRecordId.setRecordSuccess(true);
-    return ResponseEntity.ok(byRecordId);
+    return ResponseEntity.ok().build();
   }
 
   private CalendarRecordResDto convertToCalendarRecordResDto(Record record) {

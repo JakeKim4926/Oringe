@@ -43,9 +43,15 @@ public class RecordController {
     return recordService.selectRecord(recordId);
   }
 
+  @GetMapping("/record/success")
+  @Operation(summary = "인증 성공 여부 조회")
+  public ResponseEntity<?> getSuccess(@RequestParam Long recordId) {
+    return recordService.getSuccess(recordId);
+  }
+
   @PatchMapping("/record/success")
   @Operation(summary = "인증 성공 하기")
-  public ResponseEntity<Record> setSuccess(@RequestParam Long recordId) {
+  public ResponseEntity<?> setSuccess(@RequestParam Long recordId) {
     return recordService.setSuccess(recordId);
   }
 }
