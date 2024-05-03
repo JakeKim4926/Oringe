@@ -24,26 +24,28 @@ public class RecordController {
 
   @PostMapping("/record")
   @Operation(summary = "인증 생성")
-  public ResponseEntity<Record> postRecord(@RequestBody RecordCreateReqDto dto, Long memberId) {
-    return ResponseEntity.ok(recordService.insertRecord(dto, memberId));
+  public ResponseEntity<?> postRecord(@RequestBody RecordCreateReqDto recordCreateReqDto) {
+    return recordService.insertRecord(recordCreateReqDto);
   }
 
-  @GetMapping("/record/challenge/{challengeId}")
+  @GetMapping("/record/challenge")
   @Operation(summary = "특정 챌린지의 월 별 인증 전체 조회")
-  public ResponseEntity<List<CalendarRecordResDto>> getCalendarRecord(Long challengeId,
-      Long memberId, int month) {
-    return ResponseEntity.ok(recordService.selectCalendarRecord(challengeId, memberId, month));
+  public ResponseEntity<List<CalendarRecordResDto>> getCalendarRecord(
+      @RequestParam Long memberId,
+      @RequestParam Long challengeId,
+      @RequestParam int month) {
+    return recordService.selectCalendarRecord(memberId, challengeId, month);
   }
 
-  @GetMapping("/record/{recordId}")
+  @GetMapping("/record")
   @Operation(summary = "인증 상세 조회")
-  public ResponseEntity<Record> getRecord(@PathVariable Long recordId) {
-    return ResponseEntity.ok(recordService.selectRecord(recordId));
+  public ResponseEntity<Record> getRecord(@RequestParam Long recordId) {
+    return recordService.selectRecord(recordId);
   }
 
-  @PatchMapping("/record/success/{recordId}")
+  @PatchMapping("/record/success")
   @Operation(summary = "인증 성공 하기")
-  public ResponseEntity<Record> setSuccess(@PathVariable Long recordId) {
+  public ResponseEntity<Record> setSuccess(@RequestParam Long recordId) {
     return recordService.setSuccess(recordId);
   }
 }
