@@ -86,6 +86,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
+                        android:layout_gravity="center_horizontal"
                         android:orientation="horizontal">
 
                         <com.ssafy.oringe.ui.component.common.CalendarView
@@ -130,62 +131,64 @@
                         android:layout_height="wrap_content"
                         tools:ignore="UselessParent">
 
-                        <TableRow tools:ignore="UselessParent">
+                        <TableRow
+                            android:layout_gravity="clip_horizontal"
+                            tools:ignore="UselessParent">
 
                             <TextView
                                 android:id="@+id/monday"
-                                android:paddingLeft="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingRight="15dp"
-                                android:paddingBottom="10dp"
+                                android:paddingLeft="13dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="13dp"
+                                android:paddingBottom="8dp"
                                 android:text="월" />
 
                             <TextView
                                 android:id="@+id/tuesday"
-                                android:paddingLeft="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingRight="15dp"
-                                android:paddingBottom="10dp"
+                                android:paddingLeft="13dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="13dp"
+                                android:paddingBottom="8dp"
                                 android:text="화" />
 
                             <TextView
                                 android:id="@+id/wednesday"
-                                android:paddingLeft="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingRight="15dp"
-                                android:paddingBottom="10dp"
+                                android:paddingLeft="13dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="13dp"
+                                android:paddingBottom="8dp"
                                 android:text="수" />
 
                             <TextView
                                 android:id="@+id/thursday"
-                                android:paddingLeft="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingRight="15dp"
-                                android:paddingBottom="10dp"
+                                android:paddingLeft="13dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="13dp"
+                                android:paddingBottom="8dp"
                                 android:text="목" />
 
                             <TextView
                                 android:id="@+id/friday"
-                                android:paddingLeft="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingRight="15dp"
-                                android:paddingBottom="10dp"
+                                android:paddingLeft="13dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="13dp"
+                                android:paddingBottom="8dp"
                                 android:text="금" />
 
                             <TextView
                                 android:id="@+id/saturday"
-                                android:paddingLeft="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingRight="15dp"
-                                android:paddingBottom="10dp"
+                                android:paddingLeft="13dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="13dp"
+                                android:paddingBottom="8dp"
                                 android:text="토" />
 
                             <TextView
                                 android:id="@+id/sunday"
-                                android:paddingLeft="15dp"
-                                android:paddingTop="10dp"
-                                android:paddingRight="15dp"
-                                android:paddingBottom="10dp"
+                                android:paddingLeft="13dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="13dp"
+                                android:paddingBottom="8dp"
                                 android:text="일" />
                         </TableRow>
                     </TableLayout>
