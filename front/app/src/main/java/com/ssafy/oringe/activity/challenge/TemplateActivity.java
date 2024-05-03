@@ -230,12 +230,7 @@ public class TemplateActivity extends AppCompatActivity {
                 for (String tem : map.keySet()) {
                     View templateView = inflater.inflate(R.layout.sample_template_view, templateContainer, false);
                     TextView textView = templateView.findViewById(R.id.template_templateDetail_name);
-                    if (tem.equals("전화\n소중한 사람과의 통화")) tem = "전화";
                     textView.setText(tem);
-                    if (textView.getText().toString().equals("전화")) textView.append("\n(소중한 사람과의 통화)");
-                    else if (textView.getText().toString().equals("디지털 디톡스")) textView.append("\n(앱 사용시간 줄이기)");
-                    else if (textView.getText().toString().equals("걷기")) textView.append("\n(운동하고 건강해지기)");
-                    else if (textView.getText().toString().equals("기상")) textView.append("\n(주어진 명언을 똑같이 입력해야만 인증완료)");
                     templateContainer.addView(templateView);
                     chooseTemplate(textView);
                 }
@@ -245,12 +240,7 @@ public class TemplateActivity extends AppCompatActivity {
             for (String tem : temMap.keySet()) {
                 View templateView = inflater.inflate(R.layout.sample_template_view, templateContainer, false);
                 TextView textView = templateView.findViewById(R.id.template_templateDetail_name);
-                if (tem.equals("전화\n소중한 사람과의 통화")) tem = "전화";
                 textView.setText(tem);
-                if (textView.getText().toString().equals("전화")) textView.append("\n(소중한 사람과의 통화)");
-                else if (textView.getText().toString().equals("디지털 디톡스")) textView.append("\n(앱 사용시간 줄이기)");
-                else if (textView.getText().toString().equals("걷기")) textView.append("\n(운동하고 건강해지기)");
-                else if (textView.getText().toString().equals("기상")) textView.append("\n(주어진 명언을 똑같이 입력해야만 인증완료)");
                 templateContainer.addView(templateView);
                 chooseTemplate(textView);
             }
@@ -270,11 +260,11 @@ public class TemplateActivity extends AppCompatActivity {
                 String selectedText = ((TextView) v).getText().toString();
 
                 // 다른 선택들을 비활성화하는 로직 추가
-                if (clicked && canSelectMore()) {
-                    if (selectedText.equals("전화") ||
-                        selectedText.equals("기상") ||
-                        selectedText.equals("걷기")||
-                        selectedText.equals("디지털 디톡스")) {
+                if (clicked && !canSelectMore()) {
+                    if (selectedText.contains("전화") ||
+                        selectedText.contains("기상") ||
+                        selectedText.contains("걷기")||
+                        selectedText.contains("디지털 디톡스")) {
                         Toast.makeText(getApplicationContext(), "추천 챌린지는 하나만 선택 가능합니다.", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -295,7 +285,7 @@ public class TemplateActivity extends AppCompatActivity {
 
     // 다른 선택이 이미 활성화되었는지 확인
     private boolean canSelectMore() {
-        return (callChallenge || wakeupChallenge || walkChallenge || digitalChallenge);
+        return !(callChallenge || wakeupChallenge || walkChallenge || digitalChallenge);
     }
 
     // UI 업데이트 메소드

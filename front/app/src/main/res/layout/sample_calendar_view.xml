@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/oringe_main"
         android:clickable="true"
+        android:textSize="14sp"
         android:focusable="false"
         android:textAlignment="center" />
 
