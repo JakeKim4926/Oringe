@@ -38,21 +38,18 @@
                     android:id="@+id/image_main_org"
                     android:layout_width="120dp"
                     android:layout_height="100dp"
-                    android:layout_centerVertical="true"
                     android:src="@drawable/main_org" />
 
                 <FrameLayout
                     android:id="@+id/frameLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/image_main_org">
+                    android:layout_height="100dp">
 
                     <ImageView
                         android:id="@+id/image_bubble"
                         android:layout_width="280dp"
                         android:layout_height="100dp"
-                        android:src="@drawable/bubble"></ImageView>
+                        android:src="@drawable/bubble"/>
 
                     <TextView
                         android:id="@+id/text_nickname_hi"
