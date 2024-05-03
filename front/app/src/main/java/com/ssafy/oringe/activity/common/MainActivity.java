@@ -101,7 +101,13 @@ public class MainActivity extends AppCompatActivity {
         btn_list.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChallengeListActivity.class)));
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Long memberId = sharedPref.getLong("loginId", 0);
+        getTodayChallengeList(memberId);
+    }
     private void getMemberId(String memberEmail) {
         OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
@@ -187,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
     public void setData(List<Challenge> challengeList) {
         LayoutInflater inflater = LayoutInflater.from(this);
         challengeListContainer.removeAllViews();
-        if(challengeList.isEmpty()){
+        if (challengeList.isEmpty()) {
             View challengeView = inflater.inflate(R.layout.sample_main_list_view, challengeListContainer, false);
 
             titleView = challengeView.findViewById(R.id.main_list_title);
@@ -212,12 +218,17 @@ public class MainActivity extends AppCompatActivity {
             long nowdate = ChronoUnit.DAYS.between(startDate, today);
 
             titleView.setText(challenge.getChallengeTitle());
-            if(nowdate == 0){
-                progressView.setText("0"+ "% 진행중");
+            if (nowdate == 0) {
+                progressView.setText("0" + "% 진행중");
                 progressBarView.setProgress(0);
-            }else{
-                progressView.setText((int) ((double) nowdate / totaldate * 100) + "% 진행중");
-                progressBarView.setProgress((int) ((double) nowdate / totaldate * 100));
+            } else {
+                if ((int) ((double) nowdate / totaldate * 100) >= 100) {
+                    progressView.setText("100" + "% 진행중");
+                    progressBarView.setProgress(100);
+                } else {
+                    progressView.setText((int) ((double) nowdate / totaldate * 100) + "% 진행중");
+                    progressBarView.setProgress((int) ((double) nowdate / totaldate * 100));
+                }
             }
             orgView.setImageResource(R.drawable.sad_org);
             successView.setText("오늘은 달성하지 못했어요");

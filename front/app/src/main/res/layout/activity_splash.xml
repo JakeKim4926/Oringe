@@ -8,13 +8,10 @@
     android:background="#FF6B00"
     android:gravity="center_vertical"
     tools:context=".activity.common.SplashActivity">
-
     <ImageView
         android:id="@+id/imageViewSplash"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_gravity="center"
         android:src="@drawable/splash" />
-
-
 </LinearLayout>
