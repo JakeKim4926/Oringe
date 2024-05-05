@@ -112,12 +112,12 @@ public class RecordService {
     return ResponseEntity.ok(byRecordId.getRecordTemplates());
   }
 
-//  public ResponseEntity<?> textTemplate(Long memberId, Long challengeId, Long challengeDetailId) {
-//    ChallengeDetail byChallengeDetailId = challengeDetailRepository.findByChallengeDetailId(
-//        challengeDetailId);
-//
-//    return ResponseEntity.ok().build();
-//  }
+  public ResponseEntity<?> textTemplate(Long memberId, Long challengeId, Long challengeDetailId) {
+    ChallengeDetail byChallengeDetailId = challengeDetailRepository.findByChallengeDetailId(
+        challengeDetailId);
+
+    return ResponseEntity.ok().build();
+  }
 
   private CalendarRecordResDto convertToCalendarRecordResDto(Record record) {
     return new CalendarRecordResDto(
