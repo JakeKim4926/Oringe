@@ -38,5 +38,10 @@ public class ChallengeDetail {
 
     private Integer Walk;
 
+    private Integer TTS;
+
+    private Integer STT;
+
+
 
 }

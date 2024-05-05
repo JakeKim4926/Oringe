@@ -2,6 +2,8 @@ package com.ssafy.devway.domain.record.service;
 
 import com.ssafy.devway.domain.challenge.document.Challenge;
 import com.ssafy.devway.domain.challenge.repository.ChallengeRepository;
+import com.ssafy.devway.domain.challengeDetail.document.ChallengeDetail;
+import com.ssafy.devway.domain.challengeDetail.repository.ChallengeDetailRepository;
 import com.ssafy.devway.domain.member.document.Member;
 import com.ssafy.devway.domain.member.repository.MemberRepository;
 import com.ssafy.devway.domain.record.document.Record;
@@ -30,6 +32,7 @@ public class RecordService {
   private final MemberRepository memberRepository;
   private final ChallengeRepository challengeRepository;
   private final AutoIncrementSequenceService autoIncrementSequenceService;
+  private final ChallengeDetailRepository challengeDetailRepository;
 
   public ResponseEntity<?> insertRecord(RecordCreateReqDto dto) {
     Member member = memberRepository.findByMemberId(dto.getMemberId());
@@ -100,6 +103,21 @@ public class RecordService {
     byRecordId.setRecordSuccess(true);
     return ResponseEntity.ok().build();
   }
+
+  public ResponseEntity<?> getTemplates(Long recordId) {
+    Record byRecordId = recordRespository.findByRecordId(recordId);
+    if(byRecordId == null)
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+    return ResponseEntity.ok(byRecordId.getRecordTemplates());
+  }
+
+//  public ResponseEntity<?> textTemplate(Long memberId, Long challengeId, Long challengeDetailId) {
+//    ChallengeDetail byChallengeDetailId = challengeDetailRepository.findByChallengeDetailId(
+//        challengeDetailId);
+//
+//    return ResponseEntity.ok().build();
+//  }
 
   private CalendarRecordResDto convertToCalendarRecordResDto(Record record) {
     return new CalendarRecordResDto(

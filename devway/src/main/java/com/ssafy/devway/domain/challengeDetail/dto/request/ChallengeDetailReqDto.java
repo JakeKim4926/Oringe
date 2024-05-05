@@ -30,4 +30,8 @@ public class ChallengeDetailReqDto {
     private Integer challengeDetailWakeupTime;
 
     private Integer challengeDetailWalk;
+
+    private Integer challengeDetailSTT;
+
+    private Integer challengeDetailTTS;
 }

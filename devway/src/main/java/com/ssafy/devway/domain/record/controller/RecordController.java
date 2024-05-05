@@ -54,4 +54,10 @@ public class RecordController {
   public ResponseEntity<?> setSuccess(@RequestParam Long recordId) {
     return recordService.setSuccess(recordId);
   }
+
+  @GetMapping("/record/templates")
+  @Operation(summary = "인증 내용 조회")
+  public ResponseEntity<?> getTemplates(@RequestParam Long recordId) {
+    return recordService.getTemplates(recordId);
+  }
 }
