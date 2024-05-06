@@ -26,12 +26,11 @@ public class ChallengeDetailService {
             .challengeDetailTitle(dto.getChallengeDetailTitle())
             .challengeDetailContent(dto.getChallengeDetailContent())
             .challengeDetailImage(dto.getChallengeDetailImage())
-            .challengeDetailImageContent(dto.getChallengeDetailImageContent())
+            .challengeDetailGif(dto.getChallengeDetailGif())
+            .challengeDetailAudio(dto.getChallengeDetailAudio())
+            .challengeDetailSTT(dto.getChallengeDetailSTT())
+            .challengeDetailTTS(dto.getChallengeDetailTTS())
             .challengeDetailVideo(dto.getChallengeDetailVideo())
-            .Digital(dto.getChallengeDetailAppName())
-            .Call(dto.getChallengeDetailAppTime())
-            .WakeUp(dto.getChallengeDetailCallName())
-            .Walk(dto.getChallengeDetailCallNumber())
             .build();
 
         challengeDetailRepository.save(challengeDetail);
