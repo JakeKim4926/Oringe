@@ -57,7 +57,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String API_URL = "https://k10b201.p.ssafy.io/oringe/api/";
+    private String API_URL;
     private FirebaseAuth auth;
     private Button btn_record;
 
@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView progressView;
     private ProgressBar progressBarView;
     private TextView successView;
+
+    private ImageView orgView;
+
     private List<Challenge> challengeList;
 
     private ViewGroup challengeListContainer; // 동적 뷰를 추가할 컨테이너
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        API_URL = getString(R.string.APIURL);
 
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -96,13 +101,14 @@ public class MainActivity extends AppCompatActivity {
         btn_list.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChallengeListActivity.class)));
     }
 
-    OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
-    Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl(API_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(client)
-        .build();
+
     private void getMemberId(String memberEmail) {
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build();
         Call<Member> call = retrofit.create(MemberService.class).getMemberByEmail(memberEmail);
         call.enqueue(new Callback<Member>() {
             @Override
@@ -137,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getTodayChallengeList(Long memberId) {
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -180,6 +187,14 @@ public class MainActivity extends AppCompatActivity {
     public void setData(List<Challenge> challengeList) {
         LayoutInflater inflater = LayoutInflater.from(this);
         challengeListContainer.removeAllViews();
+        if(challengeList.isEmpty()){
+            View challengeView = inflater.inflate(R.layout.sample_main_list_view, challengeListContainer, false);
+
+            titleView = challengeView.findViewById(R.id.main_list_title);
+            titleView.setText("오늘의 챌린지가 없어요 \n 챌린지를 생성해 보세요!");
+            challengeListContainer.addView(challengeView);
+            return;
+        }
         for (Challenge challenge : challengeList) {
             View challengeView = inflater.inflate(R.layout.sample_main_list_view, challengeListContainer, false);
 
@@ -187,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
             progressView = challengeView.findViewById(R.id.main_list_progress);
             progressBarView = challengeView.findViewById(R.id.main_list_progressbar);
             successView = challengeView.findViewById(R.id.main_list_success);
+            orgView = challengeView.findViewById(R.id.main_list_org);
 
             LocalDate startDate = LocalDate.parse(challenge.getChallengeStart());
             LocalDate endDate = LocalDate.parse(challenge.getChallengeEnd());
@@ -203,7 +219,10 @@ public class MainActivity extends AppCompatActivity {
                 progressView.setText((int) ((double) nowdate / totaldate * 100) + "% 진행중");
                 progressBarView.setProgress((int) ((double) nowdate / totaldate * 100));
             }
-
+            orgView.setImageResource(R.drawable.sad_org);
+            successView.setText("오늘은 달성하지 못했어요");
+//            alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE);
+//            successView.setText(인증있으면?"오늘 달성 완료!":"오늘은 달성하지 못했어요");
             challengeListContainer.addView(challengeView);
 
         }

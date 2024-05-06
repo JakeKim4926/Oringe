@@ -325,6 +325,16 @@ public class ChallengeCreateActivity extends AppCompatActivity {
             Toast.makeText(this, "시작일과 종료일을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
             return;
         }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            Date startDate = format.parse(start);
+            Date endDate = format.parse(end);
+            if (startDate.getDate()-endDate.getDate()<=7) {
+
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         String[] arr = {"challengeDetailTitle", "challengeDetailContent",
             "challengeDetailImage", "challengeDetailGif", "challengeDetailAudio",

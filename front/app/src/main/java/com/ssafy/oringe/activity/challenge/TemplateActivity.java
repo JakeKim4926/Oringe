@@ -255,6 +255,22 @@ public class TemplateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 boolean clicked = (boolean) v.getTag();
                 clicked = !clicked;
+<<<<<<< HEAD
+=======
+                String selectedText = ((TextView) v).getText().toString();
+
+                // 다른 선택들을 비활성화하는 로직 추가
+                if (clicked && !canSelectMore()) {
+                    if (selectedText.contains("전화") ||
+                        selectedText.contains("기상") ||
+                        selectedText.contains("걷기")||
+                        selectedText.contains("디지털 디톡스")) {
+                        Toast.makeText(getApplicationContext(), "추천 챌린지는 하나만 선택 가능합니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
+>>>>>>> c2b221bde844ae1636193e5b0fb8de1f8fc41cf4
                 v.setTag(clicked); // 새로운 선택 상태를 저장
                 updateUIForSelection(v, clicked);
 
@@ -262,6 +278,14 @@ public class TemplateActivity extends AppCompatActivity {
         });
     }
 
+<<<<<<< HEAD
+=======
+    // 다른 선택이 이미 활성화되었는지 확인
+    private boolean canSelectMore() {
+        return !(callChallenge || wakeupChallenge || walkChallenge || digitalChallenge);
+    }
+
+>>>>>>> c2b221bde844ae1636193e5b0fb8de1f8fc41cf4
     // UI 업데이트 메소드
     private void updateUIForSelection(View v, boolean isSelected) {
         int textColor = ContextCompat.getColor(getApplicationContext(), R.color.gray_600);

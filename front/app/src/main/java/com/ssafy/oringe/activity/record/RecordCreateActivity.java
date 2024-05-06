@@ -42,6 +42,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
     private String API_URL;
     private List<Challenge> challengeList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,10 +96,11 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             public void onResponse(Call<List<Challenge>> call, Response<List<Challenge>> response) {
                 if (response.isSuccessful()) {
                     List<Challenge> challengeList = response.body();
-                    String[] titles = new String[challengeList.size()];
+                    String[] titles = new String[challengeList.size() + 1];
+                    titles[0] = "인증할 챌린지를 선택하세요.";
                     for (int i = 0; i < challengeList.size(); i++) {
-                        titles[i] = challengeList.get(i).getChallengeTitle();
-                        System.out.println(titles[i]);
+                        titles[i + 1] = challengeList.get(i).getChallengeTitle();
+                        System.out.println(titles[i + 1]);
                     }
                     callback.onChallengeListReceived(titles);
                 } else {

@@ -10,6 +10,7 @@
         android:backgroundTint="@color/oringe_main"
         android:textSize="15sp"
         android:clickable="true"
+        android:textSize="14sp"
         android:focusable="false"
         android:textAlignment="center" />
 
