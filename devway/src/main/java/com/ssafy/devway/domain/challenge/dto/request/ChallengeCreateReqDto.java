@@ -16,32 +16,17 @@ public class ChallengeCreateReqDto {
 
     private String challengeTitle;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate challengeStart;
+    private String challengeStart;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate challengeEnd;
+    private String challengeEnd;
 
     private List<Integer> challengeCycle;
 
     private Boolean challengeAlarm;
 
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime challengeAlarmTime;
+    private String challengeAlarmTime;
 
     private String challengeMemo;
-
-    private String challengeAppName;
-
-    private String challengeAppTime;
-
-    private String challengeCallName;
-
-    private String challengeCallNumber;
-
-    private String challengeWakeupTime;
-
-    private String challengeWalk;
 
     private List<Integer> order;
 

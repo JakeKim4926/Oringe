@@ -55,11 +55,4 @@ public class ChallengeController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/update/challengeStatus")
-    @Operation(summary = "챌린지 진행 상태 스케줄링")
-    public ResponseEntity<Void> putChallengeStatus() {
-        challengeService.updateChallengeStatus();
-        return ResponseEntity.ok().build();
-    }
-
 }

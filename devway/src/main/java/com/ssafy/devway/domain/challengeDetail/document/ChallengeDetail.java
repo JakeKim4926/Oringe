@@ -26,17 +26,15 @@ public class ChallengeDetail {
 
     private Integer challengeDetailImage;
 
-    private Integer challengeDetailImageContent;
+    private Integer challengeDetailGif;
+
+    private Integer challengeDetailAudio;
 
     private Integer challengeDetailVideo;
 
-    private Integer Digital;
+    private Integer challengeDetailSTT;
 
-    private Integer Call;
-
-    private Integer WakeUp;
-
-    private Integer Walk;
+    private Integer challengeDetailTTS;
 
 
 }
