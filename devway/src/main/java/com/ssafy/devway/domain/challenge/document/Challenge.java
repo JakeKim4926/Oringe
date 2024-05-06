@@ -31,50 +31,28 @@ public class Challenge {
     public static final String SEQUENCE_NAME = "challenge_sequence";
 
     @Id
-    @NotNull
     private Long challengeId;
 
-    @NotNull
     private String challengeTitle;
 
-    @NotNull
-    private LocalDate challengeStart;
+    private String challengeStart;
 
-    @NotNull
-    private LocalDate challengeEnd;
+    private String challengeEnd;
 
-    @NotNull
     private List<Integer> challengeCycle;
 
-    @NotNull
     private Boolean challengeAlarm;
 
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime challengeAlarmTime;
+    private String challengeAlarmTime;
 
     private String challengeMemo;
 
-    @NotNull
     private Integer challengeStatus;
 
-    private String challengeAppName;
-
-    private String challengeAppTime;
-
-    private String challengeCallName;
-
-    private String challengeCallNumber;
-
-    private String challengeWakeupTime;
-
-    private String challengeWalk;
-
     @DBRef
-    @NotNull
     private Member member;
 
     @DBRef
-    @NotNull
     private ChallengeDetail challengeDetail;
 
 }
