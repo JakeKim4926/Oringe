@@ -19,12 +19,6 @@ public class Challenge {
     private Boolean challengeAlarm;
     private String challengeAlarmTime;
     private String challengeMemo;
-    private String challengeAppName;
-    private String challengeAppTime;
-    private String challengeCallName;
-    private String challengeCallNumber;
-    private String challengeWakeupTime;
-    private String challengeWalk;
     private List<Integer> order;
 
 }
