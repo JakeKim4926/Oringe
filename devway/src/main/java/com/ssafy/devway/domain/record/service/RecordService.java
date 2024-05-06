@@ -1,9 +1,19 @@
 package com.ssafy.devway.domain.record.service;
 
+import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_CONTENT;
+import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_IMAGE;
+import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_IMAGE_CONTENT;
+import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_STT;
+import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_TITLE;
+import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_TTS;
+import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_VIDEO;
+
 import com.ssafy.devway.domain.challenge.document.Challenge;
 import com.ssafy.devway.domain.challenge.repository.ChallengeRepository;
+import com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders;
 import com.ssafy.devway.domain.challengeDetail.document.ChallengeDetail;
 import com.ssafy.devway.domain.challengeDetail.repository.ChallengeDetailRepository;
+import com.ssafy.devway.domain.challengeDetail.service.ChallengeDetailService;
 import com.ssafy.devway.domain.member.document.Member;
 import com.ssafy.devway.domain.member.repository.MemberRepository;
 import com.ssafy.devway.domain.record.document.Record;
@@ -28,6 +38,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RecordService {
 
+  private final ChallengeDetailService challengeDetailService;
   private final RecordRespository recordRespository;
   private final MemberRepository memberRepository;
   private final ChallengeRepository challengeRepository;
@@ -40,6 +51,16 @@ public class RecordService {
 
     LocalDate today = LocalDate.now();
 
+    List<Integer> templatesOrder = challengeDetailService.getTemplatesOrder(
+        challenge.getChallengeDetail().getChallengeDetailId());
+
+    for (int i = 0; i < dto.getRecordTemplates().size(); i++) {
+      Boolean bConfirm = confirmTemplates(templatesOrder.get(i), dto.getRecordTemplates().get(i));
+      if (!bConfirm) {
+        return ResponseEntity.badRequest().build();
+      }
+    }
+
     Record record = Record.builder()
         .recordId(autoIncrementSequenceService.generateSequence(Record.SEQUENCE_NAME))
         .challenge(challenge)
@@ -51,8 +72,9 @@ public class RecordService {
 
     Record save = recordRespository.save(record);
 
-    if(save == null)
+    if (save == null) {
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
     return ResponseEntity.ok().build();
   }
@@ -65,8 +87,9 @@ public class RecordService {
     List<Record> recordList = recordRespository.findByChallenge_ChallengeIdAndMember_MemberIdOrderByRecordDateAsc(
         challengeId, memberId);
 
-    if(recordList.isEmpty())
+    if (recordList.isEmpty()) {
       ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
     List<CalendarRecordResDto> collect = recordList.stream()
         .filter(record -> record.getRecordDate().getMonthValue() == month)
@@ -79,8 +102,9 @@ public class RecordService {
   @Transactional(readOnly = true)
   public ResponseEntity<Record> selectRecord(Long recordId) {
     Record byRecordId = recordRespository.findByRecordId(recordId);
-    if(byRecordId == null)
+    if (byRecordId == null) {
       ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
     return ResponseEntity.ok(byRecordId);
   }
@@ -106,8 +130,9 @@ public class RecordService {
 
   public ResponseEntity<?> getTemplates(Long recordId) {
     Record byRecordId = recordRespository.findByRecordId(recordId);
-    if(byRecordId == null)
+    if (byRecordId == null) {
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
     return ResponseEntity.ok(byRecordId.getRecordTemplates());
   }
@@ -125,6 +150,33 @@ public class RecordService {
         record.getRecordSuccess(),
         record.getRecordDate()
     );
+  }
+
+  private Boolean confirmTemplates(Integer challengerDetailIndex, String challengerDetailContent) {
+    if (challengerDetailIndex == CHALLENGE_DETAIL_TITLE.getOrderCode()) {
+      if(challengerDetailContent.length() >= 100)
+        return false;
+    } else if (challengerDetailIndex == CHALLENGE_DETAIL_CONTENT.getOrderCode()) {
+      if(challengerDetailContent.length() >= 1000)
+        return false;
+    } else if (challengerDetailIndex == CHALLENGE_DETAIL_IMAGE.getOrderCode()) {
+      // 이미지 로직 작성
+//      return false;
+    } else if (challengerDetailIndex == CHALLENGE_DETAIL_IMAGE_CONTENT.getOrderCode()) {
+      // 이미지 ???
+//      return false;
+    } else if (challengerDetailIndex == CHALLENGE_DETAIL_VIDEO.getOrderCode()) {
+      // 비디오 로직 작성
+//      return false;
+    } else if (challengerDetailIndex == CHALLENGE_DETAIL_TTS.getOrderCode()) {
+      // TTS 로직 작성
+//      return false;
+    } else if (challengerDetailIndex == CHALLENGE_DETAIL_STT.getOrderCode()) {
+      // STT 로직 작성
+//      return false;
+    }
+
+    return true;
   }
 
 }

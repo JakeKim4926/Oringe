@@ -30,14 +30,6 @@ public class ChallengeDetail {
 
     private Integer challengeDetailVideo;
 
-    private Integer Digital;
-
-    private Integer Call;
-
-    private Integer WakeUp;
-
-    private Integer Walk;
-
     private Integer challengeDetailTTS;
 
     private Integer challengeDetailSTT;

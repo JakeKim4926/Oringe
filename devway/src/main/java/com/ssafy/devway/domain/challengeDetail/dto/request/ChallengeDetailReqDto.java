@@ -19,19 +19,8 @@ public class ChallengeDetailReqDto {
 
     private Integer challengeDetailVideo;
 
-    private Integer challengeDetailAppName;
-
-    private Integer challengeDetailAppTime;
-
-    private Integer challengeDetailCallName;
-
-    private Integer challengeDetailCallNumber;
-
-    private Integer challengeDetailWakeupTime;
-
-    private Integer challengeDetailWalk;
+    private Integer challengeDetailTTS;
 
     private Integer challengeDetailSTT;
 
-    private Integer challengeDetailTTS;
 }

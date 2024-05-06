@@ -53,10 +53,8 @@ public class ChallengeService {
             .challengeDetailImage(dto.getOrder().get(2))
             .challengeDetailImageContent(dto.getOrder().get(3))
             .challengeDetailVideo(dto.getOrder().get(4))
-            .Digital(dto.getOrder().get(5))
-            .Call(dto.getOrder().get(6))
-            .WakeUp(dto.getOrder().get(7))
-            .Walk(dto.getOrder().get(8))
+            .challengeDetailTTS(dto.getOrder().get(5))
+            .challengeDetailSTT(dto.getOrder().get(6))
             .build();
         log.debug("challengeDetail: " + challengeDetail);
         challengeDetailRepository.save(challengeDetail);

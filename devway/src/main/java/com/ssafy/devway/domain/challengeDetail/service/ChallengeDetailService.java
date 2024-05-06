@@ -8,6 +8,7 @@ import com.ssafy.devway.global.config.autoIncrementSequence.service.AutoIncremen
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +36,8 @@ public class ChallengeDetailService {
             .challengeDetailImage(dto.getChallengeDetailImage())
             .challengeDetailImageContent(dto.getChallengeDetailImageContent())
             .challengeDetailVideo(dto.getChallengeDetailVideo())
-            .Digital(dto.getChallengeDetailAppName())
-            .Call(dto.getChallengeDetailAppTime())
-            .WakeUp(dto.getChallengeDetailCallName())
-            .Walk(dto.getChallengeDetailCallNumber())
+            .challengeDetailTTS(dto.getChallengeDetailTTS())
+            .challengeDetailSTT(dto.getChallengeDetailSTT())
             .build();
 
         challengeDetailRepository.save(challengeDetail);
