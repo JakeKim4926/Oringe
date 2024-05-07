@@ -2,7 +2,6 @@ package com.ssafy.devway.domain.record.service;
 
 import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_CONTENT;
 import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_IMAGE;
-import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_IMAGE_CONTENT;
 import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_STT;
 import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_TITLE;
 import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_TTS;
@@ -161,9 +160,6 @@ public class RecordService {
         return false;
     } else if (challengerDetailIndex == CHALLENGE_DETAIL_IMAGE.getOrderCode()) {
       // 이미지 로직 작성
-//      return false;
-    } else if (challengerDetailIndex == CHALLENGE_DETAIL_IMAGE_CONTENT.getOrderCode()) {
-      // 이미지 ???
 //      return false;
     } else if (challengerDetailIndex == CHALLENGE_DETAIL_VIDEO.getOrderCode()) {
       // 비디오 로직 작성

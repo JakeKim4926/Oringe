@@ -1,5 +1,13 @@
 package com.ssafy.devway.domain.challenge.service;
 
+import static com.mongodb.client.model.Filters.eq;
+
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.ssafy.devway.domain.challenge.document.Challenge;
 import com.ssafy.devway.domain.challenge.dto.request.ChallengeCreateReqDto;
 import com.ssafy.devway.domain.challenge.repository.ChallengeRepository;
@@ -10,12 +18,14 @@ import com.ssafy.devway.domain.member.document.Member;
 
 import com.ssafy.devway.domain.member.repository.MemberRepository;
 import com.ssafy.devway.global.config.autoIncrementSequence.service.AutoIncrementSequenceService;
+import jakarta.annotation.PostConstruct;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -31,11 +41,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ChallengeService {
 
+    @Value("${spring.data.mongodb.uri}")
+    private String springDataMongoDBUri;
+    @Value("${spring.data.mongodb.database}")
+    private String springDataMongoDBDatabase;
+
     private final ChallengeRepository challengeRepository;
     private final ChallengeDetailRepository challengeDetailRepository;
     private final MemberRepository memberRepository;
     private final AutoIncrementSequenceService autoIncrementSequenceService;
-    private final MongoTemplate mongoTemplate;
+
+    private MongoClient mongoClient;
+    private MongoDatabase database;
+    private MongoCollection<Document> collection;
+
+    @PostConstruct
+    public void init() {
+        mongoClient = MongoClients.create(springDataMongoDBUri);
+        database = mongoClient.getDatabase(springDataMongoDBDatabase);
+        collection = database.getCollection("challenge");
+    }
 
 
     /*
@@ -43,7 +68,6 @@ public class ChallengeService {
      * */
     public Challenge insertChallenge(ChallengeCreateReqDto dto, Long memberId) {
         Member member = memberRepository.findByMemberId(memberId);
-        log.debug("member: " + member);
 
         ChallengeDetail challengeDetail = ChallengeDetail.builder()
             .challengeDetailId(
@@ -51,31 +75,27 @@ public class ChallengeService {
             .challengeDetailTitle(dto.getOrder().get(0))
             .challengeDetailContent(dto.getOrder().get(1))
             .challengeDetailImage(dto.getOrder().get(2))
-            .challengeDetailImageContent(dto.getOrder().get(3))
-            .challengeDetailVideo(dto.getOrder().get(4))
-            .challengeDetailTTS(dto.getOrder().get(5))
+            .challengeDetailVideo(dto.getOrder().get(3))
+            .challengeDetailAudio(dto.getOrder().get(5))
             .challengeDetailSTT(dto.getOrder().get(6))
+            .challengeDetailTTS(dto.getOrder().get(7))
             .build();
-        log.debug("challengeDetail: " + challengeDetail);
         challengeDetailRepository.save(challengeDetail);
 
         LocalDate today = LocalDate.now();
+        LocalDate start = LocalDate.parse(dto.getChallengeStart());
+        LocalDate end = LocalDate.parse(dto.getChallengeEnd());
+
         int status = -1;
-        if (today.isBefore(dto.getChallengeStart())) {
+        if (today.isBefore(start)) {
             status = 1;
-        } else if (today.isEqual(dto.getChallengeStart()) || (today.isAfter(dto.getChallengeStart())
-            && today.isBefore(dto.getChallengeEnd())) || today.isEqual(dto.getChallengeEnd())) {
+        } else if (today.isEqual(start) || today.isEqual(end)
+            || (today.isAfter(start) && today.isBefore(end))) {
             status = 2;
-        } else if (today.isAfter(dto.getChallengeEnd())) {
+        } else if (today.isAfter(end)) {
             status = 3;
         }
 
-        LocalTime alarmTime = dto.getChallengeAlarmTime();
-        if (dto.getChallengeAlarm()) {
-            alarmTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-        }
-
-        System.out.println(dto.getChallengeAlarmTime());
         Challenge challenge = Challenge.builder()
             .challengeId(autoIncrementSequenceService.generateSequence(Challenge.SEQUENCE_NAME))
             .challengeTitle(dto.getChallengeTitle())
@@ -86,12 +106,6 @@ public class ChallengeService {
             .challengeAlarmTime(dto.getChallengeAlarmTime())
             .challengeStatus(status)
             .challengeMemo(dto.getChallengeMemo())
-            .challengeAppName(dto.getChallengeAppName())
-            .challengeAppTime(dto.getChallengeAppTime())
-            .challengeCallName(dto.getChallengeCallName())
-            .challengeCallNumber(dto.getChallengeCallNumber())
-            .challengeWakeupTime(dto.getChallengeWakeupTime())
-            .challengeWalk(dto.getChallengeWalk())
             .challengeDetail(challengeDetail)
             .member(member)
             .build();
@@ -108,12 +122,12 @@ public class ChallengeService {
         List<Challenge> challengeList = challengeRepository.findByMember_MemberIdOrderByChallengeIdDesc(
             memberId);
         List<Challenge> statusList = new ArrayList<>();
-        for(Challenge challenge:challengeList) {
-            if (challenge.getChallengeStatus()==status) {
+        for (Challenge challenge : challengeList) {
+            if (challenge.getChallengeStatus() == status) {
                 statusList.add(challenge);
             }
         }
-        return  statusList;
+        return statusList;
     }
 
     /*
@@ -153,26 +167,24 @@ public class ChallengeService {
     /*
      * 2.5 매일 챌린지 진행상태 스케줄링
      * */
-    @Scheduled(cron = "0 0 0 */1 * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void updateChallengeStatus() {
-        List<Challenge> challengeList = challengeRepository.findAll();
-        log.debug("challengeList: " + challengeList);
-
         LocalDate today = LocalDate.now();
-        int newStatus = -1;
-        for (Challenge challenge : challengeList) {
-            if (today.isEqual(challenge.getChallengeStart()) || (
-                today.isAfter(challenge.getChallengeStart()) && today.isBefore(
-                    challenge.getChallengeEnd())) || today.isEqual(challenge.getChallengeEnd())) {
-                newStatus = 2;
-            } else if (today.isAfter(challenge.getChallengeEnd())) {
-                newStatus = 3;
-            }
-            // status 변경하는 쿼리
-            Query query = new Query(Criteria.where("_id").is(challenge.getChallengeId()));
-            Update update = new Update().set("challengeStatus", newStatus);
-            mongoTemplate.updateFirst(query, update, Challenge.class);
-        }
+        System.out.println("오눌: " + today);
+
+        Bson query1 = eq("challengeStatus", 1);
+        Bson filter1 = Filters.and(
+            Filters.lte("challengeStart", today.toString()),
+            Filters.gte("challengeEnd", today.toString())
+        );
+        Bson update1 = Updates.set("challengeStatus", 2);
+        collection.updateMany(filter1, update1);
+
+        Bson query2 = eq("challengeStatus", 2);
+        Bson filter2 = Filters.lt("challengeEnd", today.toString());
+        Bson update2 = Updates.set("challengeStatus", 3);
+        collection.updateMany(filter2, update2);
+
     }
 
 

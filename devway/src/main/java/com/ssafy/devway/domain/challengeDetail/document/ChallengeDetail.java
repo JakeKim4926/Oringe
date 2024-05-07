@@ -26,14 +26,12 @@ public class ChallengeDetail {
 
     private Integer challengeDetailImage;
 
-    private Integer challengeDetailImageContent;
+    private Integer challengeDetailAudio;
 
     private Integer challengeDetailVideo;
 
-    private Integer challengeDetailTTS;
-
     private Integer challengeDetailSTT;
 
-
+    private Integer challengeDetailTTS;
 
 }

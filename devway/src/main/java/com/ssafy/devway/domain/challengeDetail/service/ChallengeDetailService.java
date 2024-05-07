@@ -34,7 +34,7 @@ public class ChallengeDetailService {
             .challengeDetailTitle(dto.getChallengeDetailTitle())
             .challengeDetailContent(dto.getChallengeDetailContent())
             .challengeDetailImage(dto.getChallengeDetailImage())
-            .challengeDetailImageContent(dto.getChallengeDetailImageContent())
+            .challengeDetailAudio(dto.getChallengeDetailAudio())
             .challengeDetailVideo(dto.getChallengeDetailVideo())
             .challengeDetailTTS(dto.getChallengeDetailTTS())
             .challengeDetailSTT(dto.getChallengeDetailSTT())
@@ -70,10 +70,6 @@ public class ChallengeDetailService {
         temp = challengeDetail.getChallengeDetailImage();
         if(temp != 0)
             orders[temp] = ChallengeDetailOrders.CHALLENGE_DETAIL_IMAGE.getOrderCode();
-
-        temp = challengeDetail.getChallengeDetailImageContent();
-        if(temp != 0)
-            orders[temp] = ChallengeDetailOrders.CHALLENGE_DETAIL_IMAGE_CONTENT.getOrderCode();
 
         temp = challengeDetail.getChallengeDetailVideo();
         if(temp != 0)
