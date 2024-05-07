@@ -71,17 +71,21 @@ public class ChallengeDetailService {
         if(temp != 0)
             orders[temp] = ChallengeDetailOrders.CHALLENGE_DETAIL_IMAGE.getOrderCode();
 
+        temp = challengeDetail.getChallengeDetailAudio();
+        if(temp != 0)
+            orders[temp] = ChallengeDetailOrders.CHALLENGE_DETAIL_AUDIO.getOrderCode();
+
         temp = challengeDetail.getChallengeDetailVideo();
         if(temp != 0)
             orders[temp] = ChallengeDetailOrders.CHALLENGE_DETAIL_VIDEO.getOrderCode();
 
-        temp = challengeDetail.getChallengeDetailTTS();
-        if (temp != 0)
-            orders[temp] = ChallengeDetailOrders.CHALLENGE_DETAIL_TTS.getOrderCode();
-
         temp = challengeDetail.getChallengeDetailSTT();
         if(temp != 0)
             orders[temp] = ChallengeDetailOrders.CHALLENGE_DETAIL_STT.getOrderCode();
+
+        temp = challengeDetail.getChallengeDetailTTS();
+        if (temp != 0)
+            orders[temp] = ChallengeDetailOrders.CHALLENGE_DETAIL_TTS.getOrderCode();
 
         for(int i = START_TEMPLATES_NUM; i <= END_TEMPLATES_NUM; i++){
             if(orders[i] == 0)

@@ -6,5 +6,9 @@ spring:
     mongodb:
       uri: mongodb://root:devway201@k10b201.p.ssafy.io:27017/
       database: oringe
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 forward-headers-strategy: framework

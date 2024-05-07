@@ -1,5 +1,6 @@
 package com.ssafy.devway.domain.record.service;
 
+import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_AUDIO;
 import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_CONTENT;
 import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_IMAGE;
 import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_STT;
@@ -20,6 +21,9 @@ import com.ssafy.devway.domain.record.dto.request.RecordCreateReqDto;
 import com.ssafy.devway.domain.record.dto.response.CalendarRecordResDto;
 import com.ssafy.devway.domain.record.repository.RecordRespository;
 import com.ssafy.devway.global.config.autoIncrementSequence.service.AutoIncrementSequenceService;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Slf4j
 @Service
@@ -43,6 +49,8 @@ public class RecordService {
   private final ChallengeRepository challengeRepository;
   private final AutoIncrementSequenceService autoIncrementSequenceService;
   private final ChallengeDetailRepository challengeDetailRepository;
+
+  private String imgUrl = "";
 
   public ResponseEntity<?> insertRecord(RecordCreateReqDto dto) {
     Member member = memberRepository.findByMemberId(dto.getMemberId());
@@ -136,11 +144,22 @@ public class RecordService {
     return ResponseEntity.ok(byRecordId.getRecordTemplates());
   }
 
-  public ResponseEntity<?> textTemplate(Long memberId, Long challengeId, Long challengeDetailId) {
-    ChallengeDetail byChallengeDetailId = challengeDetailRepository.findByChallengeDetailId(
-        challengeDetailId);
+  public ResponseEntity<?> insertImage(MultipartFile file, String recordId) {
+    String path = recordId + "_";
+    try {
+      // Save the file to a location
+      Files.copy(file.getInputStream(), Paths.get(path + file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
 
-    return ResponseEntity.ok().build();
+      imgUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+          .path("/files/")
+          .path(file.getOriginalFilename())
+          .toUriString();
+
+      System.out.println(imgUrl);
+      return ResponseEntity.ok(imgUrl);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Could not upload the file: " + file.getOriginalFilename() + "!");
+    }
   }
 
   private CalendarRecordResDto convertToCalendarRecordResDto(Record record) {
@@ -159,16 +178,14 @@ public class RecordService {
       if(challengerDetailContent.length() >= 1000)
         return false;
     } else if (challengerDetailIndex == CHALLENGE_DETAIL_IMAGE.getOrderCode()) {
-      // 이미지 로직 작성
+//      return false;
+    } else if (challengerDetailIndex == CHALLENGE_DETAIL_AUDIO.getOrderCode()) {
 //      return false;
     } else if (challengerDetailIndex == CHALLENGE_DETAIL_VIDEO.getOrderCode()) {
-      // 비디오 로직 작성
-//      return false;
-    } else if (challengerDetailIndex == CHALLENGE_DETAIL_TTS.getOrderCode()) {
-      // TTS 로직 작성
 //      return false;
     } else if (challengerDetailIndex == CHALLENGE_DETAIL_STT.getOrderCode()) {
-      // STT 로직 작성
+//      return false;
+    } else if (challengerDetailIndex == CHALLENGE_DETAIL_TTS.getOrderCode()) {
 //      return false;
     }
 

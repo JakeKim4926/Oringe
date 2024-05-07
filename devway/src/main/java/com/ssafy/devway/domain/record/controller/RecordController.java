@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -55,9 +56,12 @@ public class RecordController {
     return recordService.setSuccess(recordId);
   }
 
-  @GetMapping("/record/templates")
-  @Operation(summary = "인증 내용 조회")
-  public ResponseEntity<?> getTemplates(@RequestParam Long recordId) {
-    return recordService.getTemplates(recordId);
+  @PostMapping("/record/image")
+  @Operation(summary = "임지 내용 조회")
+  public ResponseEntity<?> insertImage(
+      @RequestParam("image") MultipartFile file,
+      @RequestParam String recordId
+  ) {
+    return recordService.insertImage(file, recordId);
   }
 }
