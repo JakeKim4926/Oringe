@@ -39,28 +39,42 @@
 
             <!--진행상황-->
             <LinearLayout
-                android:id="@+id/challengeList_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="30dp"
-                android:gravity="center_horizontal">
+                android:gravity="center">
 
                 <com.ssafy.oringe.ui.component.common.TitleView
-                    android:id="@+id/challengeList_will"
+                    android:id="@+id/challengeDetail_titleView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    app:text="진행예정"
-                    app:textColor="@color/gray_400"
-                    app:textSize="5.5sp"
-                    tools:ignore="SmallSp" />
+                    app:text="챌린지 제목"
+                    app:textColor="@color/oringe_main"
+                    app:textSize="5.5sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:gravity="center">
+
+                <com.ssafy.oringe.ui.component.common.TitleView
+                    android:id="@+id/challengeDetail_memoView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:text="챌린지 메모"
+                    app:textColor="@color/gray_600"
+                    app:textSize="4.5sp" />
             </LinearLayout>
 
             <!--목록-->
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <LinearLayout
                     android:id="@+id/challengeList_list"
                     android:layout_width="match_parent"

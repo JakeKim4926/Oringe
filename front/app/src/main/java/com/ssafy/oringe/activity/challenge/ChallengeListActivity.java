@@ -223,6 +223,8 @@ public class ChallengeListActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(ChallengeListActivity.this, ChallengeDetailActivity.class);
                         intent.putExtra("challengeId", challenge.getChallengeId());
+                        intent.putExtra("challengeTitle", challenge.getChallengeTitle());
+                        intent.putExtra("challengeMemo", challenge.getChallengeMemo());
                         startActivity(intent);
                     }
                 });
