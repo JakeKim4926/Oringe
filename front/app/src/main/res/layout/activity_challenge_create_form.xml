@@ -40,8 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:padding="35dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="35dp">
 
                 <!--제목-->
                 <LinearLayout
@@ -65,12 +65,27 @@
                         android:text="*"
                         android:textColor="@color/oringe_main" />
 
-                    <EditText
-                        android:id="@+id/challnegeCreate_input_title"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:maxLength="20" />
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/challnegeCreate_input_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:maxLength="20" />
+
+                        <TextView
+                            android:id="@+id/challengeCreate_title_setting"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="* 제목을 입력해주세요."
+                            android:textColor="@color/oringe_sub"
+                            android:textSize="14sp"
+                            android:visibility="gone"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <!--기간-->
@@ -95,33 +110,48 @@
                         android:text="*"
                         android:textColor="@color/oringe_main" />
 
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_gravity="center_horizontal"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <com.ssafy.oringe.ui.component.common.CalendarView
-                            android:id="@+id/challnegeCreate_input_start"
-                            android:layout_width="0dp"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
+                            <com.ssafy.oringe.ui.component.common.CalendarView
+                                android:id="@+id/challnegeCreate_input_start"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:text="~"
+                                android:textAlignment="center"
+                                android:textStyle="bold" />
+
+                            <com.ssafy.oringe.ui.component.common.CalendarView
+                                android:id="@+id/challnegeCreate_input_end"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+                        </LinearLayout>
                         <TextView
+                            android:id="@+id/challengeCreate_during_setting"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:text="~"
-                            android:textAlignment="center"
-                            android:textStyle="bold" />
-
-                        <com.ssafy.oringe.ui.component.common.CalendarView
-                            android:id="@+id/challnegeCreate_input_end"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            android:text="* 기간을 입력해주세요."
+                            android:textColor="@color/oringe_sub"
+                            android:textSize="14sp"
+                            android:visibility="gone"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -220,14 +250,15 @@
                                 android:text="일" />
                         </TableRow>
                     </TableLayout>
+
                     <TextView
                         android:id="@+id/challengeCreate_day_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="요일을 설정해주세요."
-                        android:textColor="@color/oringe_main"
-                        android:textSize="12sp"
-                        android:visibility="gone"/>
+                        android:text="* 요일을 설정해주세요."
+                        android:textColor="@color/oringe_sub"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <!--알림 설정-->
@@ -314,6 +345,16 @@
                             android:layout_height="wrap_content"
                             android:text="*"
                             android:textColor="@color/oringe_main" />
+
+                        <TextView
+                            android:id="@+id/challengeCreate_template_setting"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:text="* 템플릿을 설정해주세요."
+                            android:textColor="@color/oringe_sub"
+                            android:textSize="14sp"
+                            android:visibility="gone"/>
 
                         <View
                             android:layout_width="0dp"

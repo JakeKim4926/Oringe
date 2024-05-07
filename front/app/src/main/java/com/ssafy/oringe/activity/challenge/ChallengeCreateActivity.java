@@ -369,8 +369,8 @@ public class ChallengeCreateActivity extends AppCompatActivity {
             System.out.println("challengeDetail: " + templates);
             Challenge challenge = Challenge.builder()
                 .challengeTitle(title)
-                .challengeStart(start)
-                .challengeEnd(end)
+                .challengeStart(start.substring(0,10))
+                .challengeEnd(end.substring(0,10))
                 .challengeCycle(cycle)
                 .challengeAlarm(isAlarm)
                 .challengeAlarmTime(isAlarm ? formattedTime : null)
@@ -416,34 +416,37 @@ public class ChallengeCreateActivity extends AppCompatActivity {
     private int checkInputs() {
         View view = findViewById(R.id.challnegeCreate);
 
-        EditText titleEdit = view.findViewById(R.id.challnegeCreate_input_title);
-        CalendarView startEdit = view.findViewById(R.id.challnegeCreate_input_start);
-        CalendarView endEdit = view.findViewById(R.id.challnegeCreate_input_end);
-        LinearLayout templateLayout = view.findViewById(R.id.challengeCreate_templateLayout);
+        TextView titleView = view.findViewById(R.id.challengeCreate_title_setting);
+        TextView duringView = view.findViewById(R.id.challengeCreate_during_setting);
+        TextView dayView = view.findViewById(R.id.challengeCreate_day_setting);
+        TextView templateView = view.findViewById(R.id.challengeCreate_template_setting);
 
+        // 제목
         if (title.isEmpty()) {
-            titleEdit.setHint("제목을 입력해주세요.");
-            titleEdit.setHintTextColor(getResources().getColor(R.color.oringe_main));
+            titleView.setVisibility(View.VISIBLE);
             return 1001;
+        } else {
+            titleView.setVisibility(View.GONE);
         }
-        if (start.isEmpty()) {
-            startEdit.setHint("시작일을\n입력해주세요.");
-            startEdit.setHintColor(getResources().getColor(R.color.oringe_main));
+
+        // 기간
+        if (start.isEmpty() || end.isEmpty()) {
+            duringView.setVisibility(View.VISIBLE);
+
             return 1002;
+        } else {
+            duringView.setVisibility(View.GONE);
         }
-        if (end.isEmpty()) {
-            endEdit.setHint("종료일을\n입력해주세요.");
-            endEdit.setHintColor(getResources().getColor(R.color.oringe_main));
-            return 1003;
-        }
+
+        // 요일
         if (cycle.isEmpty()) {
-            TextView textView = findViewById(R.id.challengeCreate_day_setting);
-            textView.setVisibility(View.VISIBLE);
+            dayView.setVisibility(View.VISIBLE);
+
             return 1004;
         } else {
-            TextView textView = findViewById(R.id.challengeCreate_day_setting);
-            textView.setVisibility(View.GONE);
+            dayView.setVisibility(View.GONE);
         }
+
         boolean isTemplate = false;
         for (int nums : templates) {
             if (nums > 0) {
@@ -451,9 +454,13 @@ public class ChallengeCreateActivity extends AppCompatActivity {
                 break;
             }
         }
+
+        // 템플릿
         if (!isTemplate) {
-            Toast.makeText(ChallengeCreateActivity.this, "템플릿을 설정해주세요.", Toast.LENGTH_SHORT).show();
+            templateView.setVisibility(View.VISIBLE);
             return 1005;
+        } else {
+            templateView.setVisibility(View.GONE);
         }
         return 2001;
     }
