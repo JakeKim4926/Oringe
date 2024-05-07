@@ -12,11 +12,3 @@ public class ChallengeDetailActivity extends AppCompatActivity {
     }
 
 }
-// ChallengeListActivity에 추가할것.
-//    challengeView.setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            Intent intent = new Intent(ChallengeListActivity.this, ChallengeDetailActivity.class);
-//            startActivity(intent);
-//        }
-//    });

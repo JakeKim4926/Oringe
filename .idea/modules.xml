@@ -2,6 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Oringe.iml" filepath="$PROJECT_DIR$/.idea/modules/Oringe.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Oringe.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Oringe.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Oringe.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Oringe.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Oringe.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Oringe.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Oringe.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Oringe.app.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/oringe.iml" filepath="$PROJECT_DIR$/.idea/oringe.iml" />
     </modules>
   </component>
