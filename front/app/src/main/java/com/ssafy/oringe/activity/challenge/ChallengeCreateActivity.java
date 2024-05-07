@@ -337,7 +337,7 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         }
 
         String[] arr = {"challengeDetailTitle", "challengeDetailContent",
-            "challengeDetailImage", "challengeDetailGif", "challengeDetailAudio",
+            "challengeDetailImage", "challengeDetailAudio",
             "challengeDetailVideo", "challengeDetailSTT", "challengeDetailTTS"};
 
         boolean isThere = false;

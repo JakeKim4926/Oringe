@@ -200,7 +200,6 @@ public class TemplateActivity extends AppCompatActivity {
         tem_text.put("본문", "텍스트");
         Map<String, String> tem_img = new TreeMap<>();
         tem_img.put("사진", "이미지");
-        tem_img.put("움짤", "이미지");
         Map<String, String> tem_audio = new TreeMap<>();
         tem_audio.put("음성", "음성");
         tem_audio.put("STT", "음성");
@@ -253,6 +252,7 @@ public class TemplateActivity extends AppCompatActivity {
         chooseView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("선택한 템플릿: "+chooseView.getText().toString());
                 boolean clicked = (boolean) v.getTag();
                 clicked = !clicked;
 
@@ -289,10 +289,9 @@ public class TemplateActivity extends AppCompatActivity {
         matchChallengeDetail.put("challengeDetailTitle", "제목");
         matchChallengeDetail.put("challengeDetailContent", "본문");
         matchChallengeDetail.put("challengeDetailImage", "사진");
-        matchChallengeDetail.put("challengeDetailGif", "움짤");
         matchChallengeDetail.put("challengeDetailAudio", "음성");
-        matchChallengeDetail.put("challengeDetailSTT", "음성");
-        matchChallengeDetail.put("challengeDetailTTS", "음성");
+        matchChallengeDetail.put("challengeDetailSTT", "STT");
+        matchChallengeDetail.put("challengeDetailTTS", "TTS");
         matchChallengeDetail.put("challengeDetailVideo", "영상");
 
         HashMap<String, Integer> ordermap = new HashMap<>();
