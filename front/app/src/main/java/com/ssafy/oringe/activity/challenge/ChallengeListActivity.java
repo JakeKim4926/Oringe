@@ -181,7 +181,6 @@ public class ChallengeListActivity extends AppCompatActivity {
             for (Challenge challenge : challengeList) {
                 // 각 challenge 객체에 대한 뷰를 동적으로 만들자!
                 View challengeView = inflater.inflate(R.layout.sample_list_view, challengeListContainer, false);
-
                 titleView = challengeView.findViewById(R.id.challengeList_title);
                 alarmView = challengeView.findViewById(R.id.challengeList_alarm);
                 dDayView = challengeView.findViewById(R.id.challengeList_dDay);
@@ -223,6 +222,7 @@ public class ChallengeListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(ChallengeListActivity.this, ChallengeDetailActivity.class);
+                        intent.putExtra("challengeId", challenge.getChallengeId());
                         startActivity(intent);
                     }
                 });

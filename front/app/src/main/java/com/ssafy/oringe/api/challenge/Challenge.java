@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Challenge {
+    private Long challengeId;
     private String challengeTitle;
     private String challengeStart;
     private String challengeEnd;
@@ -20,5 +21,4 @@ public class Challenge {
     private String challengeAlarmTime;
     private String challengeMemo;
     private List<Integer> order;
-
 }

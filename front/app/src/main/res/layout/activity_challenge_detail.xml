@@ -55,28 +55,6 @@
                     app:textColor="@color/gray_400"
                     app:textSize="5.5sp"
                     tools:ignore="SmallSp" />
-
-                <com.ssafy.oringe.ui.component.common.TitleView
-                    android:id="@+id/challengeList_ing"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:padding="10dp"
-                    app:text="진행중"
-                    app:textColor="@color/oringe_sub"
-                    app:textSize="5.5sp"
-                    tools:ignore="SmallSp" />
-
-                <com.ssafy.oringe.ui.component.common.TitleView
-                    android:id="@+id/challengeList_did"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    app:text="진행완료"
-                    app:textColor="@color/gray_400"
-                    app:textSize="5.5sp"
-                    tools:ignore="SmallSp" />
             </LinearLayout>
 
             <!--목록-->
