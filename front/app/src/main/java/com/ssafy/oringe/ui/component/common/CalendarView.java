@@ -29,7 +29,7 @@ public class CalendarView extends LinearLayout {
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
             // 출력 형식 지정
-            String myFormat = "YYYY-MM-dd";
+            String myFormat = "YYYY-MM-dd(E)";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
             current.setText(sdf.format(myCalendar.getTime()));
         }
@@ -80,5 +80,15 @@ public class CalendarView extends LinearLayout {
     public String getEditText() {
         EditText editText = findViewById(R.id.calendar_date);
         return editText.getText().toString();
+    }
+
+    public void setHint(String s) {
+        EditText editText = findViewById(R.id.calendar_date);
+        editText.setHint(s);
+    }
+
+    public void setHintColor(int color) {
+        EditText editText = findViewById(R.id.calendar_date);
+        editText.setHintTextColor(color);
     }
 }

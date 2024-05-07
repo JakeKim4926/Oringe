@@ -8,6 +8,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -38,13 +42,21 @@ import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
 import com.ssafy.oringe.ui.component.common.CalendarView;
 
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -73,8 +85,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
     private String start;
     private String end;
     private String memo;
-    private String whatChallenge;
-    private HashMap<String, String> inputData;
     private HashMap<String, Integer> orderMap;
     private ArrayList<String> normalTemplates;
 
@@ -100,8 +110,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         // 템플릿 설정
         templateListContainer = findViewById(R.id.challengeCreate_templateLayout);
         modifyContainer = findViewById(R.id.challengeCreate_modifyLayout);
-
-        inputData = new HashMap<>();
         orderMap = new HashMap<>();
         normalTemplates = new ArrayList<>();
         setTemplates();
@@ -112,9 +120,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 1; i < 8; i++) {
-                    if (clicked[i]) cycle.add(i);
-                }
                 createChallenge();
             }
         });
@@ -137,7 +142,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         });
 
     }
-
 
     // 아이템의 상태를 저장
     @Override
@@ -174,8 +178,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         System.out.println("데이터 받아오기");
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             if (data != null) {
-                whatChallenge = data.getStringExtra("challenge");
-                inputData = (HashMap<String, String>) data.getSerializableExtra("inputData");
                 orderMap = (HashMap<String, Integer>) data.getSerializableExtra("orderMap");
                 normalTemplates = data.getStringArrayListExtra("normalTemplates");
             }
@@ -272,6 +274,7 @@ public class ChallengeCreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChallengeCreateActivity.this, TemplateActivity.class);
+                intent.putExtra("normalTemplates", normalTemplates);
                 startActivityForResult(intent, REQUEST_CODE);
             }
         };
@@ -280,8 +283,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         templateListContainer.removeAllViews();
         modifyContainer.removeAllViews();
 
-        System.out.println("비었나?" + orderMap);
-        System.out.println("비었나?" + normalTemplates);
         if (orderMap.isEmpty()) {
             View addInstance = inflater.inflate(R.layout.sample_add_template_view, templateListContainer, false);
             TextView plusView = addInstance.findViewById(R.id.plus_template);
@@ -306,9 +307,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void createChallenge() {
         System.out.println("챌린지 생성");
-        System.out.println("challenge: "+whatChallenge);
-        System.out.println("inputData: "+inputData);
-        System.out.println("orderMap: "+orderMap);
         View view = findViewById(R.id.challnegeCreate);
 
         EditText titleEdit = view.findViewById(R.id.challnegeCreate_input_title);
@@ -339,8 +337,8 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         }
 
         String[] arr = {"challengeDetailTitle", "challengeDetailContent",
-            "challengeDetailImage", "challengeDetailImageContent",
-            "challengeDetailVideo", "Digital", "Call", "WakeUp", "Walk"};
+            "challengeDetailImage", "challengeDetailGif", "challengeDetailAudio",
+            "challengeDetailVideo", "challengeDetailSTT", "challengeDetailTTS"};
 
         boolean isThere = false;
         for (String str : arr) {
@@ -358,69 +356,106 @@ public class ChallengeCreateActivity extends AppCompatActivity {
             else templates.add(0);
         }
 
-        System.out.println("challengeDetail: "+templates);
-        Challenge.ChallengeBuilder builder = Challenge.builder()
-            .challengeTitle(title)
-            .challengeStart(start)
-            .challengeEnd(end)
-            .challengeCycle(cycle)
-            .challengeAlarm(isAlarm)
-            .challengeAlarmTime(isAlarm ? formattedTime : null)
-            .challengeMemo(memo)
-            .order(templates);
-
-        if (whatChallenge != null) {
-            switch (whatChallenge) {
-                case "디지털 디톡스":
-                    builder.challengeAppName(inputData.get("제한할 앱 이름을 입력하세요.\n(ex. 인스타그램)"));
-                    builder.challengeAppTime(inputData.get("제한 시간을 입력하세요.\n(1시간 단위만 가능)"));
-                    break;
-                case "전화":
-                    builder.challengeCallName(inputData.get("통화 대상 이름을 입력하세요."));
-                    builder.challengeCallNumber(inputData.get("통화 대상 전화번호를 입력하세요.\n(ex. 01012345678)"));
-                    break;
-                case "기상":
-                    builder.challengeWakeupTime(inputData.get("기상 시간을 입력하세요.\n(ex. 07:00)"));
-                    break;
-                case "걷기":
-                    builder.challengeWalk(inputData.get("목표 걸음 수를 입력하세요.\n(ex. 10000)"));
-                    break;
+        if (cycle.isEmpty()) {
+            for (int i = 1; i < 8; i++) {
+                if (clicked[i]) cycle.add(i);
             }
         }
 
-        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
-        Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build();
-        Challenge challenge = builder.build();
-        System.out.println("challenge: " + challenge);
+        int resultCode = checkInputs();
+        if (resultCode == 1001 || resultCode == 1002 || resultCode == 1003 || resultCode == 1004 || resultCode == 1005) {
+            return;
+        } else {
+            System.out.println("challengeDetail: " + templates);
+            Challenge challenge = Challenge.builder()
+                .challengeTitle(title)
+                .challengeStart(start)
+                .challengeEnd(end)
+                .challengeCycle(cycle)
+                .challengeAlarm(isAlarm)
+                .challengeAlarmTime(isAlarm ? formattedTime : null)
+                .challengeMemo(memo)
+                .order(templates)
+                .build();
 
-        Call<ResponseBody> call = retrofit.create(ChallengeService.class).sendData(challenge, memberId);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                System.out.println(response.code());
-                if (response.isSuccessful()) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(ChallengeCreateActivity.this, "챌린지 생성!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(ChallengeCreateActivity.this, ChallengeListActivity.class));
-                        finish();
-                    });
-                } else {
-                    runOnUiThread(() -> {
-                        Toast.makeText(ChallengeCreateActivity.this, "챌린지 생성 실패", Toast.LENGTH_SHORT).show();
-                    });
+            OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
+            Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+            System.out.println("challenge: " + challenge);
+
+            Call<ResponseBody> call = retrofit.create(ChallengeService.class).sendData(challenge, memberId);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    System.out.println(response.code());
+                    if (response.isSuccessful()) {
+                        runOnUiThread(() -> {
+                            Toast.makeText(ChallengeCreateActivity.this, "챌린지 생성!", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(ChallengeCreateActivity.this, ChallengeListActivity.class));
+                            finish();
+                        });
+                    } else {
+                        runOnUiThread(() -> {
+                            Toast.makeText(ChallengeCreateActivity.this, "챌린지 생성 실패", Toast.LENGTH_SHORT).show();
+                        });
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        }
 
+    }
+
+    private int checkInputs() {
+        View view = findViewById(R.id.challnegeCreate);
+
+        EditText titleEdit = view.findViewById(R.id.challnegeCreate_input_title);
+        CalendarView startEdit = view.findViewById(R.id.challnegeCreate_input_start);
+        CalendarView endEdit = view.findViewById(R.id.challnegeCreate_input_end);
+        LinearLayout templateLayout = view.findViewById(R.id.challengeCreate_templateLayout);
+
+        if (title.isEmpty()) {
+            titleEdit.setHint("제목을 입력해주세요.");
+            titleEdit.setHintTextColor(getResources().getColor(R.color.oringe_main));
+            return 1001;
+        }
+        if (start.isEmpty()) {
+            startEdit.setHint("시작일을\n입력해주세요.");
+            startEdit.setHintColor(getResources().getColor(R.color.oringe_main));
+            return 1002;
+        }
+        if (end.isEmpty()) {
+            endEdit.setHint("종료일을\n입력해주세요.");
+            endEdit.setHintColor(getResources().getColor(R.color.oringe_main));
+            return 1003;
+        }
+        if (cycle.isEmpty()) {
+            TextView textView = findViewById(R.id.challengeCreate_day_setting);
+            textView.setVisibility(View.VISIBLE);
+            return 1004;
+        } else {
+            TextView textView = findViewById(R.id.challengeCreate_day_setting);
+            textView.setVisibility(View.GONE);
+        }
+        boolean isTemplate = false;
+        for (int nums : templates) {
+            if (nums > 0) {
+                isTemplate = true;
+                break;
+            }
+        }
+        if (!isTemplate) {
+            Toast.makeText(ChallengeCreateActivity.this, "템플릿을 설정해주세요.", Toast.LENGTH_SHORT).show();
+            return 1005;
+        }
+        return 2001;
     }
 
     private boolean compareDates(String startDate, String endDate) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -52,6 +53,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TemplateActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE = 222;
     private String API_URL;
     private FirebaseAuth auth;
     private Long memberId;
@@ -60,13 +62,6 @@ public class TemplateActivity extends AppCompatActivity {
     private ViewGroup categoryContainer;
     private ViewGroup templateContainer;
     private List<String> chooseTemplates;
-    private int finalAppHour;
-    private boolean walkChallenge;
-    private boolean wakeupChallenge;
-    private boolean callChallenge;
-    private boolean digitalChallenge;
-    private String challenge;
-    private HashMap<String, String> inputData;
     private ArrayList<String> normalTemplates;
 
     @Override
@@ -76,8 +71,8 @@ public class TemplateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_template);
         API_URL = getString(R.string.APIURL);
 
-        inputData = new HashMap<>();
         normalTemplates = new ArrayList<>();
+
 
         // 로그인 정보
         auth = FirebaseAuth.getInstance();
@@ -96,13 +91,12 @@ public class TemplateActivity extends AppCompatActivity {
         // 선택완료
         TextView create = findViewById(R.id.template_create);
         create.setOnClickListener(v -> {
-            System.out.println("digitalChallenge,callChallenge,wakeupChallenge,walkChallenge: " + digitalChallenge + "," + callChallenge + "," + wakeupChallenge + "," + walkChallenge);
-            if (digitalChallenge || callChallenge || wakeupChallenge || walkChallenge) {
-                String challengeTitle = getChallengeTitle();
-                showChallengeDialog(challengeTitle);
-            } else {
-                returnOrderMapOnly();
-            }
+            Intent intent = new Intent();
+            HashMap<String, Integer> orderMap = setOrder();
+            intent.putExtra("orderMap", orderMap);
+            intent.putExtra("normalTemplates", normalTemplates);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
 
         });
 
@@ -113,6 +107,20 @@ public class TemplateActivity extends AppCompatActivity {
         });
 
     }
+
+    // 데이터 받아오기
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("데이터 받아오기");
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+                normalTemplates = data.getStringArrayListExtra("normalTemplates");
+            }
+            setOrder();
+        }
+    }
+
 
     // 로그인 정보
     private void getMemberId(String memberEmail) {
@@ -151,7 +159,7 @@ public class TemplateActivity extends AppCompatActivity {
         TextView imgView = categoryView.findViewById(R.id.template_category_img);
         TextView videoView = categoryView.findViewById(R.id.template_category_video);
         TextView audioView = categoryView.findViewById(R.id.template_category_audio);
-        TextView recommendView = categoryView.findViewById(R.id.template_category_recommend);
+
         View.OnClickListener tabListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,8 +174,6 @@ public class TemplateActivity extends AppCompatActivity {
                 videoView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.category_border_pink));
                 audioView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
                 audioView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.category_border_pink));
-                recommendView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
-                recommendView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.category_border_pink));
 
                 // 클릭된 뷰의 색상 변경
                 ((TextView) v).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.category_color_pink));
@@ -181,7 +187,6 @@ public class TemplateActivity extends AppCompatActivity {
         imgView.setOnClickListener(tabListener);
         videoView.setOnClickListener(tabListener);
         audioView.setOnClickListener(tabListener);
-        recommendView.setOnClickListener(tabListener);
 
         categoryContainer.addView(categoryView);
     }
@@ -202,25 +207,18 @@ public class TemplateActivity extends AppCompatActivity {
         tem_audio.put("TTS", "음성");
         Map<String, String> tem_video = new TreeMap<>();
         tem_video.put("영상", "영상");
-        Map<String, String> tem_recommend = new TreeMap<>();
-        tem_recommend.put("디지털 디톡스", "추천 챌린지");
-        tem_recommend.put("기상", "추천 챌린지");
-        tem_recommend.put("전화", "추천 챌린지");
-        tem_recommend.put("걷기", "추천 챌린지");
 
         // 텍스트-이미지-음성-영상-추천챌린지 순서
         templates.add(tem_text);
         templates.add(tem_img);
         templates.add(tem_audio);
         templates.add(tem_video);
-        templates.add(tem_recommend);
 
         int index = -1;
         if (category.equals("텍스트")) index = 0;
         else if (category.equals("이미지")) index = 1;
         else if (category.equals("음성")) index = 2;
         else if (category.equals("영상")) index = 3;
-        else if (category.equals("추천 챌린지")) index = 4;
 
         LayoutInflater inflater = LayoutInflater.from(this);
         templateContainer.removeAllViews();
@@ -257,6 +255,8 @@ public class TemplateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 boolean clicked = (boolean) v.getTag();
                 clicked = !clicked;
+<<<<<<< HEAD
+=======
                 String selectedText = ((TextView) v).getText().toString();
 
                 // 다른 선택들을 비활성화하는 로직 추가
@@ -270,37 +270,40 @@ public class TemplateActivity extends AppCompatActivity {
                     }
                 }
 
+>>>>>>> c2b221bde844ae1636193e5b0fb8de1f8fc41cf4
                 v.setTag(clicked); // 새로운 선택 상태를 저장
                 updateUIForSelection(v, clicked);
-
-                // 선택 상태에 따라 변수 업데이트
-                if (selectedText.equals("전화")) callChallenge = clicked;
-                if (selectedText.equals("기상")) wakeupChallenge = clicked;
-                if (selectedText.equals("걷기")) walkChallenge = clicked;
-                if (selectedText.equals("디지털 디톡스")) digitalChallenge = clicked;
 
             }
         });
     }
 
+<<<<<<< HEAD
+=======
     // 다른 선택이 이미 활성화되었는지 확인
     private boolean canSelectMore() {
         return !(callChallenge || wakeupChallenge || walkChallenge || digitalChallenge);
     }
 
+>>>>>>> c2b221bde844ae1636193e5b0fb8de1f8fc41cf4
     // UI 업데이트 메소드
     private void updateUIForSelection(View v, boolean isSelected) {
         int textColor = ContextCompat.getColor(getApplicationContext(), R.color.gray_600);
         int bgDrawable = isSelected ? R.drawable.category_color_gray : R.drawable.category_color_mid;
 
-        ((TextView) v).setTextColor(textColor);
-        ((TextView) v).setBackground(ContextCompat.getDrawable(getApplicationContext(), bgDrawable));
-
         if (isSelected) {
+            if (chooseTemplates.size() >= 5) {
+                Toast.makeText(TemplateActivity.this, "템플릿은 최대 5개까지만 선택 가능합니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             chooseTemplates.add(((TextView) v).getText().toString());
         } else {
             chooseTemplates.remove(((TextView) v).getText().toString());
         }
+
+        ((TextView) v).setTextColor(textColor);
+        ((TextView) v).setBackground(ContextCompat.getDrawable(getApplicationContext(), bgDrawable));
+
     }
 
     // 템플릿 순서 매칭
@@ -309,12 +312,11 @@ public class TemplateActivity extends AppCompatActivity {
         matchChallengeDetail.put("challengeDetailTitle", "제목");
         matchChallengeDetail.put("challengeDetailContent", "본문");
         matchChallengeDetail.put("challengeDetailImage", "사진");
-        matchChallengeDetail.put("challengeDetailImageContent", "움짤");
+        matchChallengeDetail.put("challengeDetailGif", "움짤");
+        matchChallengeDetail.put("challengeDetailAudio", "음성");
+        matchChallengeDetail.put("challengeDetailSTT", "음성");
+        matchChallengeDetail.put("challengeDetailTTS", "음성");
         matchChallengeDetail.put("challengeDetailVideo", "영상");
-        matchChallengeDetail.put("Digital", "디지털 디톡스");
-        matchChallengeDetail.put("Call", "전화");
-        matchChallengeDetail.put("WakeUp", "기상");
-        matchChallengeDetail.put("Walk", "걷기");
 
         HashMap<String, Integer> ordermap = new HashMap<>();
         int k = 1;
@@ -328,80 +330,5 @@ public class TemplateActivity extends AppCompatActivity {
         }
         return ordermap;
     }
-
-    private String getChallengeTitle() {
-        if (digitalChallenge) return "디지털 디톡스";
-        if (callChallenge) return "전화";
-        if (wakeupChallenge) return "기상";
-        if (walkChallenge) return "걷기";
-        return null;
-    }
-
-    private void showChallengeDialog(String title) {
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.sample_modal_view, null);
-        LinearLayout container = dialogView.findViewById(R.id.template_modal);
-
-        AlertDialog.Builder dlg = new AlertDialog.Builder(TemplateActivity.this);
-        dlg.setTitle(title);
-        dlg.setView(dialogView);
-
-        if (digitalChallenge) {
-            addEditText(container, "제한할 앱 이름을 입력하세요.\n(ex. 인스타그램)", InputType.TYPE_CLASS_TEXT);
-            addEditText(container, "제한 시간을 입력하세요.\n(1시간 단위만 가능)", InputType.TYPE_CLASS_NUMBER);
-        } else if (callChallenge) {
-            addEditText(container, "통화 대상 이름을 입력하세요.",InputType.TYPE_CLASS_TEXT);
-            addEditText(container, "통화 대상 전화번호를 입력하세요.\n(ex. 01012345678)", InputType.TYPE_CLASS_PHONE);
-        } else if (wakeupChallenge) {
-            addEditText(container, "기상 시간을 입력하세요.\n(ex. 07:00)", InputType.TYPE_CLASS_TEXT);
-        } else if (walkChallenge) {
-            addEditText(container, "목표 걸음 수를 입력하세요.\n(ex. 10000)", InputType.TYPE_CLASS_NUMBER);
-        }
-
-        dlg.setPositiveButton("완료", (dialog, which) -> {
-            for (int i = 0; i < container.getChildCount(); i++) {
-                View view = container.getChildAt(i);
-                if (view instanceof EditText) {
-                    EditText editText = (EditText) view;
-                    inputData.put(editText.getHint().toString(), editText.getText().toString());
-                }
-            }
-            Intent intent = new Intent();
-            intent.putExtra("challenge", title);
-            intent.putExtra("inputData", inputData);
-            HashMap<String, Integer> orderMap = setOrder();
-            intent.putExtra("orderMap", orderMap);
-            intent.putExtra("normalTemplates", normalTemplates);
-            System.out.println("기타 챌린지: ");
-            System.out.println("title: " + challenge);
-            System.out.println("inputData: " + inputData);
-            System.out.println("orderMap: " + orderMap);
-            System.out.println("normalTemplates: " + normalTemplates);
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-        });
-        dlg.setNegativeButton("취소", null);
-        dlg.show();
-    }
-
-    private void addEditText(LinearLayout container, String hint, int inputType) {
-        EditText editText = new EditText(container.getContext());
-        editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        editText.setHint(hint);
-        editText.setInputType(inputType);
-        container.addView(editText);
-    }
-
-    private void returnOrderMapOnly() {
-        Intent intent = new Intent();
-        HashMap<String, Integer> orderMap = setOrder();
-        intent.putExtra("orderMap", orderMap);
-        intent.putExtra("normalTemplates", normalTemplates);
-        System.out.println("returnOrderMapOnly: "+orderMap);
-        System.out.println("returnOrderMapOnly: "+normalTemplates);
-        setResult(Activity.RESULT_OK, intent);
-        finish();
-    }
-
 
 }

@@ -15,19 +15,14 @@ public class ChallengeDetailReqDto {
 
     private Integer challengeDetailImage;
 
-    private Integer challengeDetailImageContent;
+    private Integer challengeDetailGif;
+
+    private Integer challengeDetailAudio;
 
     private Integer challengeDetailVideo;
 
-    private Integer challengeDetailAppName;
+    private Integer challengeDetailSTT;
 
-    private Integer challengeDetailAppTime;
+    private Integer challengeDetailTTS;
 
-    private Integer challengeDetailCallName;
-
-    private Integer challengeDetailCallNumber;
-
-    private Integer challengeDetailWakeupTime;
-
-    private Integer challengeDetailWalk;
 }

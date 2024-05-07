@@ -26,14 +26,11 @@ public class ChallengeDetailService {
             .challengeDetailTitle(dto.getChallengeDetailTitle())
             .challengeDetailContent(dto.getChallengeDetailContent())
             .challengeDetailImage(dto.getChallengeDetailImage())
-            .challengeDetailImageContent(dto.getChallengeDetailImageContent())
+            .challengeDetailGif(dto.getChallengeDetailGif())
+            .challengeDetailAudio(dto.getChallengeDetailAudio())
+            .challengeDetailSTT(dto.getChallengeDetailSTT())
+            .challengeDetailTTS(dto.getChallengeDetailTTS())
             .challengeDetailVideo(dto.getChallengeDetailVideo())
-            .challengeDetailAppName(dto.getChallengeDetailAppName())
-            .challengeDetailAppTime(dto.getChallengeDetailAppTime())
-            .challengeDetailCallName(dto.getChallengeDetailCallName())
-            .challengeDetailCallNumber(dto.getChallengeDetailCallNumber())
-            .challengeDetailWakeupTime(dto.getChallengeDetailWakeupTime())
-            .challengeDetailWalk(dto.getChallengeDetailWalk())
             .build();
 
         challengeDetailRepository.save(challengeDetail);
