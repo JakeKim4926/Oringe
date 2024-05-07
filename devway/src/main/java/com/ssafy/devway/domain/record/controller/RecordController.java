@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/oringe/api")
 @Tag(name = "인증", description = "Record API")
 public class RecordController {
 

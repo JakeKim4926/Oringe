@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/challenge")
+@RequestMapping("/oringe/api/challenge")
 @Tag(name = "챌린지", description = "Challenge API")
 public class ChallengeController {
 
@@ -32,15 +32,14 @@ public class ChallengeController {
     @PostMapping
     @Operation(summary = "챌린지 생성")
     public ResponseEntity<Challenge> postChallenge(
-        @RequestBody ChallengeCreateReqDto dto) {
-        System.out.println(dto);
-        return ResponseEntity.ok(challengeService.insertChallenge(dto));
+        @RequestBody ChallengeCreateReqDto dto, @RequestParam Long memberId) {
+        return ResponseEntity.ok(challengeService.insertChallenge(dto, memberId));
     }
 
     @GetMapping("/{memberId}")
     @Operation(summary = "챌린지 목록 조회")
-    public ResponseEntity<List<Challenge>> getChallengeList(@PathVariable Long memberId) {
-        return ResponseEntity.ok(challengeService.selectChallengeList(memberId));
+    public ResponseEntity<List<Challenge>> getChallengeList(@PathVariable Long memberId, @RequestParam int status) {
+        return ResponseEntity.ok(challengeService.selectChallengeList(memberId, status));
     }
 
     @GetMapping("/today")
@@ -53,13 +52,6 @@ public class ChallengeController {
     @Operation(summary = "특정 챌린지 삭제")
     public ResponseEntity<Void> deleteChallenge(@PathVariable Long challengeId) {
         challengeService.deleteChallenge(challengeId);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/update/challengeStatus")
-    @Operation(summary = "챌린지 진행 상태 스케줄링")
-    public ResponseEntity<Void> putChallengeStatus() {
-        challengeService.updateChallengeStatus();
         return ResponseEntity.ok().build();
     }
 
