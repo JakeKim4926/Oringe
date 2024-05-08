@@ -13,6 +13,7 @@ public class WeatherResponseDTO {
 
     private List<Weather> weather;
     private Main main;
+    private String name;
 
     @Data
     public static class Weather {
@@ -22,6 +23,5 @@ public class WeatherResponseDTO {
     @Data
     public static class Main {
         private double temp;
-
     }
 }

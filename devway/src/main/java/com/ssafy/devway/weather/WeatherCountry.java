@@ -6,17 +6,16 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum WeatherCountry {
-    //대문자
     NORMAL(""),
-    Seoul("Seoul"),
-    Incheon("Incheon"),
-    Busan("Busan"),
-    Gwangju("Gwangju"),
-    Daejeon("Daejeon"),
-    Daegu("Daegu"),
-    Ulsan("Ulsan"),
-    Sejong("Sejong"),
-    Jeju("Jeju"),
+    SEOUL("Seoul"),
+    INCHEON("Incheon"),
+    BUSAN("Busan"),
+    GWANGJU("Gwangju"),
+    DAEJEON("Daejeon"),
+    DAEGU("Daegu"),
+    ULSAN("Ulsan"),
+    SEJONG("Sejong"),
+    JEJU("Jeju"),
     ;
 
     public final String textMode;

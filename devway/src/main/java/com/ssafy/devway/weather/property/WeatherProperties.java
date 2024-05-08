@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 @Data
 public class WeatherProperties {
     private String apiKey;
-    private String nowUrl = "https://api.openweathermap.org/data/2.5/weather"; //현재
-    private String dateUrl = "https://api.openweathermap.org/data/2.5/forecast"; //5일 세시간
+    private String nowUrl = "https://api.openweathermap.org/data/2.5/weather";
+    private String forecastUrl = "https://api.openweathermap.org/data/2.5/forecast";
 }
