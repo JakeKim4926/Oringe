@@ -8,6 +8,9 @@ import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHAL
 import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_TTS;
 import static com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders.CHALLENGE_DETAIL_VIDEO;
 
+import com.ssafy.devway.STT.STTBlock;
+import com.ssafy.devway.TTS.TTSBlock;
+import com.ssafy.devway.TTS.TTSCountry;
 import com.ssafy.devway.domain.challenge.document.Challenge;
 import com.ssafy.devway.domain.challenge.repository.ChallengeRepository;
 import com.ssafy.devway.domain.challengeDetail.repository.ChallengeDetailRepository;
@@ -16,6 +19,7 @@ import com.ssafy.devway.domain.member.document.Member;
 import com.ssafy.devway.domain.member.repository.MemberRepository;
 import com.ssafy.devway.domain.record.document.Record;
 import com.ssafy.devway.domain.record.dto.request.RecordCreateReqDto;
+import com.ssafy.devway.domain.record.dto.request.RecordCreateTTSDto;
 import com.ssafy.devway.domain.record.dto.response.CalendarRecordResDto;
 import com.ssafy.devway.domain.record.dto.response.RecordTemplateDto;
 import com.ssafy.devway.domain.record.repository.RecordRespository;
@@ -45,195 +49,310 @@ import org.w3c.dom.Text;
 @RequiredArgsConstructor
 public class RecordService {
 
-  private final ChallengeDetailService challengeDetailService;
-  private final RecordRespository recordRespository;
-  private final MemberRepository memberRepository;
-  private final ChallengeRepository challengeRepository;
-  private final AutoIncrementSequenceService autoIncrementSequenceService;
-  private final ChallengeDetailRepository challengeDetailRepository;
-  private RecordTemplateDto recordTemplateDto = new RecordTemplateDto();
+    private final ChallengeDetailService challengeDetailService;
+    private final RecordRespository recordRespository;
+    private final MemberRepository memberRepository;
+    private final ChallengeRepository challengeRepository;
+    private final AutoIncrementSequenceService autoIncrementSequenceService;
+    private final ChallengeDetailRepository challengeDetailRepository;
+    private final String API_PATH = "http://localhost:8050/";
+//    private final String API_PATH = "https://k10b201.p.ssafy.io/oringe/api";
+    public ResponseEntity<?> insertRecord(RecordCreateReqDto dto) {
+        Member member = memberRepository.findByMemberId(dto.getMemberId());
+        Challenge challenge = challengeRepository.findByChallengeId(dto.getChallengeId());
 
-  public ResponseEntity<?> insertRecord(RecordCreateReqDto dto) {
-    Member member = memberRepository.findByMemberId(dto.getMemberId());
-    Challenge challenge = challengeRepository.findByChallengeId(dto.getChallengeId());
+        LocalDate today = LocalDate.now();
 
-    LocalDate today = LocalDate.now();
+        List<Integer> templatesOrder = challengeDetailService.getTemplatesOrder(
+                challenge.getChallengeDetail().getChallengeDetailId());
 
-    List<Integer> templatesOrder = challengeDetailService.getTemplatesOrder(
-        challenge.getChallengeDetail().getChallengeDetailId());
+        for (int order = 0; order < dto.getRecordTemplates().size(); order++) {
+            Boolean bConfirm = confirmTemplates(templatesOrder.get(order),
+                    dto);
+            if (!bConfirm) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
 
-    for (int order = 0; order < dto.getRecordTemplates().size(); order++) {
-      Boolean bConfirm = confirmTemplates(templatesOrder.get(order), dto.getRecordTemplates());
-      if (!bConfirm) {
-        return ResponseEntity.badRequest().build();
-      }
+        Record record = Record.builder()
+                .recordId(autoIncrementSequenceService.generateSequence(Record.SEQUENCE_NAME))
+                .challenge(challenge)
+                .member(member)
+                .recordDate(today)
+                .recordSuccess(true)
+                .recordTemplates(dto.getRecordTemplates())
+                .build();
+
+        Record save = recordRespository.save(record);
+
+        if (save == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok().build();
     }
 
-    Record record = Record.builder()
-        .recordId(autoIncrementSequenceService.generateSequence(Record.SEQUENCE_NAME))
-        .challenge(challenge)
-        .member(member)
-        .recordDate(today)
-        .recordSuccess(false)
-        .recordTemplates(dto.getRecordTemplates())
-        .build();
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<CalendarRecordResDto>> selectCalendarRecord(
+            Long memberId,
+            Long challengeId,
+            int month) {
+        List<Record> recordList = recordRespository.findByChallenge_ChallengeIdAndMember_MemberIdOrderByRecordDateAsc(
+                challengeId, memberId);
 
-    Record save = recordRespository.save(record);
+        if (recordList.isEmpty()) {
+            ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
 
-    if (save == null) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        List<CalendarRecordResDto> collect = recordList.stream()
+                .filter(record -> record.getRecordDate().getMonthValue() == month)
+                .map(this::convertToCalendarRecordResDto)
+                .toList();
+
+        return ResponseEntity.ok(collect);
     }
 
-    return ResponseEntity.ok().build();
-  }
+    @Transactional(readOnly = true)
+    public ResponseEntity<Record> selectRecord(Long recordId) {
+        Record byRecordId = recordRespository.findByRecordId(recordId);
+        if (byRecordId == null) {
+            ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
 
-  @Transactional(readOnly = true)
-  public ResponseEntity<List<CalendarRecordResDto>> selectCalendarRecord(
-      Long memberId,
-      Long challengeId,
-      int month) {
-    List<Record> recordList = recordRespository.findByChallenge_ChallengeIdAndMember_MemberIdOrderByRecordDateAsc(
-        challengeId, memberId);
-
-    if (recordList.isEmpty()) {
-      ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(byRecordId);
     }
 
-    List<CalendarRecordResDto> collect = recordList.stream()
-        .filter(record -> record.getRecordDate().getMonthValue() == month)
-        .map(this::convertToCalendarRecordResDto)
-        .toList();
+    public ResponseEntity<?> getSuccess(Long recordId) {
+        Record byRecordId = recordRespository.findByRecordId(recordId);
+        if (byRecordId == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
 
-    return ResponseEntity.ok(collect);
-  }
-
-  @Transactional(readOnly = true)
-  public ResponseEntity<Record> selectRecord(Long recordId) {
-    Record byRecordId = recordRespository.findByRecordId(recordId);
-    if (byRecordId == null) {
-      ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(byRecordId.getRecordSuccess());
     }
 
-    return ResponseEntity.ok(byRecordId);
-  }
+    public ResponseEntity<?> setSuccess(Long recordId) {
+        Record byRecordId = recordRespository.findByRecordId(recordId);
+        if (byRecordId == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
 
-  public ResponseEntity<?> getSuccess(Long recordId) {
-    Record byRecordId = recordRespository.findByRecordId(recordId);
-    if (byRecordId == null) {
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        byRecordId.setRecordSuccess(true);
+        return ResponseEntity.ok().build();
     }
 
-    return ResponseEntity.ok(byRecordId.getRecordSuccess());
-  }
+    public ResponseEntity<?> getTemplates(Long recordId) {
+        Record byRecordId = recordRespository.findByRecordId(recordId);
+        if (byRecordId == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
 
-  public ResponseEntity<?> setSuccess(Long recordId) {
-    Record byRecordId = recordRespository.findByRecordId(recordId);
-    if (byRecordId == null) {
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(byRecordId.getRecordTemplates());
     }
 
-    byRecordId.setRecordSuccess(true);
-    return ResponseEntity.ok().build();
-  }
+    public ResponseEntity<?> insertRecordText(String title, int limitLength) {
+        TextBlock textBlock = new TextBlock(title);
 
-  public ResponseEntity<?> getTemplates(Long recordId) {
-    Record byRecordId = recordRespository.findByRecordId(recordId);
-    if (byRecordId == null) {
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        String blank = title.replaceAll("\\s+", "");
+        blank = blank.replaceAll("\"", "");          // Remove double quotation marks
+
+        if (textBlock.getContent().length() >= limitLength) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("텍스트는 " + String.valueOf(limitLength) + "자 이상 입력이 불가능 합니다.");
+        }
+        if (blank.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("공백 문자만 입력이 되었습니다.");
+        }
+
+        return ResponseEntity.ok(textBlock.getContent());
     }
 
-    return ResponseEntity.ok(byRecordId.getRecordTemplates());
-  }
+    public ResponseEntity<?> insertRecordFile(MultipartFile file, String challengeTemplate, Long memberId) {
+        String filename = file.getOriginalFilename();
+        if(filename == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 이름이 존재하지 않습니다.");
 
-  public ResponseEntity<?> insertRecordText(String title, int limitLength) {
-    TextBlock textBlock = new TextBlock(title);
+        if(challengeTemplate.equals("IMAGE") && !checkFileCorrect(challengeTemplate, filename.toLowerCase()))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("jpg,png,gif,bmp 파일만 허용 가능합니다.");
+        else if(challengeTemplate.equals("AUDIO") && !checkFileCorrect(challengeTemplate, filename.toLowerCase()))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("mp3,wav,aac,ogg,flac 파일만 허용 가능합니다.");
+        else if(challengeTemplate.equals("VIDEO") && !checkFileCorrect(challengeTemplate, filename.toLowerCase()))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("mp4,avi,mpv,wmv,flv 파일만 허용 가능합니다.");
 
-    String blank = title.replaceAll("\\s+", "");
-    blank = blank.replaceAll("\"", "");          // Remove double quotation marks
+        String absPath =  "src/main/resources/static/";
 
-    if(textBlock.getContent().length() >= limitLength)
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("제목은 " + String.valueOf(limitLength) + "자 이상 입력이 불가능 합니다.");
-    if(blank.isEmpty())
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("공백 문자만 입력이 되었습니다.");
-//    if(textBlock.containsSpecialCharacters())
-//      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("특수 문자가 포함되어 있습니다.");
-    return ResponseEntity.ok(textBlock.getContent());
-  }
+        String timestamp = LocalDateTime.now().toString().substring(0, 19)
+                .replace(":", "-");
+        String manualPath = challengeTemplate + "/" + String.valueOf(
+                memberId) + "/" + timestamp + "/";
 
-  public ResponseEntity<?> insertRecordFile(MultipartFile file, String challengeTemplate) {
-    String timestamp = LocalDateTime.now().toString().substring(0, 19).replace(":", "-"); // Windows에서 ':' 문자가 파일명에 사용될 수 없음
-    String directoryPath = "static/" + challengeTemplate + "/";
+        String directoryPath = absPath + manualPath;
 
-    String filename = timestamp + "_" + challengeTemplate + "_" + file.getOriginalFilename();
-    String fullPath = directoryPath + filename;
-    try {
-      // Save path
-      Path fileCreate = Paths.get(directoryPath);
-      Files.createDirectories(fileCreate);
+        String fullPath = directoryPath + filename;
+        try {
+            // Save path
+            Path fileCreate = Paths.get(directoryPath);
+            Files.createDirectories(fileCreate);
 
-      // Save the file to a location
-      Files.copy(file.getInputStream(), Paths.get(fullPath), StandardCopyOption.REPLACE_EXISTING);
+            // Save the file to a location
+            Files.copy(file.getInputStream(), Paths.get(fullPath),
+                    StandardCopyOption.REPLACE_EXISTING);
 
-      String imgUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-          .path("/files/")
-          .path(file.getName())
-          .toUriString();
-
-      recordTemplateDto.setRecordImage(imgUrl);
-
-      return ResponseEntity.ok(fullPath);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Could not upload the file: " + file.getOriginalFilename() + "!");
+            String resultPath = API_PATH + manualPath + filename;
+            return ResponseEntity.ok(resultPath);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                    .body("Could not upload the file: " + file.getOriginalFilename() + "!");
+        }
     }
-  }
 
-  private CalendarRecordResDto convertToCalendarRecordResDto(Record record) {
-    return new CalendarRecordResDto(
-        record.getRecordId(),
-        record.getRecordSuccess(),
-        record.getRecordDate()
-    );
-  }
+    private boolean checkFileCorrect(String challengeTemplate, String fileName) {
+        if (challengeTemplate.equals("IMAGE")) {
+            if(fileName.endsWith(".jpeg"))      return true;
+            if(fileName.endsWith(".jpg"))       return true;
+            if(fileName.endsWith(".gif"))       return true;
+            if(fileName.endsWith(".bmp"))       return true;
+        } else if(challengeTemplate.equals("AUDIO")) {
+            if(fileName.endsWith(".mp3"))       return true;
+            if(fileName.endsWith(".wav"))       return true;
+            if(fileName.endsWith(".aac"))       return true;
+            if(fileName.endsWith(".ogg"))       return true;
+            if(fileName.endsWith(".flac"))      return true;
+        } else if(challengeTemplate.equals("VIDEO")) {
+            if(fileName.endsWith(".mp4"))       return true;
+            if(fileName.endsWith(".avi"))       return true;
+            if(fileName.endsWith(".mov"))       return true;
+            if(fileName.endsWith(".wmv"))       return true;
+            if(fileName.endsWith(".flv"))       return true;
+        }
 
-  private Boolean confirmTemplates(Integer challengeDetailIndex, List<String> challengeDetailContent) {
-    if (challengeDetailIndex == CHALLENGE_DETAIL_TITLE.getOrderCode()) {
-      if(recordTemplateDto.getRecordTitle().length() >= 100 || recordTemplateDto.getRecordTitle().isEmpty())
         return false;
-
-      challengeDetailContent.add(recordTemplateDto.getRecordTitle());
-    } else if (challengeDetailIndex == CHALLENGE_DETAIL_CONTENT.getOrderCode()) {
-      if(recordTemplateDto.getRecordContent().length() >= 1000 || recordTemplateDto.getRecordContent().isEmpty())
-        return false;
-
-      challengeDetailContent.add(recordTemplateDto.getRecordContent());
-    } else if (challengeDetailIndex == CHALLENGE_DETAIL_IMAGE.getOrderCode()) {
-      if(recordTemplateDto.getRecordImage() == null || recordTemplateDto.getRecordImage().isEmpty())
-        return false;
-
-      challengeDetailContent.add(recordTemplateDto.getRecordImage());
-    } else if (challengeDetailIndex == CHALLENGE_DETAIL_AUDIO.getOrderCode()) {
-      if(recordTemplateDto.getRecordAudio() == null || recordTemplateDto.getRecordAudio().isEmpty())
-        return false;
-
-      challengeDetailContent.add(recordTemplateDto.getRecordAudio());
-    } else if (challengeDetailIndex == CHALLENGE_DETAIL_VIDEO.getOrderCode()) {
-      if(recordTemplateDto.getRecordVideo() == null || recordTemplateDto.getRecordVideo().isEmpty())
-        return false;
-
-      challengeDetailContent.add(recordTemplateDto.getRecordVideo());
-    } else if (challengeDetailIndex == CHALLENGE_DETAIL_STT.getOrderCode()) {
-      if(recordTemplateDto.getRecordSTT() == null || recordTemplateDto.getRecordSTT().isEmpty())
-        return false;
-
-      challengeDetailContent.add(recordTemplateDto.getRecordVideo());
-    } else if (challengeDetailIndex == CHALLENGE_DETAIL_TTS.getOrderCode()) {
-      if(recordTemplateDto.getRecordTTS() == null || recordTemplateDto.getRecordTTS().isEmpty())
-        return false;
-
-      challengeDetailContent.add(recordTemplateDto.getRecordVideo());
     }
 
-    return true;
-  }
+    public ResponseEntity<?> insertSTT(MultipartFile file, Long memberId) {
+        try {
+            if(!file.getOriginalFilename().endsWith(".wav"))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("wav 파일만 허용 가능합니다.");
+
+            // Temporarily save the file to process
+            Path tempDir = Files.createTempDirectory("stt_temp_" + String.valueOf(memberId));
+            Path tempFile = tempDir.resolve(file.getOriginalFilename());
+            file.transferTo(tempFile);
+
+            STTBlock sttBlock = new STTBlock();
+            sttBlock.transcribe(tempFile.toString());
+            StringBuilder stringBuilder = new StringBuilder();
+
+            for(String str : sttBlock.getSpeechToTexts()) {
+                stringBuilder.append(str);
+            }
+
+            String result = stringBuilder.toString();
+
+            Files.delete(tempFile);
+
+            return ResponseEntity.ok(result);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                    .body("Could not save the stt: " + file.getOriginalFilename() + "!");
+        }
+    }
+
+    public ResponseEntity<?> insertTTS(RecordCreateTTSDto recordCreateTTSDto) {
+        try {
+            String timestamp = LocalDateTime.now().toString().substring(0, 19)
+                    .replace(":", "-");
+            String absPath = "src/main/resources/static";
+            String directoryPath = "/TTS/" + String.valueOf(recordCreateTTSDto.getMemberId())
+                    + "/" + timestamp + "/";
+
+            String path = absPath + directoryPath ;
+
+            // Save path
+            Path fileCreate = Paths.get(path);
+            Files.createDirectories(fileCreate);
+
+            TTSBlock ttsBlock = new TTSBlock(path); // 음성 파일 저장 위치
+            ttsBlock.synthesizeText(recordCreateTTSDto.getRecordTTS(), TTSCountry.US_C_FEMALE); // 텍스트 및 음성 나라 설정
+
+            String resultPath = API_PATH + directoryPath + "output.mp3";
+            return ResponseEntity.ok(resultPath);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                    .body("Could not save the tts : " + e.toString());
+        }
+    }
+
+    private CalendarRecordResDto convertToCalendarRecordResDto(Record record) {
+        return new CalendarRecordResDto(
+                record.getRecordId(),
+                record.getRecordSuccess(),
+                record.getRecordDate()
+        );
+    }
+
+    private Boolean confirmTemplates(Integer challengeDetailIndex,
+            RecordCreateReqDto recordTemplateDto) {
+        if (challengeDetailIndex == CHALLENGE_DETAIL_TITLE.getOrderCode()) {
+            if (recordTemplateDto.getRecordTitle().length() >= 100
+                    || recordTemplateDto.getRecordTitle().isEmpty()) {
+                return false;
+            }
+
+            recordTemplateDto.getRecordTemplates().add(recordTemplateDto.getRecordTitle());
+
+        } else if (challengeDetailIndex == CHALLENGE_DETAIL_CONTENT.getOrderCode()) {
+            if (recordTemplateDto.getRecordContent().length() >= 1000
+                    || recordTemplateDto.getRecordContent().isEmpty()) {
+                return false;
+            }
+
+            recordTemplateDto.getRecordTemplates().add(recordTemplateDto.getRecordContent());
+
+        } else if (challengeDetailIndex == CHALLENGE_DETAIL_IMAGE.getOrderCode()) {
+            if (recordTemplateDto.getRecordImage() == null || recordTemplateDto.getRecordImage()
+                    .isEmpty()) {
+                return false;
+            }
+
+            recordTemplateDto.getRecordTemplates().add(recordTemplateDto.getRecordImage());
+
+        } else if (challengeDetailIndex == CHALLENGE_DETAIL_AUDIO.getOrderCode()) {
+            if (recordTemplateDto.getRecordAudio() == null || recordTemplateDto.getRecordAudio()
+                    .isEmpty()) {
+                return false;
+            }
+
+            recordTemplateDto.getRecordTemplates().add(recordTemplateDto.getRecordAudio());
+
+        } else if (challengeDetailIndex == CHALLENGE_DETAIL_VIDEO.getOrderCode()) {
+            if (recordTemplateDto.getRecordVideo() == null || recordTemplateDto.getRecordVideo()
+                    .isEmpty()) {
+                return false;
+            }
+
+            recordTemplateDto.getRecordTemplates().add(recordTemplateDto.getRecordVideo());
+
+        } else if (challengeDetailIndex == CHALLENGE_DETAIL_STT.getOrderCode()) {
+            if (recordTemplateDto.getRecordSTT() == null || recordTemplateDto.getRecordSTT()
+                    .isEmpty()) {
+                return false;
+            }
+
+            recordTemplateDto.getRecordTemplates().add(recordTemplateDto.getRecordSTT());
+
+        } else if (challengeDetailIndex == CHALLENGE_DETAIL_TTS.getOrderCode()) {
+            if (recordTemplateDto.getRecordTTS() == null || recordTemplateDto.getRecordTTS()
+                    .isEmpty()) {
+                return false;
+            }
+
+            recordTemplateDto.getRecordTemplates().add(recordTemplateDto.getRecordTTS());
+
+        }
+
+        return true;
+    }
 
 }

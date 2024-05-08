@@ -48,7 +48,6 @@ public class TTSBlock implements BlockElement {
       ByteString audioContents = response.getAudioContent();
       try (OutputStream out = new FileOutputStream(filePath + "/output.mp3")) {
         out.write(audioContents.toByteArray());
-        System.out.println("Audio content written to file \"output.mp3\"");
       }
     }
 
