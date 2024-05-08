@@ -21,6 +21,7 @@ import com.ssafy.devway.domain.record.document.Record;
 import com.ssafy.devway.domain.record.dto.request.RecordCreateReqDto;
 import com.ssafy.devway.domain.record.dto.request.RecordCreateTTSDto;
 import com.ssafy.devway.domain.record.dto.response.CalendarRecordResDto;
+import com.ssafy.devway.domain.record.dto.response.RecordResDto;
 import com.ssafy.devway.domain.record.dto.response.RecordTemplateDto;
 import com.ssafy.devway.domain.record.repository.RecordRespository;
 import com.ssafy.devway.global.config.autoIncrementSequence.service.AutoIncrementSequenceService;
@@ -30,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -66,11 +68,13 @@ public class RecordService {
         List<Integer> templatesOrder = challengeDetailService.getTemplatesOrder(
                 challenge.getChallengeDetail().getChallengeDetailId());
 
-        for (int order = 0; order < dto.getRecordTemplates().size(); order++) {
+        List<String> template = new ArrayList<>();
+        dto.setRecordTemplates(template);
+        for (int order = 0; order < templatesOrder.size(); order++) {
             Boolean bConfirm = confirmTemplates(templatesOrder.get(order),
                     dto);
             if (!bConfirm) {
-                return ResponseEntity.badRequest().build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.valueOf(order) + " 리스트 인덱스에 문제가 있어요");
             }
         }
 
@@ -89,7 +93,7 @@ public class RecordService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Success");
     }
 
     @Transactional(readOnly = true)
@@ -113,13 +117,21 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<Record> selectRecord(Long recordId) {
+    public ResponseEntity<RecordResDto> selectRecord(Long recordId) {
         Record byRecordId = recordRespository.findByRecordId(recordId);
         if (byRecordId == null) {
-            ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("해당 recordId의 document 는 존재하지 않습니다.");
         }
 
-        return ResponseEntity.ok(byRecordId);
+        RecordResDto recordResDto = RecordResDto.builder()
+                .memberId(byRecordId.getMember().getMemberId())
+                .challengeId(byRecordId.getChallenge().getChallengeId())
+                .recordDate(byRecordId.getRecordDate())
+                .recordSuccess(byRecordId.getRecordSuccess())
+                .recordTemplates(byRecordId.getRecordTemplates())
+                .build();
+
+        return ResponseEntity.ok(recordResDto);
     }
 
     public ResponseEntity<?> getSuccess(Long recordId) {
@@ -294,6 +306,7 @@ public class RecordService {
 
     private Boolean confirmTemplates(Integer challengeDetailIndex,
             RecordCreateReqDto recordTemplateDto) {
+
         if (challengeDetailIndex == CHALLENGE_DETAIL_TITLE.getOrderCode()) {
             if (recordTemplateDto.getRecordTitle().length() >= 100
                     || recordTemplateDto.getRecordTitle().isEmpty()) {
