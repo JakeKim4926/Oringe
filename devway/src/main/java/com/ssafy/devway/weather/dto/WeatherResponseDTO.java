@@ -17,11 +17,14 @@ public class WeatherResponseDTO {
 
     @Data
     public static class Weather {
+
         private String main;
         private String description;
     }
+
     @Data
     public static class Main {
+
         private double temp;
     }
 }

@@ -16,6 +16,7 @@ public class ForecastResponseDTO {
 
     @Data
     public static class Main {
+
         private double temp;
         private double temp_min;
         private double temp_max;
@@ -23,6 +24,7 @@ public class ForecastResponseDTO {
 
     @Data
     public static class Forecast {
+
         private String dt_txt;
         private Main main;
         private double pop;
@@ -30,6 +32,7 @@ public class ForecastResponseDTO {
 
     @Data
     public static class City {
+
         private String name;
     }
 }
