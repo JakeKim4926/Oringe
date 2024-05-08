@@ -31,6 +31,9 @@ android {
         }
     }
     compileOptions {
+        // 코어 라이브러리 디슈거링을 활성화하여 Java 8+ API를 지원합니다.
+        isCoreLibraryDesugaringEnabled = true
+        // Set Java compatibility (version can be higher if desired)
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -93,6 +96,14 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.20")
     annotationProcessor("org.projectlombok:lombok:1.18.20")
 
+    //for desugaring
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+
+    // The view calendar library
+    implementation ("com.kizitonwose.calendar:view:2.5.1")
+
+    // The compose calendar library
+    implementation ("com.kizitonwose.calendar:compose:2.5.1")
 
 }
 

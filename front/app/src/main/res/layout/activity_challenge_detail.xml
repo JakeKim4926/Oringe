@@ -22,6 +22,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
+        app:text="***의 챌린지입니다."
         app:textColor="@color/white"
         app:textSize="7sp" />
 
@@ -42,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="20dp"
                 android:gravity="center">
 
                 <com.ssafy.oringe.ui.component.common.TitleView
@@ -51,13 +52,12 @@
                     android:layout_height="wrap_content"
                     app:text="챌린지 제목"
                     app:textColor="@color/oringe_main"
-                    app:textSize="5.5sp" />
+                    app:textSize="8sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:layout_marginBottom="30dp"
                 android:gravity="center">
 
@@ -81,7 +81,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:orientation="vertical" />
+                    android:orientation="vertical" >
+                    <com.kizitonwose.calendar.view.CalendarView
+                        android:id="@+id/calendarView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cv_dayViewResource="@layout/calendar_day_layout"
+                        app:cv_monthHeaderResource="@layout/calendar_month_header"/>
+                </LinearLayout>
             </ScrollView>
         </LinearLayout>
 
