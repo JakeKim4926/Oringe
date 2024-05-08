@@ -1,10 +1,8 @@
 package com.ssafy.devway.domain.record.controller;
 
-import com.ssafy.devway.domain.challenge.document.Challenge;
 import com.ssafy.devway.domain.record.document.Record;
 import com.ssafy.devway.domain.record.dto.request.RecordCreateReqDto;
 import com.ssafy.devway.domain.record.dto.response.CalendarRecordResDto;
-import com.ssafy.devway.domain.record.repository.RecordRespository;
 import com.ssafy.devway.domain.record.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,12 +54,44 @@ public class RecordController {
     return recordService.setSuccess(recordId);
   }
 
-  @PostMapping("/record/image")
-  @Operation(summary = "임지 내용 조회")
-  public ResponseEntity<?> insertImage(
-      @RequestParam("image") MultipartFile file,
-      @RequestParam String recordId
+  @PostMapping("/record/title")
+  @Operation(summary = "제목 인증 생성")
+  public ResponseEntity<?> insertRecordTitle(
+      @RequestParam String recordTitle
   ) {
-    return recordService.insertImage(file, recordId);
+    return recordService.insertRecordText(recordTitle, 100);
   }
+
+  @PostMapping("/record/content")
+  @Operation(summary = "본문 인증 생성")
+  public ResponseEntity<?> insertRecordContent(
+      @RequestParam String recordContent
+  ) {
+    return recordService.insertRecordText(recordContent, 1000);
+  }
+
+  @PostMapping("/record/image")
+  @Operation(summary = "이미지 인증 생성")
+  public ResponseEntity<?> insertRecordImage(
+      @RequestParam("image") MultipartFile file
+  ) {
+    return recordService.insertRecordFile(file, "IMAGE");
+  }
+
+  @PostMapping("/record/audio")
+  @Operation(summary = "오디오 인증 생성")
+  public ResponseEntity<?> insertRecordAudio(
+      @RequestParam("audio") MultipartFile file
+  ) {
+    return recordService.insertRecordFile(file, "AUDIO");
+  }
+
+  @PostMapping("/record/video")
+  @Operation(summary = "비디오 인증 생성")
+  public ResponseEntity<?> insertRecordVideo(
+      @RequestParam("video") MultipartFile file
+  ) {
+    return recordService.insertRecordFile(file, "VIDEO");
+  }
+
 }
