@@ -9,9 +9,8 @@ import lombok.ToString;
 @ToString
 public class Choice {
 
-  private Integer index;
-  private Message message;
-  private String finish_reason;
-
+    private Integer index;
+    private Message message;
+    private String finish_reason;
 }
 

@@ -1,26 +1,25 @@
 package com.ssafy.devway.book;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.devway.block.element.BlockElement;
 import com.ssafy.devway.book.dto.BookResponseDTO;
+import com.ssafy.devway.book.dto.kakao.Document;
+import com.ssafy.devway.book.dto.kakao.KakaoResponseDTO;
+import com.ssafy.devway.book.dto.kakao.Meta;
 import com.ssafy.devway.book.property.BookProperties;
-import java.io.IOException;
-import java.io.Reader;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.List;
 import lombok.Getter;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,69 +31,102 @@ public class BookBlock implements BlockElement {
     }
 
     @Getter
-    private BookResponseDTO responseDTO;
+    private List<BookResponseDTO> bookList;
+    @Getter
+    private Meta howManyBook;
 
     private final BookProperties properties;
-    private final OkHttpClient httpClient;
-    private final Gson gson;
 
     public BookBlock(String API_KEY) {
         this.properties = new BookProperties();
-        this.httpClient = new OkHttpClient();
-        this.gson = new Gson();
 
         properties.setApiKey(API_KEY);
     }
 
-    public void askBookInfo(String query, BookSortMode sort, int page, int size,
-        BookTargetMode target) throws IOException {
+    public void searchBookList(String query, BookMode sort, BookMode target) {
+        int page = properties.getPage();
+        int size = properties.getSize();
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "KakaoAK " + properties.getApiKey());
+        try {
+            if (page > 50) {
+                throw new IllegalStateException("page is over");
+            }
+            if (size > 50) {
+                throw new IllegalStateException("size is over");
+            }
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(headers); //엔티티로 만들기
-        URI targetUrl = UriComponentsBuilder
-            .fromUriString(properties.getUrl()) //기본 url
-            .queryParam("query", query) //인자
-            .queryParam("sort", sort.sortMode)
-            .queryParam("page", page)
-            .queryParam("size", size)
-            .queryParam("target", target.targetMode)
-            .build()
-            .encode(StandardCharsets.UTF_8) //인코딩
-            .toUri();
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "KakaoAK " + properties.getApiKey());
 
-        ResponseEntity<Map> result = restTemplate.exchange(targetUrl, HttpMethod.GET, httpEntity, Map.class);
+            HttpEntity<String> httpEntity = new HttpEntity<>(headers);
 
+            URI targetUrl = UriComponentsBuilder
+                .fromUriString(properties.getUrl())
+                .queryParam("query", query)
+                .queryParam("sort", sort.textMode)
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("target", target)
+                .build()
+                .encode(StandardCharsets.UTF_8) //인코딩
+                .toUri();
 
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> result = restTemplate.exchange(targetUrl, HttpMethod.GET,
+                httpEntity,
+                String.class);
 
-//        Response response = null;
-//        try {
-//            response = httpClient.newCall(request).execute();
-//            System.out.println("response: " + response);
-//            if (response.isSuccessful() && response.body() != null) {
-//                String responseBody = response.body().string();
-//                BookResponseDTO bookReponse = gson.fromJson(responseBody, BookResponseDTO.class);
-//                System.out.println(bookReponse);
-//            } else {
-//                throw new RuntimeException(
-//                    "Failed to communicate with KakaoAPI: " + response.message());
-//            }
-//        } catch (Exception e) {
-//            if (response != null) {
-//                System.out.println();
-//                try {
-//                    String msg = "HTTP status code: " + response.code() +
-//                        "HTTP response body: " + (response.body() != null ? response.body().string()
-//                        : "null");
-//                    System.out.println(msg);
-//                } catch (IOException ex) {
-//                    System.out.println("Failed to read response body");
-//                }
-//            } else {
-//                System.out.println("Error during API request: " + e.getMessage());
-//            }
-//        }
+            ObjectMapper mapper = new ObjectMapper();
+            KakaoResponseDTO bookInfo = mapper.readValue(result.getBody(), KakaoResponseDTO.class);
+            if (bookInfo == null) {
+                throw new IllegalStateException("bookInfo is null");
+            }
+
+            List<Document> kakaoList = bookInfo.getDocuments();
+            if (bookInfo.getMeta().getPageable_count() == 0) {
+                throw new IllegalStateException("search result is none");
+            }
+
+            howManyBook = bookInfo.getMeta();
+            bookList = new ArrayList<>();
+            for (Document document : kakaoList) {
+                BookResponseDTO dto = BookResponseDTO.builder()
+                    .title(document.getTitle())
+                    .authors(document.getAuthors())
+                    .isbn(document.getIsbn())
+                    .price(document.getPrice())
+                    .datetime(document.getDatetime())
+                    .publisher(document.getPublisher())
+                    .thumnail(document.getThumbnail())
+                    .build();
+                bookList.add(dto);
+            }
+
+        } catch (HttpClientErrorException e) {
+            HttpStatusCode code = e.getStatusCode();
+            if (code == HttpStatus.UNAUTHORIZED) {
+                System.out.println("REST API KEY를 다시 확인해주세요.");
+            } else if (code == HttpStatus.BAD_REQUEST) {
+                System.out.println("검색어(query)를 알맞게 입력해주세요.");
+            }
+        } catch (IllegalStateException e) {
+            String msg = e.getMessage();
+            if (msg.equals("page is over")) {
+                System.out.println("페이지 번호는 최대 50까지만 가능합니다.");
+            }
+            if (msg.equals("size is over")) {
+                System.out.println("한 페이지당 문서 수는 최대 50까지만 가능합니다.");
+            }
+            if (msg.equals("search result is none")) {
+                System.out.println("검색 결과가 없습니다.");
+            }
+            if (msg.equals("bookInfo is null")) {
+                System.out.println("검색에 실패했습니다.");
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+
 }
