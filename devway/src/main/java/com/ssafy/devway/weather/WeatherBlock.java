@@ -1,6 +1,7 @@
 package com.ssafy.devway.weather;
 
 import com.ssafy.devway.block.element.BlockElement;
+import com.ssafy.devway.weather.dto.Forecast;
 import com.ssafy.devway.weather.dto.ForecastResponseDTO;
 import com.ssafy.devway.weather.dto.WeatherResponseDTO;
 import com.ssafy.devway.weather.property.WeatherProperties;
@@ -111,7 +112,7 @@ public class WeatherBlock implements BlockElement {
                 temperatureMinList = new ArrayList<>();
                 temperatureMaxList = new ArrayList<>();
                 rainList = new ArrayList<>();
-                for (ForecastResponseDTO.Forecast forecast : response.getList()) {
+                for (Forecast forecast : response.getList()) {
                     temp += forecast.getMain().getTemp();
                     rain += forecast.getPop();
                     if (min > forecast.getMain().getTemp_min()) {

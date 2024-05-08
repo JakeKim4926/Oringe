@@ -1,7 +1,5 @@
 package com.ssafy.devway.weather.dto;
 
-import java.util.List;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -9,8 +7,9 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class ForecastResponseDTO {
+public class Main {
 
-    private List<Forecast> list;
-    private City city;
+    private double temp;
+    private double temp_min;
+    private double temp_max;
 }

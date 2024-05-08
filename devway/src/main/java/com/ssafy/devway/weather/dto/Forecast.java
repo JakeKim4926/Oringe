@@ -1,7 +1,5 @@
 package com.ssafy.devway.weather.dto;
 
-import java.util.List;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -9,9 +7,9 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class WeatherResponseDTO {
+public class Forecast {
 
-    private List<Weather> weather;
+    private String dt_txt;
     private Main main;
-    private String name;
+    private double pop;
 }
