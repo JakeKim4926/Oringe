@@ -6,6 +6,8 @@ import com.ssafy.devway.weather.dto.ForecastResponseDTO;
 import com.ssafy.devway.weather.dto.WeatherResponseDTO;
 import com.ssafy.devway.weather.property.WeatherProperties;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -96,7 +98,6 @@ public class WeatherBlock implements BlockElement {
                 "&" + URLEncoder.encode("appid", "UTF-8") + "=" + properties.getApiKey());
             urlBuilder.append("&" + URLEncoder.encode("lang", "UTF-8") + "=kr");
             urlBuilder.append("&" + URLEncoder.encode("units", "UTF-8") + "=metric");
-
             RestTemplate restTemplate = new RestTemplate();
             ForecastResponseDTO response = restTemplate.getForObject(urlBuilder.toString(),
                 ForecastResponseDTO.class);
@@ -112,31 +113,39 @@ public class WeatherBlock implements BlockElement {
                 temperatureMinList = new ArrayList<>();
                 temperatureMaxList = new ArrayList<>();
                 rainList = new ArrayList<>();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime currentDate = null;
                 for (Forecast forecast : response.getList()) {
-                    temp += forecast.getMain().getTemp();
-                    rain += forecast.getPop();
-                    if (min > forecast.getMain().getTemp_min()) {
-                        min = forecast.getMain().getTemp_min();
-                    }
-                    if (max < forecast.getMain().getTemp_max()) {
-                        max = forecast.getMain().getTemp_max();
-                    }
-                    cnt++;
-                    if (cnt % 8 == 0) {
-                        temperatureList.add(Math.round(temp / 8 * 100) / 100.0);
+                    LocalDateTime forecastDate = LocalDateTime.parse(forecast.getDt_txt(),
+                        formatter).plusHours(9);
+                    if (currentDate == null || currentDate.toLocalDate()
+                        .equals(forecastDate.toLocalDate())) {
+                        temp += forecast.getMain().getTemp();
+                        rain += forecast.getPop();
+                        if (min > forecast.getMain().getTemp_min()) {
+                            min = forecast.getMain().getTemp_min();
+                        }
+                        if (max < forecast.getMain().getTemp_max()) {
+                            max = forecast.getMain().getTemp_max();
+                        }
+                        cnt++;
+                    } else {
+                        temperatureList.add(Math.round(temp / cnt * 100) / 100.0);
                         temperatureMinList.add(min);
                         temperatureMaxList.add(max);
                         if (rain == 0.0) {
                             rainList.add(0.0);
                         } else {
-                            rain = rain * 100 / 8;
+                            rain = rain * 100 / cnt;
                             rainList.add(Math.round(rain * 100) / 100.0);
                         }
-                        temp = 0.0;
-                        min = 100.0;
-                        max = 0.0;
-                        rain = 0.0;
+                        temp = forecast.getMain().getTemp();
+                        min = forecast.getMain().getTemp_min();
+                        max = forecast.getMain().getTemp_max();
+                        rain = forecast.getPop();
+                        cnt = 1;
                     }
+                    currentDate = forecastDate;
                 }
             }
         } catch (HttpClientErrorException e) {
