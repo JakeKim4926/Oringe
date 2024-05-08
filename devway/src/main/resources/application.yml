@@ -11,4 +11,11 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
 
+notification:
+  mattermost:
+    enabled: true
+    webhook-url: https://meeting.ssafy.com/hooks/c15dwm6cdtr1tq55fiewwjk4hr
+    color: green
+    author-name: oringe_manager
+
 forward-headers-strategy: framework
