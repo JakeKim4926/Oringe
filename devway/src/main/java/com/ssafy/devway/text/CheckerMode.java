@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CheckerMode {
+
     ALLOWED_ALL(1),
     ALLOWED_ENGLISH_LOWERCASE(2),
     ALLOWED_ENGLISH_UPPERCASE(3),
