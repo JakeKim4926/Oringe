@@ -1,13 +1,18 @@
 package com.ssafy.devway.domain.challengeDetail.service;
 
+import com.ssafy.devway.domain.challenge.document.Challenge;
+import com.ssafy.devway.domain.challenge.repository.ChallengeRepository;
+import com.ssafy.devway.domain.challenge.service.ChallengeService;
 import com.ssafy.devway.domain.challengeDetail.ChallengeDetailOrders;
 import com.ssafy.devway.domain.challengeDetail.document.ChallengeDetail;
 import com.ssafy.devway.domain.challengeDetail.dto.request.ChallengeDetailReqDto;
 import com.ssafy.devway.domain.challengeDetail.repository.ChallengeDetailRepository;
+import com.ssafy.devway.global.api.ApiResponse;
 import com.ssafy.devway.global.config.autoIncrementSequence.service.AutoIncrementSequenceService;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
+import okhttp3.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,7 @@ import java.util.List;
 @Transactional
 public class ChallengeDetailService {
 
+    private final ChallengeRepository challengeRepository;
     private final ChallengeDetailRepository challengeDetailRepository;
     private final AutoIncrementSequenceService autoIncrementSequenceService;
     private final int START_TEMPLATES_NUM = 1;
@@ -53,6 +59,17 @@ public class ChallengeDetailService {
         List<Integer> orderList = setTemplatesOrder(byChallengeDetailId);
 
         return orderList;
+    }
+
+    public ResponseEntity<?> getTemplatesId(Long challengeId) {
+        Challenge byChallengeId = challengeRepository.findByChallengeId(challengeId);
+
+        if(byChallengeId == null)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Challenge가 존재하지 않습니다.");
+
+        Long challengeDetailId = byChallengeId.getChallengeDetail().getChallengeDetailId();
+
+        return ResponseEntity.ok(challengeDetailId);
     }
 
     private List<Integer> setTemplatesOrder(ChallengeDetail challengeDetail) {
@@ -95,5 +112,6 @@ public class ChallengeDetailService {
 
         return list;
     }
+
 
 }
