@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:textSize="24sp"
+        android:textColor="@color/oringe_main"
         android:textStyle="bold"/>
 
     <LinearLayout
@@ -22,39 +23,39 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="일"
+            android:text="@string/sunday"
             android:textColor="#D32F2F"
             android:layout_weight="1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="월"
+            android:text="@string/monday"
             android:layout_weight="1"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="화"
+            android:text="@string/tuesday"
             android:layout_weight="1"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="수"
+            android:text="@string/wednesday"
             android:layout_weight="1"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="목"
+            android:text="@string/thursday"
             android:layout_weight="1"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="금"
+            android:text="@string/friday"
             android:layout_weight="1"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="토"
+            android:text="@string/saturday"
             android:textColor="#2196F3"
             android:layout_weight="1"/>
     </LinearLayout>

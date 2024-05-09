@@ -1,5 +1,6 @@
 package com.ssafy.oringe.activity.record;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -42,6 +43,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
     private String API_URL;
     private List<Challenge> challengeList;
+    private String selectedChallengeTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,9 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_record_create);
         API_URL = getString(R.string.APIURL);
+
+        // Intent에서 challengeTitle 받기
+        selectedChallengeTitle = getIntent().getStringExtra("challengeTitle");
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -66,6 +71,11 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 Spinner spinner = findViewById(R.id.spinner);
                 spinner.setAdapter(adapter);
+                // 스피너의 기본값을 주입받은 챌린지 타이틀로 설정
+                if (selectedChallengeTitle != null) {
+                    int position = adapter.getPosition(selectedChallengeTitle);
+                    spinner.setSelection(position);
+                }
                 spinner.setOnItemSelectedListener(RecordCreateActivity.this);
             }
         });

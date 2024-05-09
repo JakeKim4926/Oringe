@@ -90,6 +90,15 @@
                         app:cv_monthHeaderResource="@layout/calendar_month_header"/>
                 </LinearLayout>
             </ScrollView>
+            <Button
+                android:id="@+id/btn_record"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/record_btn"
+                android:text="오린지 인증하기 ✏"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <!--메뉴-->
