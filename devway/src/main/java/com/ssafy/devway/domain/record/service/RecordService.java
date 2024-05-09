@@ -58,7 +58,7 @@ public class RecordService {
     private final AutoIncrementSequenceService autoIncrementSequenceService;
     private final ChallengeDetailRepository challengeDetailRepository;
 //    private final String API_PATH = "http://localhost:8050/";
-    private final String API_PATH = "https://k10b201.p.ssafy.io/oringe/api/";
+    private final String API_PATH = "https://k10b201.p.ssafy.io/";
     public ResponseEntity<?> insertRecord(RecordCreateReqDto dto) {
         Member member = memberRepository.findByMemberId(dto.getMemberId());
         Challenge challenge = challengeRepository.findByChallengeId(dto.getChallengeId());
