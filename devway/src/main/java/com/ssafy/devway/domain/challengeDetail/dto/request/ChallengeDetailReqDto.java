@@ -21,8 +21,7 @@ public class ChallengeDetailReqDto {
 
     private Integer challengeDetailVideo;
 
-    private Integer challengeDetailSTT;
-
     private Integer challengeDetailTTS;
 
+    private Integer challengeDetailSTT;
 }

@@ -40,6 +40,7 @@ public class Record {
     private LocalDate recordDate;
 
     @NotNull
+    @Setter
     private Boolean recordSuccess;
 
     @NotNull

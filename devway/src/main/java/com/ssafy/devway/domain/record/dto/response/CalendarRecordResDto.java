@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Builder
 public class CalendarRecordResDto {
 
+
     private Long recordId;
 
     private Boolean recordSuccess;
