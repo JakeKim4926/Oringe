@@ -51,7 +51,7 @@ public class WeatherBlock implements BlockElement {
 
     @Override
     public String getName() {
-        return "weather";
+        return "WEATHER";
     }
 
     public void todayWeather(String city, WeatherCountry weatherCountry) {
