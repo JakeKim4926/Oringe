@@ -55,6 +55,9 @@ public class BookBlock implements BlockElement {
                 throw new IllegalStateException("size is over");
             }
 
+            List<Document> kakaoList = new ArrayList<>();
+            bookList = new ArrayList<>();
+
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "KakaoAK " + properties.getApiKey());
 
@@ -82,7 +85,7 @@ public class BookBlock implements BlockElement {
                 throw new IllegalStateException("bookInfo is null");
             }
 
-            List<Document> kakaoList = bookInfo.getDocuments();
+            kakaoList = bookInfo.getDocuments();
             if (bookInfo.getMeta().getPageable_count() == 0) {
                 throw new IllegalStateException("search result is none");
             }
