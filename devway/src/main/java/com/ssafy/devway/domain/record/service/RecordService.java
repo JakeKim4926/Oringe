@@ -58,7 +58,7 @@ public class RecordService {
     private final AutoIncrementSequenceService autoIncrementSequenceService;
     private final ChallengeDetailRepository challengeDetailRepository;
 //    private final String API_PATH = "http://localhost:8050/";
-    private final String API_PATH = "https://k10b201.p.ssafy.io/";
+    private final String API_PATH = "https://k10b201.p.ssafy.io/static/";
     public ResponseEntity<?> insertRecord(RecordCreateReqDto dto) {
         Member member = memberRepository.findByMemberId(dto.getMemberId());
         Challenge challenge = challengeRepository.findByChallengeId(dto.getChallengeId());
@@ -275,7 +275,8 @@ public class RecordService {
         try {
             String timestamp = LocalDateTime.now().toString().substring(0, 19)
                     .replace(":", "-");
-            String absPath = "src/main/resources/static";
+//            String absPath = "src/main/resources/static";
+            String absPath =  "/app/static/";
             String directoryPath = "/TTS/" + String.valueOf(recordCreateTTSDto.getMemberId())
                     + "/" + timestamp + "/";
 
