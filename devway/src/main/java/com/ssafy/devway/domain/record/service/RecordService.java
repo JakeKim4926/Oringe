@@ -181,7 +181,7 @@ public class RecordService {
 
     public ResponseEntity<?> insertRecordFile(MultipartFile file, String challengeTemplate, Long memberId) {
         String filename = file.getOriginalFilename();
-        if(filename == null || filename.isEmpty())
+        if(filename == null || filename.isEmpty() || file.isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 이름이 존재하지 않습니다.");
         if(challengeTemplate.equals("IMAGE") && !checkFileCorrect(challengeTemplate, filename.toLowerCase()))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("jpg,png,gif,bmp 파일만 허용 가능합니다.");
