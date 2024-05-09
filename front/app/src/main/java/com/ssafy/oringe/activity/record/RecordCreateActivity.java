@@ -9,9 +9,17 @@ import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_TTS
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_VIDEO;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -20,8 +28,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -37,7 +48,9 @@ import com.ssafy.oringe.api.challengeDetail.dto.ChallengeDetailIdResponse;
 import com.ssafy.oringe.api.challengeDetail.ChallengeDetailService;
 import com.ssafy.oringe.common.ChallengeDetailOrders;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +68,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     private List<Integer> challengeDetailOrder = new ArrayList<>();
     private Spinner spinner;
 
+    private LinearLayout buttonContainer;
     private ChallengeDetailService challengeDetailService;
 
     Button buttonTitle;
@@ -64,6 +78,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     Button buttonVideo;
     Button buttonSTT;
     Button buttonTTS;
+    VideoView videoView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +96,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             return insets;
         });
 
+        buttonContainer = findViewById(R.id.buttonContainer);
         buttonTitle = findViewById(R.id.button_title);
         buttonContent = findViewById(R.id.button_content);
         buttonImage = findViewById(R.id.button_image);
@@ -89,8 +105,48 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         buttonSTT = findViewById(R.id.button_stt);
         buttonTTS = findViewById(R.id.button_tts);
 
+        buttonTitle.setVisibility(View.GONE);
+        buttonContent.setVisibility(View.GONE);
+        buttonImage.setVisibility(View.GONE);
+        buttonAudio.setVisibility(View.GONE);
+        buttonVideo.setVisibility(View.GONE);
+        buttonSTT.setVisibility(View.GONE);
+        buttonTTS.setVisibility(View.GONE);
+
+        videoView = findViewById(R.id.video_view);
+        videoView.setVisibility(View.GONE);
+
         spinner = findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
+
+        buttonTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditTitleDialog(CHALLENGE_DETAIL_TITLE);
+            }
+        });
+
+        buttonContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditTitleDialog(CHALLENGE_DETAIL_CONTENT);
+            }
+        });
+
+        buttonImage.setOnClickListener(v -> openImageSelector());
+
+        buttonAudio.setOnClickListener(v -> openAudioSelector());
+
+        buttonVideo.setOnClickListener(v -> openVideoSelector());
+
+        buttonSTT.setOnClickListener(v -> openAudioSelector());
+
+        buttonTTS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditTitleDialog(CHALLENGE_DETAIL_TITLE);
+            }
+        });
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Long savedLoginId = sharedPref.getLong("loginId", 0);
@@ -107,32 +163,31 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     }
 
     public void showButton() {
-        buttonTitle.setVisibility(View.GONE);
-        buttonContent.setVisibility(View.GONE);
-        buttonImage.setVisibility(View.GONE);
-        buttonAudio.setVisibility(View.GONE);
-        buttonVideo.setVisibility(View.GONE);
-        buttonSTT.setVisibility(View.GONE);
-        buttonTTS.setVisibility(View.GONE);
+        buttonContainer.removeAllViews();
+        videoView.setVisibility(View.GONE);
 
-        buttonTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditTitleDialog(CHALLENGE_DETAIL_TITLE);
+        for (int value : challengeDetailOrder) {
+            Button buttonToAdd = null;
+            if (value == CHALLENGE_DETAIL_TITLE.getOrderCode())      buttonToAdd = buttonTitle;
+            if (value == CHALLENGE_DETAIL_CONTENT.getOrderCode())    buttonToAdd = buttonContent;
+            if (value == CHALLENGE_DETAIL_IMAGE.getOrderCode())      buttonToAdd = buttonImage;
+            if (value == CHALLENGE_DETAIL_AUDIO.getOrderCode())      buttonToAdd = buttonAudio;
+            if (value == CHALLENGE_DETAIL_VIDEO.getOrderCode())      buttonToAdd = buttonVideo;
+            if (value == CHALLENGE_DETAIL_STT.getOrderCode())        buttonToAdd = buttonSTT;
+            if (value == CHALLENGE_DETAIL_TTS.getOrderCode())        buttonToAdd = buttonTTS;
+
+            // Remove the button from its parent before adding it to the new container
+            if (buttonToAdd != null) {
+                ViewGroup parent = (ViewGroup) buttonToAdd.getParent();
+                if (parent != null) {
+                    parent.removeView(buttonToAdd);
+                }
+                buttonToAdd.setVisibility(View.VISIBLE);
+                buttonContainer.addView(buttonToAdd);
             }
-        });
-
-
-        for(int value : challengeDetailOrder) {
-            System.out.println(value);
-            if(value == CHALLENGE_DETAIL_TITLE.getOrderCode())      buttonTitle.setVisibility(View.VISIBLE);
-            if(value == CHALLENGE_DETAIL_CONTENT.getOrderCode())    buttonContent.setVisibility(View.VISIBLE);
-            if(value == CHALLENGE_DETAIL_IMAGE.getOrderCode())      buttonImage.setVisibility(View.VISIBLE);
-            if(value == CHALLENGE_DETAIL_AUDIO.getOrderCode())      buttonAudio.setVisibility(View.VISIBLE);
-            if(value == CHALLENGE_DETAIL_VIDEO.getOrderCode())      buttonVideo.setVisibility(View.VISIBLE);
-            if(value == CHALLENGE_DETAIL_STT.getOrderCode())        buttonSTT.setVisibility(View.VISIBLE);
-            if(value == CHALLENGE_DETAIL_TTS.getOrderCode())        buttonTTS.setVisibility(View.VISIBLE);
         }
+
+        challengeDetailOrder.clear();
     }
 
     @Override
@@ -247,13 +302,15 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             public void onClick(DialogInterface dialog, int which) {
                 String inputText = input.getText().toString();
 
-                if(challengeDetailOrders == CHALLENGE_DETAIL_TITLE) {
-                    // 여기에 제목은 100자 이하만 가능
-                } else if(challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
-                    // 여기에 본문은 1000자 이하만 가능
+                if(challengeDetailOrders == CHALLENGE_DETAIL_TITLE && inputText.length() > 100) {
+                    Toast.makeText(RecordCreateActivity.this, "제목은 100자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if(challengeDetailOrders == CHALLENGE_DETAIL_CONTENT && inputText.length() > 1000) {
+                    Toast.makeText(RecordCreateActivity.this, "본문은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
-                updateButtonTitle(inputText);
+                updateButtonTitle(inputText, challengeDetailOrders);
             }
         });
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -266,14 +323,191 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         builder.show();
     }
 
-    private void updateButtonTitle(String text) {
-        Button buttonTitle = findViewById(R.id.button_title);
-        buttonTitle.setText(text);
-
+    private void updateButtonTitle(String text, ChallengeDetailOrders challengeDetailOrders) {
+        Button buttonTextTemp = null;
+        if(challengeDetailOrders == CHALLENGE_DETAIL_TITLE) {
+            buttonTextTemp = findViewById(R.id.button_title);
+        } else if(challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
+            buttonTextTemp = findViewById(R.id.button_content);
+        }
+        buttonTextTemp.setText(text);
         // Adjust button width based on the text length
-        ViewGroup.LayoutParams params = buttonTitle.getLayoutParams();
+        ViewGroup.LayoutParams params = buttonTextTemp.getLayoutParams();
         params.width = ViewGroup.LayoutParams.WRAP_CONTENT; // Allow the button to size itself
-        buttonTitle.setLayoutParams(params);
+        buttonTextTemp.setLayoutParams(params);
     }
+
+    private static final int PICK_IMAGE_REQUEST = 1;  // Request code for picking an image
+
+    private void openImageSelector(){
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    private static final int REQUEST_VIDEO_PICK = 1001;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            setButtonBackground(imageUri);
+        } else if (requestCode == PICK_AUDIO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri audioUri = data.getData();
+            setupAudioButton(audioUri);
+        } else if (requestCode == REQUEST_VIDEO_PICK && resultCode == RESULT_OK) {
+            videoUri = data.getData();
+            setupVideoPlayback();
+        }
+
+    }
+
+//    private void setButtonBackground(Uri imageUri) {
+//        Button buttonImage = findViewById(R.id.button_image);
+//        buttonImage.post(() -> {
+//            try {
+//                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+//                Drawable drawable = Drawable.createFromStream(inputStream, imageUri.toString());
+//                buttonImage.setBackground(drawable);
+//            } catch (FileNotFoundException e) {
+//                Toast.makeText(this, "Image file not found", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+    private void setButtonBackground(Uri imageUri) {
+        Button buttonImage = findViewById(R.id.button_image);
+        final int maxHeightPx = dpToPx(200);  // Convert dp to pixel
+
+        buttonImage.post(() -> {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                if (bitmap.getHeight() > maxHeightPx) {
+                    // Calculate the scale factor
+                    float scale = (float) maxHeightPx / bitmap.getHeight();
+                    int newWidth = (int) (bitmap.getWidth() * scale);
+
+                    // Create a new scaled bitmap
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, maxHeightPx, true);
+                    bitmap.recycle();  // Recycle the original bitmap as it's no longer needed
+
+                    BitmapDrawable drawable = new BitmapDrawable(getResources(), scaledBitmap);
+                    buttonImage.setBackground(drawable);
+
+                    // Adjust the button size to match the scaled image
+                    ViewGroup.LayoutParams params = buttonImage.getLayoutParams();
+                    params.width = newWidth;
+                    params.height = maxHeightPx;
+                    buttonImage.setLayoutParams(params);
+                } else {
+                    // Use the original bitmap if it's within limits
+                    BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
+                    buttonImage.setBackground(drawable);
+
+                    ViewGroup.LayoutParams params = buttonImage.getLayoutParams();
+                    params.width = bitmap.getWidth();
+                    params.height = bitmap.getHeight();
+                    buttonImage.setLayoutParams(params);
+                }
+                buttonImage.setText("");
+            } catch (FileNotFoundException e) {
+                Toast.makeText(this, "Image file not found", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Convert dp to pixel based on the screen density.
+     * @param dp the value in dp to convert
+     * @return the corresponding pixel value
+     */
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
+    private static final int PICK_AUDIO_REQUEST = 101;  // Request code for picking an audio file
+
+    private void openAudioSelector() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_AUDIO_REQUEST);
+    }
+
+
+    private MediaPlayer mediaPlayer;
+
+    private void setupAudioButton(Uri audioUri) {
+        Button buttonAudio = findViewById(R.id.button_audio);
+        buttonAudio.setText("Play Audio");
+
+        buttonAudio.setOnClickListener(v -> {
+            if (mediaPlayer == null) {
+                mediaPlayer = MediaPlayer.create(RecordCreateActivity.this, audioUri);
+                mediaPlayer.setOnCompletionListener(mp -> {
+                    buttonAudio.setText("Play Audio");
+                    mediaPlayer.reset();
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                });
+            }
+
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+                buttonAudio.setText("Resume Audio");
+            } else {
+                mediaPlayer.start();
+                buttonAudio.setText("Pause Audio");
+            }
+        });
+    }
+
+    private Uri videoUri; // To hold the video URI
+
+    private void openVideoSelector() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("video/*");
+
+        startActivityForResult(intent, REQUEST_VIDEO_PICK);
+    }
+
+    private void setupVideoPlayback() {
+
+        buttonVideo.setVisibility(View.GONE);  // 버튼 숨기기
+        videoView.setVisibility(View.VISIBLE); // 비디오 뷰 보이게
+
+        videoView.setVideoURI(videoUri);
+        videoView.setMediaController(new MediaController(this)); // Adding controls
+        videoView.requestFocus();
+        videoView.start();
+
+        // Listener for completion of video
+        videoView.setOnCompletionListener(mp -> {
+            // Optionally reset the video to start or handle UI changes
+        });
+
+        MediaController mediaController = new MediaController(this);
+        mediaController.setAnchorView(videoView);
+        videoView.setMediaController(mediaController);
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (videoView != null && videoView.isPlaying()) {
+            videoView.pause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (videoView != null) {
+            videoView.resume();
+        }
+    }
+
+
 
 }

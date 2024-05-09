@@ -56,6 +56,13 @@
                 android:text=""
                 android:textSize="16sp" />
 
+            <LinearLayout
+                android:id="@+id/buttonContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
+
             <Button
                 android:id="@+id/button_title"
                 android:layout_width="match_parent"
@@ -106,6 +113,12 @@
                 android:text="비디오 입력"
                 android:textSize="18sp" />
 
+            <VideoView
+                android:id="@+id/video_view"
+                android:layout_width="match_parent"
+                android:layout_height="193dp"
+                android:layout_margin="20dp" />
+
             <Button
                 android:id="@+id/button_stt"
                 android:layout_width="match_parent"
@@ -113,7 +126,7 @@
                 android:layout_margin="20dp"
                 android:background="@drawable/button_color_gray_huge"
                 android:padding="16dp"
-                android:text="Speech to text"
+                android:text="Speech to text (.wav)"
                 android:textSize="18sp" />
 
             <Button
