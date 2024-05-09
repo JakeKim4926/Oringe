@@ -190,7 +190,8 @@ public class RecordService {
         else if(challengeTemplate.equals("VIDEO") && !checkFileCorrect(challengeTemplate, filename.toLowerCase()))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("mp4,avi,mpv,wmv,flv 파일만 허용 가능합니다.");
 
-        String absPath =  "src/main/resources/static/";
+//        String absPath =  "src/main/resources/static/";
+        String absPath =  "/app/static/";
 
         String timestamp = LocalDateTime.now().toString().substring(0, 19)
                 .replace(":", "-");
