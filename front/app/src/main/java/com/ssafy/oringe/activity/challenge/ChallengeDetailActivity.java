@@ -2,6 +2,7 @@ package com.ssafy.oringe.activity.challenge;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -31,6 +32,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
+import java.util.Random;
 
 public class ChallengeDetailActivity extends AppCompatActivity {
     private String memberNickname;
@@ -59,12 +61,25 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             @Override
             public void bind(@NonNull DayViewContainer container, CalendarDay day) {
                 container.textView.setText(String.valueOf(day.getDate().getDayOfMonth()));
+                // 이미지 오버레이
+//                if (dayHasEvent(day.getDate())) {
+//                    container.imageView.setVisibility(View.VISIBLE);
+//                    container.imageView.setImageResource(R.drawable.oranges_simple_blue1);
+//                } else {
+//                    container.imageView.setVisibility(View.GONE);
+//                }
+
                 if (dayHasEvent(day.getDate())) {
+                    TypedArray oranges = getResources().obtainTypedArray(R.array.orange_images_orange);
+                    int imageId = oranges.getResourceId(new Random().nextInt(oranges.length()), -1);
+                    container.imageView.setImageResource(imageId);
                     container.imageView.setVisibility(View.VISIBLE);
-                    container.imageView.setImageResource(R.drawable.oranges_simple_blue1);
+                    oranges.recycle();
                 } else {
                     container.imageView.setVisibility(View.GONE);
                 }
+
+                // 요일 별 day color 렌더링
                 if (day.getDate().getDayOfWeek() == DayOfWeek.SATURDAY) {
                     container.textView.setTextColor(Color.parseColor("#2196F3"));
                 } else if (day.getDate().getDayOfWeek() == DayOfWeek.SUNDAY) {

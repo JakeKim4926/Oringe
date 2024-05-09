@@ -12,9 +12,8 @@
 
     <ImageView
         android:id="@+id/dayIcon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="bottom|end"
-        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
         android:visibility="gone" />
 </FrameLayout>
