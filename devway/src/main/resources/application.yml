@@ -15,7 +15,7 @@ notification:
   mattermost:
     enabled: true
     webhook-url: https://meeting.ssafy.com/hooks/c15dwm6cdtr1tq55fiewwjk4hr
+    channel:
     color: green
-    author-name: oringe_manager
 
 forward-headers-strategy: framework

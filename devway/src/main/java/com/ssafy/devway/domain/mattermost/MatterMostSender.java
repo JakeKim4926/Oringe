@@ -30,10 +30,6 @@ public class MatterMostSender {
     @Value("${notification.mattermost.webhook-url}")
     private String webhookUrl;
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
     private final RestTemplate restTemplate;
     private final MattermostProperties mmProperties;
 

@@ -2,6 +2,7 @@ package com.ssafy.devway.domain.mattermost;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,9 +10,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalControllerAdvice {
-    @Autowired
-    private NotificationManager notificationManager;
+    private final NotificationManager notificationManager;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity exceptionTest(Exception e, HttpServletRequest req) {

@@ -19,7 +19,6 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import lombok.Getter;
 
-
 @Getter
 public class STTBlock implements BlockElement {
 
