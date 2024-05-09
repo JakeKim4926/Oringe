@@ -56,9 +56,7 @@ public class ChallengeDetailService {
             challengeDetailId);
 
         // gets order
-        List<Integer> orderList = setTemplatesOrder(byChallengeDetailId);
-
-        return orderList;
+        return setTemplatesOrder(byChallengeDetailId);
     }
 
     public ResponseEntity<?> getTemplatesId(Long challengeId) {

@@ -4,6 +4,7 @@ import com.ssafy.devway.domain.challengeDetail.dto.request.ChallengeDetailReqDto
 import com.ssafy.devway.domain.challengeDetail.service.ChallengeDetailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class ChallengeDetailController {
 
     @GetMapping("/order")
     @Operation(summary = "템플릿 순서 조회")
-    public ResponseEntity<?> getTemplatesOrder(
+    public ResponseEntity<List<Integer>> getTemplatesOrder(
         @RequestParam Long challengeDetailId) {
         return ResponseEntity.ok(challengeDetailService.getTemplatesOrder(challengeDetailId));
     }
