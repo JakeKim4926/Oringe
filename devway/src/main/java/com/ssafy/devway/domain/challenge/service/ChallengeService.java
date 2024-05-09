@@ -76,9 +76,9 @@ public class ChallengeService {
             .challengeDetailContent(dto.getOrder().get(1))
             .challengeDetailImage(dto.getOrder().get(2))
             .challengeDetailVideo(dto.getOrder().get(3))
-            .challengeDetailAudio(dto.getOrder().get(5))
-            .challengeDetailSTT(dto.getOrder().get(6))
-            .challengeDetailTTS(dto.getOrder().get(7))
+            .challengeDetailAudio(dto.getOrder().get(4))
+            .challengeDetailSTT(dto.getOrder().get(5))
+            .challengeDetailTTS(dto.getOrder().get(6))
             .build();
         challengeDetailRepository.save(challengeDetail);
 
