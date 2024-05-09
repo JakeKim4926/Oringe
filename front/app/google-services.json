@@ -22,6 +22,22 @@
           }
         },
         {
+          "client_id": "674424380265-7idqeh9ejlauuhkbkivjfumpj2ff7c1m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.oringe",
+            "certificate_hash": "4138b6544d10125e84523fd4d8a872e1ea9a924a"
+          }
+        },
+        {
+          "client_id": "674424380265-dls6okb048ppq16n965m8nia0hr0ftod.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.oringe",
+            "certificate_hash": "43bacc55d9f04cc2c012075c1651fc50684fe0a2"
+          }
+        },
+        {
           "client_id": "674424380265-oq46crgrb6set32gv38oreu04f04ovn0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
