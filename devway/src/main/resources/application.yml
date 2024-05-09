@@ -6,5 +6,16 @@ spring:
     mongodb:
       uri: mongodb://root:devway201@k10b201.p.ssafy.io:27017/
       database: oringe
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+notification:
+  mattermost:
+    enabled: true
+    webhook-url: https://meeting.ssafy.com/hooks/c15dwm6cdtr1tq55fiewwjk4hr
+    channel:
+    color: green
 
 forward-headers-strategy: framework

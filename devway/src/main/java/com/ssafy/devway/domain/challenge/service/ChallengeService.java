@@ -23,11 +23,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.Document;
-
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,9 +75,8 @@ public class ChallengeService {
             .challengeDetailTitle(dto.getOrder().get(0))
             .challengeDetailContent(dto.getOrder().get(1))
             .challengeDetailImage(dto.getOrder().get(2))
-            .challengeDetailGif(dto.getOrder().get(3))
-            .challengeDetailAudio(dto.getOrder().get(4))
-            .challengeDetailVideo(dto.getOrder().get(5))
+            .challengeDetailVideo(dto.getOrder().get(3))
+            .challengeDetailAudio(dto.getOrder().get(5))
             .challengeDetailSTT(dto.getOrder().get(6))
             .challengeDetailTTS(dto.getOrder().get(7))
             .build();
@@ -107,9 +109,6 @@ public class ChallengeService {
             .challengeDetail(challengeDetail)
             .member(member)
             .build();
-
-        System.out.println("challenge 생성: " + challenge);
-        System.out.println("challenge detail 생성: " + challengeDetail);
         challengeRepository.save(challenge);
 
         return challenge;

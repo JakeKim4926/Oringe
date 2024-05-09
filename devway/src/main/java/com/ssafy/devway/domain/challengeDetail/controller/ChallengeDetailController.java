@@ -23,4 +23,11 @@ public class ChallengeDetailController {
         return ResponseEntity.ok(challengeDetailService.insertChallengeDetail(dto));
     }
 
+    @GetMapping("/order")
+    @Operation(summary = "템플릿 순서 조회")
+    public ResponseEntity<?> getTemplatesOrder(
+        @RequestParam Long challengeDetailId) {
+        return ResponseEntity.ok(challengeDetailService.getTemplatesOrder(challengeDetailId));
+    }
+
 }

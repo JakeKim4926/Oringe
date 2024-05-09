@@ -26,8 +26,6 @@ public class ChallengeDetail {
 
     private Integer challengeDetailImage;
 
-    private Integer challengeDetailGif;
-
     private Integer challengeDetailAudio;
 
     private Integer challengeDetailVideo;
@@ -35,6 +33,5 @@ public class ChallengeDetail {
     private Integer challengeDetailSTT;
 
     private Integer challengeDetailTTS;
-
 
 }
