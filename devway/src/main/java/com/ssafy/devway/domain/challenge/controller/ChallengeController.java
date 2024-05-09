@@ -54,5 +54,9 @@ public class ChallengeController {
         challengeService.deleteChallenge(challengeId);
         return ResponseEntity.ok().build();
     }
-
+    @GetMapping("/cycle")
+    @Operation(summary = "챌린지의 cycle 조회")
+    public ResponseEntity<List<Integer>> getChallengeCycle(@RequestParam Long challengeId) {
+        return  ResponseEntity.ok(challengeService.selectChallengeCycleList(challengeId));
+    }
 }
