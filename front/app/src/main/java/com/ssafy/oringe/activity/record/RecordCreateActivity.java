@@ -189,8 +189,8 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             if (value == CHALLENGE_DETAIL_TITLE.getOrderCode())      buttonToAdd = buttonTitle;
             if (value == CHALLENGE_DETAIL_CONTENT.getOrderCode())    buttonToAdd = buttonContent;
             if (value == CHALLENGE_DETAIL_IMAGE.getOrderCode())      buttonToAdd = buttonImage;
-            if (value == CHALLENGE_DETAIL_AUDIO.getOrderCode())      buttonToAdd = buttonAudio;
-            if (value == CHALLENGE_DETAIL_VIDEO.getOrderCode())      buttonToAdd = buttonVideo;
+            if (value == CHALLENGE_DETAIL_AUDIO.getOrderCode())      buttonToAdd = buttonVideo;
+            if (value == CHALLENGE_DETAIL_VIDEO.getOrderCode())      buttonToAdd = buttonAudio;
             if (value == CHALLENGE_DETAIL_STT.getOrderCode())        buttonToAdd = buttonSTT;
             if (value == CHALLENGE_DETAIL_TTS.getOrderCode())        buttonToAdd = buttonTTS;
 
