@@ -55,6 +55,9 @@ public class ChallengeDetailService {
         ChallengeDetail byChallengeDetailId = challengeDetailRepository.findByChallengeDetailId(
             challengeDetailId);
 
+        if(byChallengeDetailId == null)
+            return null;
+
         // gets order
         return setTemplatesOrder(byChallengeDetailId);
     }

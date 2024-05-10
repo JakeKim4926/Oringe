@@ -54,5 +54,14 @@ public class ChallengeController {
         challengeService.deleteChallenge(challengeId);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/cycle")
+    @Operation(summary = "챌린지의 cycle 조회")
+    public ResponseEntity<?> getChallengeCycle(@RequestParam Long challengeId) {
+        List<Integer> integers = challengeService.selectChallengeCycleList(challengeId);
+        if(integers.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("해당하는 id의 내용은 존재하지 않습니다.");
+        }
 
+        return  ResponseEntity.ok(challengeService.selectChallengeCycleList(challengeId));
+    }
 }
