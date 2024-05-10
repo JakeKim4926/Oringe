@@ -105,6 +105,13 @@ public class ChallengeDetailActivity extends AppCompatActivity {
         });
         // 오린지 인증하기 버튼 동작
         Button btn_record = findViewById(R.id.btn_record);
+        // challengeStatus를 받아와서 인증하기버튼 조건부 렌더링.
+        int challengeStatus = getIntent().getIntExtra("challengeStatus", -1);
+        if (challengeStatus == 2) { // 2 == "진행중" 상태를 나타냄
+            btn_record.setVisibility(View.VISIBLE);
+        } else {
+            btn_record.setVisibility(View.GONE);
+        }
         btn_record.setOnClickListener(v -> {
             Intent intent = new Intent(ChallengeDetailActivity.this, RecordCreateActivity.class);
             intent.putExtra("challengeTitle", challengeTitle);
