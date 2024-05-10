@@ -40,7 +40,7 @@ public class RecordController {
 
     @GetMapping
     @Operation(summary = "인증 상세 조회")
-    public ResponseEntity<RecordResDto> getRecord(@RequestParam Long recordId) {
+    public ResponseEntity<?> getRecord(@RequestParam Long recordId) {
         return recordService.selectRecord(recordId);
     }
 

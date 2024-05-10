@@ -188,4 +188,15 @@ public class ChallengeService {
     }
 
 
+    /*
+     * 2.6 챌린지의 cycle 조회
+     * */
+    public List<Integer> selectChallengeCycleList(Long challengeId){
+        Document challengeCycleDoc = challengeRepository.findChallengeCycleDocumentByChallengeId(challengeId);
+        if (challengeCycleDoc == null) {
+            return new ArrayList<>();
+        }
+        return (List<Integer>) challengeCycleDoc.get("challengeCycle");
+    }
+
 }
