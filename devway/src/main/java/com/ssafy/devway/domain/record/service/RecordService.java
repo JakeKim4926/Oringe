@@ -117,10 +117,10 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<RecordResDto> selectRecord(Long recordId) {
+    public ResponseEntity<?> selectRecord(Long recordId) {
         Record byRecordId = recordRespository.findByRecordId(recordId);
         if (byRecordId == null) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("해당 recordId의 document 는 존재하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("해당 recordId의 document 는 존재하지 않습니다.");
         }
 
         RecordResDto recordResDto = RecordResDto.builder()

@@ -195,9 +195,8 @@ public class ChallengeService {
         Document challengeCycleDoc = challengeRepository.findChallengeCycleDocumentByChallengeId(challengeId);
         if (challengeCycleDoc != null) {
             return (List<Integer>) challengeCycleDoc.get("challengeCycle");
-        } else {
-            return new ArrayList<>(); // 또는 적절한 예외 처리
         }
+        return new ArrayList<>(); // 또는 적절한 예외 처리
     }
 
 
