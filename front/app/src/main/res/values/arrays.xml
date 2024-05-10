@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="orange_images_blue">
+        <item>@drawable/oranges_simple_blue1</item>
+        <item>@drawable/oranges_simple_blue2</item>
+        <item>@drawable/oranges_simple_blue3</item>
+    </array>
+    <array name="orange_images_orange">
+        <item>@drawable/oranges_simple_orange1</item>
+        <item>@drawable/oranges_simple_orange2</item>
+        <item>@drawable/oranges_simple_orange3</item>
+    </array>
+</resources>

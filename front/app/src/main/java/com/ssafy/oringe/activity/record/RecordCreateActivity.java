@@ -1,5 +1,6 @@
 package com.ssafy.oringe.activity.record;
 
+import android.content.Intent;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_AUDIO;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_CONTENT;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_IMAGE;
@@ -66,6 +67,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
     private String API_URL;
     private List<Challenge> challengeList;
+    private String selectedChallengeTitle;
     private List<Integer> challengeDetailOrder = new ArrayList<>();
     private Spinner spinner;
 
@@ -87,6 +89,9 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_record_create);
         API_URL = getString(R.string.APIURL);
+
+        // Intent에서 challengeTitle 받기
+        selectedChallengeTitle = getIntent().getStringExtra("challengeTitle");
 
         setupRetrofitClient();
 
@@ -162,6 +167,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Long savedLoginId = sharedPref.getLong("loginId", 0);
+
         getChallengeList(savedLoginId);
     }
 

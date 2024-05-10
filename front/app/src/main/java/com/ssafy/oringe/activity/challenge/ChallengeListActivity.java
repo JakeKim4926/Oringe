@@ -1,5 +1,6 @@
 package com.ssafy.oringe.activity.challenge;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -135,10 +136,10 @@ public class ChallengeListActivity extends AppCompatActivity {
     public void getChallengeList(int status) {
         OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build();
+                .baseUrl(API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
         Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(memberId, status);
         call.enqueue(new Callback<List<Challenge>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -177,50 +178,59 @@ public class ChallengeListActivity extends AppCompatActivity {
             TextView textView = challengeView.findViewById(R.id.nothing);
             challengeListContainer.addView(challengeView);
         } else {
-        for (Challenge challenge : challengeList) {
-            // 각 challenge 객체에 대한 뷰를 동적으로 만들자!
-            View challengeView = inflater.inflate(R.layout.sample_list_view, challengeListContainer, false);
+            for (Challenge challenge : challengeList) {
+                // 각 challenge 객체에 대한 뷰를 동적으로 만들자!
+                View challengeView = inflater.inflate(R.layout.sample_list_view, challengeListContainer, false);
+                titleView = challengeView.findViewById(R.id.challengeList_title);
+                alarmView = challengeView.findViewById(R.id.challengeList_alarm);
+                dDayView = challengeView.findViewById(R.id.challengeList_dDay);
+                cycleView = challengeView.findViewById(R.id.challengeList_cycle);
+                dateRangeView = challengeView.findViewById(R.id.challengeList_dateRange);
 
-            titleView = challengeView.findViewById(R.id.challengeList_title);
-            alarmView = challengeView.findViewById(R.id.challengeList_alarm);
-            dDayView = challengeView.findViewById(R.id.challengeList_dDay);
-            cycleView = challengeView.findViewById(R.id.challengeList_cycle);
-            dateRangeView = challengeView.findViewById(R.id.challengeList_dateRange);
+                LocalDate startDate = LocalDate.parse(challenge.getChallengeStart());
+                LocalDate endDate = LocalDate.parse(challenge.getChallengeEnd());
+                LocalDate today = LocalDate.now();
 
-            LocalDate startDate = LocalDate.parse(challenge.getChallengeStart());
-            LocalDate endDate = LocalDate.parse(challenge.getChallengeEnd());
-            LocalDate today = LocalDate.now();
+                // 시작 날짜와 오늘 날짜 사이의 차이를 계산합니다.
+                long daysBetween = ChronoUnit.DAYS.between(startDate, today);
+                long daysBetween2 = ChronoUnit.DAYS.between(today, endDate);
 
-            // 시작 날짜와 오늘 날짜 사이의 차이를 계산합니다.
-            long daysBetween = ChronoUnit.DAYS.between(startDate, today);
-            long daysBetween2 = ChronoUnit.DAYS.between(today, endDate);
+                List<Integer> cycle = challenge.getChallengeCycle();
+                List<String> days = new ArrayList<>();
+                String str = "";
+                for (int day : cycle) {
+                    if (day == 1) str += "월 ";
+                    else if (day == 2) str += "화 ";
+                    else if (day == 3) str += "수 ";
+                    else if (day == 4) str += "목 ";
+                    else if (day == 5) str += "금 ";
+                    else if (day == 6) str += "토 ";
+                    else if (day == 7) str += "일 ";
+                }
 
-            List<Integer> cycle = challenge.getChallengeCycle();
-            List<String> days = new ArrayList<>();
-            String str = "";
-            for (int day : cycle) {
-                if (day == 1) str += "월 ";
-                else if (day == 2) str += "화 ";
-                else if (day == 3) str += "수 ";
-                else if (day == 4) str += "목 ";
-                else if (day == 5) str += "금 ";
-                else if (day == 6) str += "토 ";
-                else if (day == 7) str += "일 ";
+                titleView.setText(challenge.getChallengeTitle());
+                alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE); // 알람이 true일 때만 보이도록
+                if (daysBetween < 0 && daysBetween2 > 0) {
+                    dDayView.setText("D" + daysBetween);
+                } else if (daysBetween > 0 && daysBetween2 < 0) {
+                    dDayView.setText("완료");
+                }
+                cycleView.setText(str);
+                dateRangeView.setText(challenge.getChallengeStart() + " ~ " + challenge.getChallengeEnd());
+
+                challengeView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ChallengeListActivity.this, ChallengeDetailActivity.class);
+                        intent.putExtra("challengeId", challenge.getChallengeId());
+                        intent.putExtra("challengeTitle", challenge.getChallengeTitle());
+                        intent.putExtra("challengeMemo", challenge.getChallengeMemo());
+                        startActivity(intent);
+                    }
+                });
+                challengeListContainer.addView(challengeView);
+
             }
-
-            titleView.setText(challenge.getChallengeTitle());
-            alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE); // 알람이 true일 때만 보이도록
-            if (daysBetween < 0 && daysBetween2 > 0) {
-                dDayView.setText("D" + daysBetween);
-            } else if (daysBetween > 0 && daysBetween2 < 0) {
-                dDayView.setText("완료");
-            }
-            cycleView.setText(str);
-            dateRangeView.setText(challenge.getChallengeStart() + " ~ " + challenge.getChallengeEnd());
-
-            challengeListContainer.addView(challengeView);
-
-        }
         }
     }
 }
