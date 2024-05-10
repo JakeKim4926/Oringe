@@ -41,6 +41,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.activity.common.MainActivity;
 import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
@@ -78,6 +79,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     Button buttonVideo;
     Button buttonSTT;
     Button buttonTTS;
+    Button buttonOK;
     VideoView videoView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         buttonVideo = findViewById(R.id.button_video);
         buttonSTT = findViewById(R.id.button_stt);
         buttonTTS = findViewById(R.id.button_tts);
+        buttonOK = findViewById(R.id.button_ok);
 
         buttonTitle.setVisibility(View.GONE);
         buttonContent.setVisibility(View.GONE);
@@ -145,6 +148,15 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             @Override
             public void onClick(View v) {
                 showEditTitleDialog(CHALLENGE_DETAIL_TITLE);
+            }
+        });
+
+        buttonOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecordCreateActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
 
