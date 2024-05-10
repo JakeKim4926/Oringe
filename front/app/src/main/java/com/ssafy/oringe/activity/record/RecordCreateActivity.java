@@ -149,7 +149,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
         buttonSTT.setOnClickListener(v -> openAudioSelector());
 
-        buttonTTS.setOnClickListener(new View.OnClickListener() {
+        buttonTTS.setOnClickListener(new View.OnClickListener() { 
             @Override
             public void onClick(View v) {
                 showEditTitleDialog(CHALLENGE_DETAIL_TITLE);
