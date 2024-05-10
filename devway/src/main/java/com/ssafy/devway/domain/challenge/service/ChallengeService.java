@@ -193,11 +193,10 @@ public class ChallengeService {
      * */
     public List<Integer> selectChallengeCycleList(Long challengeId){
         Document challengeCycleDoc = challengeRepository.findChallengeCycleDocumentByChallengeId(challengeId);
-        if (challengeCycleDoc != null) {
-            return (List<Integer>) challengeCycleDoc.get("challengeCycle");
+        if (challengeCycleDoc == null) {
+            return new ArrayList<>();
         }
-        return new ArrayList<>(); // 또는 적절한 예외 처리
+        return (List<Integer>) challengeCycleDoc.get("challengeCycle");
     }
-
 
 }
