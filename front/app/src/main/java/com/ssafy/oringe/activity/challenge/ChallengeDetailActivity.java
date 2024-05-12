@@ -39,6 +39,7 @@ public class ChallengeDetailActivity extends AppCompatActivity {
     private Long memberId;
     private String API_URL;
     private Button btn_record;
+    private long challengeId;
     private String challengeTitle;
     private String challengeMemo;
     @Override
@@ -61,13 +62,7 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             @Override
             public void bind(@NonNull DayViewContainer container, CalendarDay day) {
                 container.textView.setText(String.valueOf(day.getDate().getDayOfMonth()));
-                // 이미지 오버레이
-//                if (dayHasEvent(day.getDate())) {
-//                    container.imageView.setVisibility(View.VISIBLE);
-//                    container.imageView.setImageResource(R.drawable.oranges_simple_blue1);
-//                } else {
-//                    container.imageView.setVisibility(View.GONE);
-//                }
+
 
                 if (dayHasEvent(day.getDate())) {
                     TypedArray oranges = getResources().obtainTypedArray(R.array.orange_images_orange);
@@ -124,7 +119,7 @@ public class ChallengeDetailActivity extends AppCompatActivity {
         TitleView whoView = findViewById(R.id.challengeList_who);
         whoView.setText(memberNickname + "님의 챌린지");
         Intent intent = getIntent();
-        long challengeId = intent.getLongExtra("challengeId", -1);
+        challengeId = intent.getLongExtra("challengeId", -1);
         challengeTitle = intent.getStringExtra("challengeTitle");
         challengeMemo = intent.getStringExtra("challengeMemo");
 
