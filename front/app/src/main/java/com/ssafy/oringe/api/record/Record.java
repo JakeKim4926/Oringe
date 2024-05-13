@@ -19,9 +19,11 @@ public class Record {
 
     private Long recordId;
 
-    private LocalDate recordDate;
-
     private Boolean recordSuccess;
 
-    private List<String> recordTemplates;
+    private LocalDate recordDate;
+
+
+
+//    private List<String> recordTemplates;
 }
