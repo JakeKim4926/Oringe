@@ -362,10 +362,10 @@ public class ChallengeDetailActivity extends AppCompatActivity {
         executor.execute(() -> {
             try {
                 Response<List<Record>> response = recordService.fetchMonthlyRecords(memberId, challengeId, month.getMonthValue()).execute();
+                Log.d("MYTAG", response.toString());
                 handler.post(() -> {
                     if (response.isSuccessful()) {
                         monthlyRecords = response.body();
-                        Log.d("MYTAG", monthlyRecords.toString());
                         calendarView.notifyCalendarChanged();
                     } else {
                         Toast.makeText(ChallengeDetailActivity.this, "Failed to load records", Toast.LENGTH_SHORT).show();

@@ -17,13 +17,11 @@ import lombok.ToString;
 @ToString
 public class Record {
 
-    private Long recordId;
+    private int recordId;
 
     private Boolean recordSuccess;
 
     private LocalDate recordDate;
-
-
 
 //    private List<String> recordTemplates;
 }
