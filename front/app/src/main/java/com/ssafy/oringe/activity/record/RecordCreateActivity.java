@@ -48,15 +48,22 @@ import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.challengeDetail.dto.ChallengeDetailIdResponse;
 import com.ssafy.oringe.api.challengeDetail.ChallengeDetailService;
+import com.ssafy.oringe.api.record.RecordService;
+import com.ssafy.oringe.api.record.dto.RecordCreateReqDto;
+import com.ssafy.oringe.api.record.dto.RecordCreateTTSDto;
 import com.ssafy.oringe.common.ChallengeDetailOrders;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,6 +77,8 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     private String selectedChallengeTitle;
     private List<Integer> challengeDetailOrder = new ArrayList<>();
     private Spinner spinner;
+
+    private RecordService recordService;
 
     private LinearLayout buttonContainer;
     private ChallengeDetailService challengeDetailService;
@@ -253,6 +262,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                 .build();
 
         challengeDetailService = retrofit.create(ChallengeDetailService.class);
+        recordService = retrofit.create(RecordService.class);
     }
 
     private void getChallengeDetailIdAndOrderList(Long challengeId) {
@@ -526,6 +536,156 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         }
     }
 
+    // ==========================================================
+    // =
+    // =                        API 연결
+    // =
+    // ==========================================================
+
+
+    private void postRecord(RecordCreateReqDto recordCreateReqDto) {
+        Call<Void> call = recordService.postRecord(recordCreateReqDto);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // 성공 처리
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // 실패 처리
+            }
+        });
+    }
+
+    private void insertRecordTitle(String title) {
+        Call<Void> call = recordService.insertRecordTitle(title);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // 성공 처리
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // 실패 처리
+            }
+        });
+    }
+
+    private void insertRecordContent(String content) {
+        Call<Void> call = recordService.insertRecordContent(content);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // 성공 처리
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // 실패 처리
+            }
+        });
+    }
+
+    private void insertRecordImage(File file, Long memberId) {
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        Call<Void> call = recordService.insertRecordImage(body, memberId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // 성공 처리
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // 실패 처리
+            }
+        });
+    }
+
+    private void insertRecordAudio(File file, Long memberId) {
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("audio", file.getName(), requestFile);
+        Call<Void> call = recordService.insertRecordAudio(body, memberId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // 성공 처리
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // 실패 처리
+            }
+        });
+    }
+
+    private void insertRecordVideo(File file, Long memberId) {
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("video", file.getName(), requestFile);
+        Call<Void> call = recordService.insertRecordVideo(body, memberId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // 성공 처리
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // 실패 처리
+            }
+        });
+    }
+
+    private void insertSTT(File file, Long memberId) {
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("stt", file.getName(), requestFile);
+        Call<Void> call = recordService.insertSTT(body, memberId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // 성공 처리
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // 실패 처리
+            }
+        });
+    }
+
+    private void insertTTS(RecordCreateTTSDto recordCreateTTSDto) {
+        Call<Void> call = recordService.insertTTS(recordCreateTTSDto);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // 성공 처리
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // 실패 처리
+            }
+        });
+    }
 
 
 }
