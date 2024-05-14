@@ -2,7 +2,6 @@ package com.ssafy.oringe.activity.challenge;
 
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -40,12 +39,15 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.WeekFields;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChallengeDetailActivity extends AppCompatActivity {
@@ -57,8 +59,9 @@ public class ChallengeDetailActivity extends AppCompatActivity {
     private String challengeTitle;
     private String challengeMemo;
     private RecordService recordService;
-    private List<Record> monthlyRecords;
+    private List<Record> monthlyRecords = new ArrayList<>(); // Initialize to an empty list
     private CalendarView calendarView;
+    private List<Integer> cycleDays = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +84,9 @@ public class ChallengeDetailActivity extends AppCompatActivity {
         calendarView.setup(currentMonth.minusMonths(3), currentMonth.plusMonths(1), WeekFields.of(Locale.getDefault()).getFirstDayOfWeek());
         calendarView.scrollToMonth(currentMonth);
 
-
         recordService = RetrofitClient.getApiRecordService();
         loadMonthlyRecordsSync(currentMonth);
+        loadCycleDays();
 
         calendarView.setMonthScrollListener(calendarMonth -> {
             loadMonthlyRecordsSync(calendarMonth.getYearMonth());
@@ -138,14 +141,18 @@ public class ChallengeDetailActivity extends AppCompatActivity {
                 LocalDate date = day.getDate();
                 container.textView.setText(String.valueOf(date.getDayOfMonth()));
 
-
-
                 if (dayHasEvent(date)) {
                     TypedArray oranges = getResources().obtainTypedArray(R.array.orange_images_orange);
                     int imageId = oranges.getResourceId(new Random().nextInt(oranges.length()), -1);
                     container.imageView.setImageResource(imageId);
                     container.imageView.setVisibility(View.VISIBLE);
                     oranges.recycle();
+                } else if (shouldHighlightDay(date)) {
+                    TypedArray blues = getResources().obtainTypedArray(R.array.orange_images_blue);
+                    int imageId = blues.getResourceId(new Random().nextInt(blues.length()), -1);
+                    container.imageView.setImageResource(imageId);
+                    container.imageView.setVisibility(View.VISIBLE);
+                    blues.recycle();
                 } else {
                     container.imageView.setVisibility(View.GONE);
                 }
@@ -173,6 +180,13 @@ public class ChallengeDetailActivity extends AppCompatActivity {
         });
     }
 
+    private boolean shouldHighlightDay(LocalDate date) {
+        if (date.isAfter(LocalDate.now())) return false;
+        if (!cycleDays.contains(date.getDayOfWeek().getValue())) return false;
+        if (monthlyRecords == null) return false; // Add null check here
+        return monthlyRecords.stream().noneMatch(record -> record.getRecordDate().equals(date));
+    }
+
     private void loadMonthlyRecordsSync(YearMonth month) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
@@ -193,12 +207,34 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void loadCycleDays() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        executor.execute(() -> {
+            try {
+                Response<List<Integer>> response = recordService.fetchCycleDays(challengeId).execute();
+                handler.post(() -> {
+                    if (response.isSuccessful() && response.body() != null) {
+                        cycleDays = response.body();
+                        calendarView.notifyCalendarChanged(); // Refresh the calendar view
+                    } else {
+                        Toast.makeText(ChallengeDetailActivity.this, "Failed to load cycle days", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (Exception e) {
+                handler.post(() -> Toast.makeText(ChallengeDetailActivity.this, "Error loading cycle days: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
     private void animateButton() {
         btn_record.post(() -> {
             int[] location = new int[2];
             btn_record.getLocationOnScreen(location);
             float startY = btn_record.getY();
-            float endY = location[1] - btn_record.getTop()+150;  // Get the relative Y position
+            float endY = location[1] - btn_record.getTop() + 150;  // Get the relative Y position
 
             ObjectAnimator animator = ObjectAnimator.ofFloat(
                     btn_record,
@@ -209,7 +245,6 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             animator.start();
         });
     }
-
 
     class DayViewContainer extends ViewContainer {
         TextView textView;
