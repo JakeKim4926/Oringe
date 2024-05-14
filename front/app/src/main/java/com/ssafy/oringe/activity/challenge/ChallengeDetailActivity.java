@@ -12,6 +12,8 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -145,12 +147,14 @@ public class ChallengeDetailActivity extends AppCompatActivity {
                     TypedArray oranges = getResources().obtainTypedArray(R.array.orange_images_orange);
                     int imageId = oranges.getResourceId(new Random().nextInt(oranges.length()), -1);
                     container.imageView.setImageResource(imageId);
+                    animateImageView(container.imageView);
                     container.imageView.setVisibility(View.VISIBLE);
                     oranges.recycle();
                 } else if (shouldHighlightDay(date)) {
                     TypedArray blues = getResources().obtainTypedArray(R.array.orange_images_blue);
                     int imageId = blues.getResourceId(new Random().nextInt(blues.length()), -1);
                     container.imageView.setImageResource(imageId);
+                    animateImageView(container.imageView);
                     container.imageView.setVisibility(View.VISIBLE);
                     blues.recycle();
                 } else {
@@ -179,7 +183,17 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             }
         });
     }
+    private void animateImageView(ImageView imageView) {
+        ScaleAnimation scaleAnimation = new ScaleAnimation(
+                0f, 1f,  // Start and end values for the X axis scaling
+                0f, 1f,  // Start and end values for the Y axis scaling
+                Animation.RELATIVE_TO_SELF, 0.5f,  // Pivot point of X scaling
+                Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
 
+        scaleAnimation.setDuration(300);
+        scaleAnimation.setFillAfter(true);  // Needed to keep the result of the animation
+        imageView.startAnimation(scaleAnimation);
+    }
     private boolean shouldHighlightDay(LocalDate date) {
         if (date.isAfter(LocalDate.now())) return false;
         if (!cycleDays.contains(date.getDayOfWeek().getValue())) return false;
