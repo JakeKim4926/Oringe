@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kizitonwose.calendar.core.CalendarDay;
@@ -48,8 +49,6 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChallengeDetailActivity extends AppCompatActivity {
@@ -64,12 +63,23 @@ public class ChallengeDetailActivity extends AppCompatActivity {
     private List<Record> monthlyRecords = new ArrayList<>(); // Initialize to an empty list
     private CalendarView calendarView;
     private List<Integer> cycleDays = new ArrayList<>();
+    private LocalDate challengeStartDate;
+    private LocalDate challengeEndDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge_detail);
         API_URL = getString(R.string.APIURL);
+
+        // Retrieve challenge details from the intent
+        Intent intent = getIntent();
+        challengeId = intent.getLongExtra("challengeId", -1);
+        challengeTitle = intent.getStringExtra("challengeTitle");
+        challengeMemo = intent.getStringExtra("challengeMemo");
+        challengeStartDate = LocalDate.parse(intent.getStringExtra("challengeStart"));
+        challengeEndDate = LocalDate.parse(intent.getStringExtra("challengeEnd"));
+
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         memberId = sharedPref.getLong("loginId", 0);
         memberNickname = sharedPref.getString("loginNickName", "(알 수 없음)");
@@ -82,12 +92,8 @@ public class ChallengeDetailActivity extends AppCompatActivity {
         calendarView = findViewById(R.id.calendarView);
         setupCalendarView();
 
-        YearMonth currentMonth = YearMonth.now();
-        calendarView.setup(currentMonth.minusMonths(3), currentMonth.plusMonths(1), WeekFields.of(Locale.getDefault()).getFirstDayOfWeek());
-        calendarView.scrollToMonth(currentMonth);
-
         recordService = RetrofitClient.getApiRecordService();
-        loadMonthlyRecordsSync(currentMonth);
+        loadMonthlyRecordsSync(YearMonth.from(challengeStartDate));
         loadCycleDays();
 
         calendarView.setMonthScrollListener(calendarMonth -> {
@@ -98,26 +104,22 @@ public class ChallengeDetailActivity extends AppCompatActivity {
 
         // Set up the button to start the RecordCreateActivity
         btn_record = findViewById(R.id.btn_record);
-        int challengeStatus = getIntent().getIntExtra("challengeStatus", -1);
+        int challengeStatus = intent.getIntExtra("challengeStatus", -1);
         if (challengeStatus == 2) { // 2 == "In Progress" status
             btn_record.setVisibility(View.VISIBLE);
         } else {
             btn_record.setVisibility(View.GONE);
         }
         btn_record.setOnClickListener(v -> {
-            Intent intent = new Intent(ChallengeDetailActivity.this, RecordCreateActivity.class);
-            intent.putExtra("challengeTitle", challengeTitle);
-            startActivity(intent);
+            Intent recordIntent = new Intent(ChallengeDetailActivity.this, RecordCreateActivity.class);
+            recordIntent.putExtra("challengeTitle", challengeTitle);
+            startActivity(recordIntent);
         });
     }
 
     private void setDefaultInfo() {
         TitleView whoView = findViewById(R.id.challengeList_who);
         whoView.setText(memberNickname + "님의 챌린지");
-        Intent intent = getIntent();
-        challengeId = intent.getLongExtra("challengeId", -1);
-        challengeTitle = intent.getStringExtra("challengeTitle");
-        challengeMemo = intent.getStringExtra("challengeMemo");
 
         TitleView titleView = findViewById(R.id.challengeDetail_titleView);
         TitleView memoView = findViewById(R.id.challengeDetail_memoView);
@@ -138,10 +140,12 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             public DayViewContainer create(@NonNull View view) {
                 return new DayViewContainer(view);
             }
+
             @Override
             public void bind(@NonNull DayViewContainer container, CalendarDay day) {
                 LocalDate date = day.getDate();
                 container.textView.setText(String.valueOf(date.getDayOfMonth()));
+                container.recordId = null;  // Reset recordId
 
                 if (dayHasEvent(date)) {
                     TypedArray oranges = getResources().obtainTypedArray(R.array.orange_images_orange);
@@ -150,6 +154,12 @@ public class ChallengeDetailActivity extends AppCompatActivity {
                     animateImageView(container.imageView);
                     container.imageView.setVisibility(View.VISIBLE);
                     oranges.recycle();
+
+                    // Set recordId if the day has an event
+                    Record record = getRecordForDate(date);
+                    if (record != null) {
+                        container.recordId = (long) record.getRecordId();
+                    }
                 } else if (shouldHighlightDay(date)) {
                     TypedArray blues = getResources().obtainTypedArray(R.array.orange_images_blue);
                     int imageId = blues.getResourceId(new Random().nextInt(blues.length()), -1);
@@ -172,17 +182,24 @@ public class ChallengeDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
         calendarView.setMonthHeaderBinder(new MonthHeaderFooterBinder<MonthViewContainer>() {
             @Override
             public MonthViewContainer create(View view) {
                 return new MonthViewContainer(view);
             }
+
             @Override
             public void bind(MonthViewContainer container, CalendarMonth month) {
                 container.monthText.setText(String.format(Locale.ENGLISH, "<   %s   >", month.getYearMonth().getMonth()));
             }
         });
+
+        // Set the calendar view range to the challenge start and end dates
+        calendarView.setup(YearMonth.from(challengeStartDate), YearMonth.from(challengeEndDate), WeekFields.of(Locale.getDefault()).getFirstDayOfWeek());
+        calendarView.scrollToMonth(YearMonth.from(challengeStartDate));
     }
+
     private void animateImageView(ImageView imageView) {
         ScaleAnimation scaleAnimation = new ScaleAnimation(
                 0f, 1f,  // Start and end values for the X axis scaling
@@ -194,11 +211,21 @@ public class ChallengeDetailActivity extends AppCompatActivity {
         scaleAnimation.setFillAfter(true);  // Needed to keep the result of the animation
         imageView.startAnimation(scaleAnimation);
     }
+
     private boolean shouldHighlightDay(LocalDate date) {
-        if (date.isAfter(LocalDate.now())) return false;
+        if (date.isBefore(challengeStartDate) || date.isAfter(LocalDate.now())) return false; // Only highlight days between the challenge start date and today
         if (!cycleDays.contains(date.getDayOfWeek().getValue())) return false;
-        if (monthlyRecords == null) return false; // Add null check here
+        if (monthlyRecords == null) return false;
         return monthlyRecords.stream().noneMatch(record -> record.getRecordDate().equals(date));
+    }
+
+    private Record getRecordForDate(LocalDate date) {
+        for (Record record : monthlyRecords) {
+            if (record.getRecordDate().equals(date)) {
+                return record;
+            }
+        }
+        return null;
     }
 
     private void loadMonthlyRecordsSync(YearMonth month) {
@@ -263,12 +290,29 @@ public class ChallengeDetailActivity extends AppCompatActivity {
     class DayViewContainer extends ViewContainer {
         TextView textView;
         ImageView imageView;
+        Long recordId;  // Added recordId
 
         DayViewContainer(View view) {
             super(view);
             textView = view.findViewById(R.id.dayText);
             imageView = view.findViewById(R.id.dayIcon);
+
+            view.setOnClickListener(v -> {
+                if (recordId != null) {
+                    // Show modal dialog with record details
+                    showRecordDetails(recordId);
+                }
+            });
         }
+    }
+
+    private void showRecordDetails(Long recordId) {
+        // Show a modal dialog with the record details
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Record Details");
+        builder.setMessage("Record ID: " + recordId);
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+        builder.show();
     }
 
     class MonthViewContainer extends ViewContainer {

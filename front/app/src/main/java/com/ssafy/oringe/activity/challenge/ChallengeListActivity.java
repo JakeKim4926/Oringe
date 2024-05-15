@@ -225,6 +225,8 @@ public class ChallengeListActivity extends AppCompatActivity {
                         intent.putExtra("challengeId", challenge.getChallengeId());
                         intent.putExtra("challengeTitle", challenge.getChallengeTitle());
                         intent.putExtra("challengeMemo", challenge.getChallengeMemo());
+                        intent.putExtra("challengeStart", challenge.getChallengeStart());
+                        intent.putExtra("challengeEnd", challenge.getChallengeEnd());
                         intent.putExtra("challengeStatus", currentStatus);
                         startActivity(intent);
                     }
