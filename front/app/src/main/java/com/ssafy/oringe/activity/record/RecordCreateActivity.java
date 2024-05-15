@@ -12,6 +12,7 @@ import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_VID
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -48,6 +49,7 @@ import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.challengeDetail.dto.ChallengeDetailIdResponse;
 import com.ssafy.oringe.api.challengeDetail.ChallengeDetailService;
+import com.ssafy.oringe.api.record.AudioConverter;
 import com.ssafy.oringe.api.record.RecordService;
 import com.ssafy.oringe.api.record.dto.RecordCreateReqDto;
 import com.ssafy.oringe.api.record.dto.RecordCreateTTSDto;
@@ -59,6 +61,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -69,6 +72,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RecordCreateActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -77,11 +81,22 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     private String selectedChallengeTitle;
     private List<Integer> challengeDetailOrder = new ArrayList<>();
     private Spinner spinner;
+    private Long memberId;
+    private Long challengeId;
 
     private RecordService recordService;
+    private RecordService recordJsonService;
+
+    private RecordCreateReqDto recordCreateReqDto;
+    private RecordCreateReqDto recordCreateReqDtoSave;
 
     private LinearLayout buttonContainer;
     private ChallengeDetailService challengeDetailService;
+
+    private File imageFile;
+    private File audioFile;
+    private File videoFile;
+    private File TTSFile;
 
     Button buttonTitle;
     Button buttonContent;
@@ -101,6 +116,9 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
         // Intent에서 challengeTitle 받기
         selectedChallengeTitle = getIntent().getStringExtra("challengeTitle");
+
+        recordCreateReqDtoSave = new RecordCreateReqDto();
+        recordCreateReqDto = new RecordCreateReqDto();
 
         setupRetrofitClient();
 
@@ -168,14 +186,19 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendData();
+
                 Intent intent = new Intent(RecordCreateActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+
+                challengeDetailOrder.clear();
             }
         });
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Long savedLoginId = sharedPref.getLong("loginId", 0);
+        memberId = savedLoginId;
 
         getChallengeList(savedLoginId);
     }
@@ -183,7 +206,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Challenge selectedChallenge = (Challenge) parent.getItemAtPosition(position);
-        Long challengeId = selectedChallenge.getChallengeId();
+        challengeId = selectedChallenge.getChallengeId();
         Toast.makeText(this, "현재 챌린지 : " + selectedChallenge.getChallengeTitle(), Toast.LENGTH_LONG).show();
 
         getChallengeDetailIdAndOrderList(challengeId);
@@ -214,9 +237,26 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             }
         }
 
-        challengeDetailOrder.clear();
     }
 
+    public void sendData() {
+        System.out.println("save : " + recordCreateReqDtoSave);
+        recordCreateReqDto.setMemberId(memberId);
+        recordCreateReqDto.setChallengeId(challengeId);
+
+        AtomicInteger completedCalls = new AtomicInteger(0);
+        int totalCall = challengeDetailOrder.size();
+        // completedCalls, totalCall
+        for (int value : challengeDetailOrder) {
+            if (value == CHALLENGE_DETAIL_TITLE.getOrderCode())      insertRecordTitle(recordCreateReqDtoSave.getRecordTitle(), completedCalls, totalCall);
+            if (value == CHALLENGE_DETAIL_CONTENT.getOrderCode())    insertRecordContent(recordCreateReqDtoSave.getRecordContent(), completedCalls, totalCall);
+            if (value == CHALLENGE_DETAIL_IMAGE.getOrderCode())      insertRecordImage(completedCalls, totalCall);
+            if (value == CHALLENGE_DETAIL_AUDIO.getOrderCode())      insertRecordAudio(completedCalls, totalCall);
+            if (value == CHALLENGE_DETAIL_VIDEO.getOrderCode())      insertRecordVideo(completedCalls, totalCall);
+//            if (value == CHALLENGE_DETAIL_STT.getOrderCode())        insertSTT(recordCreateReqDtoSave.getRecordTitle());
+//            if (value == CHALLENGE_DETAIL_TTS.getOrderCode())        insertTTS(recordCreateReqDtoSave.getRecordTitle());
+        }
+    }
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // Do nothing
@@ -262,7 +302,14 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                 .build();
 
         challengeDetailService = retrofit.create(ChallengeDetailService.class);
-        recordService = retrofit.create(RecordService.class);
+
+        Retrofit retrofit2 = new Retrofit.Builder()
+                .baseUrl(API_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        recordService = retrofit2.create(RecordService.class);
     }
 
     private void getChallengeDetailIdAndOrderList(Long challengeId) {
@@ -295,27 +342,6 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         });
     }
 
-    private void getTemplatesOrder(Long challengeDetailId) {
-        challengeDetailService.getTemplatesOrder(challengeDetailId).enqueue(new Callback<List<Integer>>() {
-            @Override
-            public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                if (response.isSuccessful()) {
-                    challengeDetailOrder = response.body();
-                    System.out.println(challengeDetailOrder);
-                    showButton();
-                    // TODO: Handle the order list, e.g., show in UI or process further
-                } else {
-                    Toast.makeText(RecordCreateActivity.this, "Failed to fetch order list", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Integer>> call, Throwable t) {
-                Toast.makeText(RecordCreateActivity.this, "An error occurred while fetching order list", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     private void showEditTitleDialog(ChallengeDetailOrders challengeDetailOrders) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -339,6 +365,8 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                 }
 
                 updateButtonTitle(inputText, challengeDetailOrders);
+                if(challengeDetailOrders == CHALLENGE_DETAIL_TITLE)     recordCreateReqDtoSave.setRecordTitle(inputText);
+                else if(challengeDetailOrders == CHALLENGE_DETAIL_CONTENT)     recordCreateReqDtoSave.setRecordContent(inputText);
             }
         });
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -381,14 +409,92 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
             setButtonBackground(imageUri);
+            String imagePath = getPathFromUri(imageUri);
+            if (imagePath != null) {
+                imageFile = new File(imagePath);
+            }
         } else if (requestCode == PICK_AUDIO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri audioUri = data.getData();
             setupAudioButton(audioUri);
+            String audioPath = getPathFromUriAudio(audioUri);
+            if (audioPath != null) {
+                File file = new File(audioPath);
+
+                if (audioPath.endsWith(".m4a")) {
+                    // 원래 파일 이름을 유지하면서 확장자를 .wav로 변경
+                    String outputFilePath = audioPath.substring(0, audioPath.lastIndexOf(".")) + ".wav";
+                    File outputFile = new File(outputFilePath);
+
+                    AudioConverter.convertToWav(file, outputFile, new AudioConverter.ConversionListener() {
+                        @Override
+                        public void onConversionSuccess(File convertedFile) {
+                            audioFile = convertedFile;
+                            Toast.makeText(RecordCreateActivity.this, "되어라 : " + convertedFile.getName(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onConversionFailed(String error) {
+                            Toast.makeText(RecordCreateActivity.this, error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else if(audioPath.endsWith(".mp3")
+                        || audioPath.endsWith(".wav")
+                        || audioPath.endsWith(".aac")
+                        || audioPath.endsWith(".ogg")
+                        || audioPath.endsWith(".flac")) {
+                    audioFile = file;
+                } else {
+                    Toast.makeText(RecordCreateActivity.this, "m4a,mp3,wav,aac,ogg,flac 파일만 허용 가능합니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
         } else if (requestCode == REQUEST_VIDEO_PICK && resultCode == RESULT_OK) {
             videoUri = data.getData();
             setupVideoPlayback();
+            String videoPath = getPathFromUriVideo(videoUri);
+            if (videoPath != null) {
+                videoFile = new File(videoPath);
+            }
         }
 
+    }
+    private String getPathFromUri(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String path = cursor.getString(column_index);
+            cursor.close();
+            return path;
+        }
+        return null;
+    }
+
+    private String getPathFromUriAudio(Uri uri) {
+        String result = null;
+        String[] projection = {MediaStore.Audio.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+                result = cursor.getString(column_index);
+            }
+            cursor.close();
+        }
+        return result;
+    }
+
+    private String getPathFromUriVideo(Uri uri) {
+        String[] projection = { MediaStore.Video.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            String path = cursor.getString(column_index);
+            cursor.close();
+            return path;
+        }
+        return null;
     }
 
 //    private void setButtonBackground(Uri imageUri) {
@@ -543,149 +649,214 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     // ==========================================================
 
 
-    private void postRecord(RecordCreateReqDto recordCreateReqDto) {
-        Call<Void> call = recordService.postRecord(recordCreateReqDto);
-        call.enqueue(new Callback<Void>() {
+    private void getTemplatesOrder(Long challengeDetailId) {
+        challengeDetailService.getTemplatesOrder(challengeDetailId).enqueue(new Callback<List<Integer>>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
                 if (response.isSuccessful()) {
-                    // 성공 처리
+                    challengeDetailOrder = response.body();
+                    showButton();
+                    // TODO: Handle the order list, e.g., show in UI or process further
+                } else {
+                    Toast.makeText(RecordCreateActivity.this, "Failed to fetch order list", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // 실패 처리
+            public void onFailure(Call<List<Integer>> call, Throwable t) {
+                Toast.makeText(RecordCreateActivity.this, "An error occurred while fetching order list", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void insertRecordTitle(String title) {
-        Call<Void> call = recordService.insertRecordTitle(title);
-        call.enqueue(new Callback<Void>() {
+    private void postRecord() {
+        System.out.println("when you send it : " + recordCreateReqDto);
+        Call<String> call = recordService.postRecord(recordCreateReqDto);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    // 성공 처리
+                    Toast.makeText(RecordCreateActivity.this, "인증 생성 성공", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<String> call, Throwable t) {
                 // 실패 처리
+                Toast.makeText(RecordCreateActivity.this, "An error occurred while add record", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void insertRecordContent(String content) {
-        Call<Void> call = recordService.insertRecordContent(content);
-        call.enqueue(new Callback<Void>() {
+    private void insertRecordTitle(String title, AtomicInteger completedCalls, int totalCalls) {
+        Call<String> call = recordService.insertRecordTitle(title);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    // 성공 처리
+                    String result = response.body();
+                    recordCreateReqDto.setRecordTitle(title);
+                } else {
+                    try {
+                        System.out.println("Response was not successful: " + response.code());
+                        System.out.println("Response error body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // 실패 처리
+            public void onFailure(Call<String> call, Throwable t) {
+
+                System.out.println("Request failed: " + t.getMessage());
+                t.printStackTrace();
+                Toast.makeText(RecordCreateActivity.this, "An error occurred while adding title", Toast.LENGTH_SHORT).show();
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
         });
     }
 
-    private void insertRecordImage(File file, Long memberId) {
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-        Call<Void> call = recordService.insertRecordImage(body, memberId);
-        call.enqueue(new Callback<Void>() {
+    private void insertRecordContent(String content, AtomicInteger completedCalls, int totalCalls) {
+        Call<String> call = recordService.insertRecordContent(content);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    // 성공 처리
+                    String result = response.body();
+                    recordCreateReqDto.setRecordContent(content);
                 }
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // 실패 처리
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(RecordCreateActivity.this, "An error occurred while adding content", Toast.LENGTH_SHORT).show();
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
         });
     }
 
-    private void insertRecordAudio(File file, Long memberId) {
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("audio", file.getName(), requestFile);
-        Call<Void> call = recordService.insertRecordAudio(body, memberId);
-        call.enqueue(new Callback<Void>() {
+    private void insertRecordImage(AtomicInteger completedCalls, int totalCalls) {
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
+        Call<String> call = recordService.insertRecordImage(body, memberId);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    // 성공 처리
+                    String result = response.body();
+                    recordCreateReqDto.setRecordImage(result);
                 }
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // 실패 처리
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(RecordCreateActivity.this, "An error occurred while adding image", Toast.LENGTH_SHORT).show();
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
         });
     }
 
-    private void insertRecordVideo(File file, Long memberId) {
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("video", file.getName(), requestFile);
-        Call<Void> call = recordService.insertRecordVideo(body, memberId);
-        call.enqueue(new Callback<Void>() {
+    private void insertRecordAudio(AtomicInteger completedCalls, int totalCalls) {
+        if (audioFile == null) {
+            Toast.makeText(this, "No audio file selected", Toast.LENGTH_SHORT).show();
+            checkIfAllCallsCompleted(completedCalls, totalCalls);
+            return;
+        }
+
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), audioFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("audio", audioFile.getName(), requestFile);
+        Call<String> call = recordService.insertRecordAudio(body, memberId);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    // 성공 처리
+                    String result = response.body();
+                    recordCreateReqDto.setRecordAudio(result);
                 }
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // 실패 처리
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(RecordCreateActivity.this, "An error occurred while adding audio", Toast.LENGTH_SHORT).show();
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
         });
     }
 
-    private void insertSTT(File file, Long memberId) {
+    private void insertRecordVideo(AtomicInteger completedCalls, int totalCalls) {
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), videoFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("video", videoFile.getName(), requestFile);
+        Call<String> call = recordService.insertRecordVideo(body, memberId);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    String result = response.body();
+                    recordCreateReqDto.setRecordVideo(result);
+                }
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(RecordCreateActivity.this, "An error occurred while adding video", Toast.LENGTH_SHORT).show();
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
+            }
+        });
+    }
+
+    private void insertSTT(File file, Long memberId, AtomicInteger completedCalls, int totalCalls) {
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("stt", file.getName(), requestFile);
-        Call<Void> call = recordService.insertSTT(body, memberId);
-        call.enqueue(new Callback<Void>() {
+        Call<String> call = recordService.insertSTT(body, memberId);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    // 성공 처리
+                    String result = response.body();
+                    recordCreateReqDto.setRecordSTT(result);
                 }
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // 실패 처리
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(RecordCreateActivity.this, "An error occurred while adding STT", Toast.LENGTH_SHORT).show();
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
         });
     }
 
-    private void insertTTS(RecordCreateTTSDto recordCreateTTSDto) {
-        Call<Void> call = recordService.insertTTS(recordCreateTTSDto);
-        call.enqueue(new Callback<Void>() {
+    private void insertTTS(RecordCreateTTSDto recordCreateTTSDto, AtomicInteger completedCalls, int totalCalls) {
+        Call<String> call = recordService.insertTTS(recordCreateTTSDto);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    // 성공 처리
+                    String result = response.body();
+                    recordCreateReqDto.setRecordTTS(result);
                 }
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // 실패 처리
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(RecordCreateActivity.this, "An error occurred while adding TTS", Toast.LENGTH_SHORT).show();
+                checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
         });
     }
 
+    private void checkIfAllCallsCompleted(AtomicInteger completedCalls, int totalCalls) {
+        if (completedCalls.incrementAndGet() == totalCalls) {
+            System.out.println("All API calls completed");
+            postRecord();
+        }
+    }
 
 }

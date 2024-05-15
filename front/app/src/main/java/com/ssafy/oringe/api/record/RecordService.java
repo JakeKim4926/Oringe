@@ -14,50 +14,50 @@ import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface RecordService {
-    @POST("/")
-    Call<Void> postRecord(@Body RecordCreateReqDto recordCreateReqDto);
+    @POST("record")
+    Call<String> postRecord(@Body RecordCreateReqDto recordCreateReqDto);
 
     // 제목 인증 생성
-    @POST("/title")
-    Call<Void> insertRecordTitle(@Query("recordTitle") String recordTitle);
+    @POST("record/title")
+    Call<String> insertRecordTitle(@Query("recordTitle") String recordTitle);
 
     // 본문 인증 생성
-    @POST("/content")
-    Call<Void> insertRecordContent(@Query("recordContent") String recordContent);
+    @POST("record/content")
+    Call<String> insertRecordContent(@Query("recordContent") String recordContent);
 
     // 이미지 인증 생성
     @Multipart
-    @POST("/image")
-    Call<Void> insertRecordImage(
+    @POST("record/image")
+    Call<String> insertRecordImage(
             @Part MultipartBody.Part file,
             @Query("memberId") Long memberId
     );
 
     // 오디오 인증 생성
     @Multipart
-    @POST("/audio")
-    Call<Void> insertRecordAudio(
+    @POST("record/audio")
+    Call<String> insertRecordAudio(
             @Part MultipartBody.Part file,
             @Query("memberId") Long memberId
     );
 
     // 비디오 인증 생성
     @Multipart
-    @POST("/video")
-    Call<Void> insertRecordVideo(
+    @POST("record/video")
+    Call<String> insertRecordVideo(
             @Part MultipartBody.Part file,
             @Query("memberId") Long memberId
     );
 
     // STT 인증 생성
     @Multipart
-    @POST("/stt")
-    Call<Void> insertSTT(
+    @POST("record/stt")
+    Call<String> insertSTT(
             @Part MultipartBody.Part file,
             @Query("memberId") Long memberId
     );
 
     // TTS 인증 생성
-    @POST("/tts")
-    Call<Void> insertTTS(@Body RecordCreateTTSDto recordCreateTTSDto);
+    @POST("record/tts")
+    Call<String> insertTTS(@Body RecordCreateTTSDto recordCreateTTSDto);
 }
