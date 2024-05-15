@@ -33,6 +33,7 @@ import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
 import com.kizitonwose.calendar.view.ViewContainer;
 import com.ssafy.oringe.R;
 import com.ssafy.oringe.activity.record.RecordCreateActivity;
+import com.ssafy.oringe.activity.record.RecordDetailDialogFragment;
 import com.ssafy.oringe.api.RetrofitClient;
 import com.ssafy.oringe.api.record.Record;
 import com.ssafy.oringe.api.record.RecordService;
@@ -299,12 +300,13 @@ public class ChallengeDetailActivity extends AppCompatActivity {
 
             view.setOnClickListener(v -> {
                 if (recordId != null) {
-                    // Show modal dialog with record details
-                    showRecordDetails(recordId);
+                    RecordDetailDialogFragment.newInstance(recordId)
+                            .show(getSupportFragmentManager(), "recordDetails");
                 }
             });
         }
     }
+
 
     private void showRecordDetails(Long recordId) {
         // Show a modal dialog with the record details
