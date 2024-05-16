@@ -85,10 +85,11 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     private Long challengeId;
 
     private RecordService recordService;
-    private RecordService recordJsonService;
 
     private RecordCreateReqDto recordCreateReqDto;
     private RecordCreateReqDto recordCreateReqDtoSave;
+
+    private RecordCreateTTSDto recordCreateTTSDto;
 
     private LinearLayout buttonContainer;
     private ChallengeDetailService challengeDetailService;
@@ -96,7 +97,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     private File imageFile;
     private File audioFile;
     private File videoFile;
-    private File TTSFile;
+    private File STTFile;
 
     Button buttonTitle;
     Button buttonContent;
@@ -119,6 +120,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
         recordCreateReqDtoSave = new RecordCreateReqDto();
         recordCreateReqDto = new RecordCreateReqDto();
+        recordCreateTTSDto = new RecordCreateTTSDto();
 
         setupRetrofitClient();
 
@@ -174,14 +176,9 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
         buttonVideo.setOnClickListener(v -> openVideoSelector());
 
-        buttonSTT.setOnClickListener(v -> openAudioSelector());
+        buttonSTT.setOnClickListener(v -> openSTTSelector());
 
-        buttonTTS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditTitleDialog(CHALLENGE_DETAIL_TITLE);
-            }
-        });
+        buttonTTS.setOnClickListener(v -> showEditTitleDialog(CHALLENGE_DETAIL_TTS));
 
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,6 +240,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         System.out.println("save : " + recordCreateReqDtoSave);
         recordCreateReqDto.setMemberId(memberId);
         recordCreateReqDto.setChallengeId(challengeId);
+        recordCreateTTSDto.setMemberId(memberId);
 
         AtomicInteger completedCalls = new AtomicInteger(0);
         int totalCall = challengeDetailOrder.size();
@@ -253,8 +251,8 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             if (value == CHALLENGE_DETAIL_IMAGE.getOrderCode())      insertRecordImage(completedCalls, totalCall);
             if (value == CHALLENGE_DETAIL_AUDIO.getOrderCode())      insertRecordAudio(completedCalls, totalCall);
             if (value == CHALLENGE_DETAIL_VIDEO.getOrderCode())      insertRecordVideo(completedCalls, totalCall);
-//            if (value == CHALLENGE_DETAIL_STT.getOrderCode())        insertSTT(recordCreateReqDtoSave.getRecordTitle());
-//            if (value == CHALLENGE_DETAIL_TTS.getOrderCode())        insertTTS(recordCreateReqDtoSave.getRecordTitle());
+            if (value == CHALLENGE_DETAIL_STT.getOrderCode())        insertSTT(completedCalls, totalCall);
+            if (value == CHALLENGE_DETAIL_TTS.getOrderCode())        insertTTS(recordCreateTTSDto, completedCalls, totalCall);
         }
     }
     @Override
@@ -419,25 +417,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             String audioPath = getPathFromUriAudio(audioUri);
             if (audioPath != null) {
                 File file = new File(audioPath);
-
-                if (audioPath.endsWith(".m4a")) {
-                    // 원래 파일 이름을 유지하면서 확장자를 .wav로 변경
-                    String outputFilePath = audioPath.substring(0, audioPath.lastIndexOf(".")) + ".wav";
-                    File outputFile = new File(outputFilePath);
-
-                    AudioConverter.convertToWav(file, outputFile, new AudioConverter.ConversionListener() {
-                        @Override
-                        public void onConversionSuccess(File convertedFile) {
-                            audioFile = convertedFile;
-                            Toast.makeText(RecordCreateActivity.this, "되어라 : " + convertedFile.getName(), Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onConversionFailed(String error) {
-                            Toast.makeText(RecordCreateActivity.this, error, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else if(audioPath.endsWith(".mp3")
+                if(audioPath.endsWith(".mp3")
                         || audioPath.endsWith(".wav")
                         || audioPath.endsWith(".aac")
                         || audioPath.endsWith(".ogg")
@@ -453,6 +433,13 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             String videoPath = getPathFromUriVideo(videoUri);
             if (videoPath != null) {
                 videoFile = new File(videoPath);
+            }
+        } else if (requestCode == PICK_WAV_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri audioUri = data.getData();
+            setupSTTButton(audioUri);
+            String audioPath = getPathFromUriAudio(audioUri);
+            if (audioPath != null) {
+                STTFile = new File(audioPath);
             }
         }
 
@@ -564,9 +551,15 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
     private void openAudioSelector() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_AUDIO_REQUEST);
-    }
+        intent.setType("audio/*"); // 기본 오디오 MIME 유형
 
+        // 추가 형식 필터링을 위한 MIME 유형 배열
+        String[] mimeTypes = {"audio/mpeg", "audio/wav", "audio/aac", "audio/ogg", "audio/flac"};
+
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+
+        startActivityForResult(Intent.createChooser(intent, "Select Audio"), PICK_AUDIO_REQUEST);
+    }
 
     private MediaPlayer mediaPlayer;
 
@@ -591,6 +584,31 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             } else {
                 mediaPlayer.start();
                 buttonAudio.setText("Pause Audio");
+            }
+        });
+    }
+
+    private void setupSTTButton(Uri audioUri) {
+        Button buttonAudio = findViewById(R.id.button_stt);
+        buttonAudio.setText("Play Audio");
+
+        buttonAudio.setOnClickListener(v -> {
+            if (mediaPlayer == null) {
+                mediaPlayer = MediaPlayer.create(RecordCreateActivity.this, audioUri);
+                mediaPlayer.setOnCompletionListener(mp -> {
+                    buttonSTT.setText("Play Audio");
+                    mediaPlayer.reset();
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                });
+            }
+
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+                buttonSTT.setText("Resume Audio");
+            } else {
+                mediaPlayer.start();
+                buttonSTT.setText("Pause Audio");
             }
         });
     }
@@ -642,6 +660,14 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         }
     }
 
+    private static final int PICK_WAV_REQUEST = 3;
+    private void openSTTSelector() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("audio/wav");
+        startActivityForResult(intent, PICK_WAV_REQUEST);
+    }
+
+
     // ==========================================================
     // =
     // =                        API 연결
@@ -669,7 +695,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         });
     }
 
-    private void postRecord() {
+    private void postRecord(Runnable onSuccess, Runnable onFailure) {
         System.out.println("when you send it : " + recordCreateReqDto);
         Call<String> call = recordService.postRecord(recordCreateReqDto);
         call.enqueue(new Callback<String>() {
@@ -810,9 +836,9 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         });
     }
 
-    private void insertSTT(File file, Long memberId, AtomicInteger completedCalls, int totalCalls) {
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("stt", file.getName(), requestFile);
+    private void insertSTT(AtomicInteger completedCalls, int totalCalls) {
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), STTFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("stt", STTFile.getName(), requestFile);
         Call<String> call = recordService.insertSTT(body, memberId);
         call.enqueue(new Callback<String>() {
             @Override
@@ -853,9 +879,22 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     }
 
     private void checkIfAllCallsCompleted(AtomicInteger completedCalls, int totalCalls) {
-        if (completedCalls.incrementAndGet() == totalCalls) {
+        if (completedCalls.incrementAndGet() >= totalCalls) {
+            System.out.println(completedCalls.get());
             System.out.println("All API calls completed");
-            postRecord();
+            postRecord(
+                    () -> {
+                        // 성공 시
+                        Intent intent = new Intent(RecordCreateActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        challengeDetailOrder.clear();
+                    },
+                    () -> {
+                        // 실패 시
+                        Toast.makeText(RecordCreateActivity.this, "Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+            );
         }
     }
 

@@ -15,7 +15,9 @@ public class AudioConverter {
             } else if (returnCode == Config.RETURN_CODE_CANCEL) {
                 listener.onConversionFailed("Conversion cancelled");
             } else {
-                listener.onConversionFailed("Conversion failed with returnCode: " + returnCode);
+                String errorOutput = Config.getLastCommandOutput();
+                listener.onConversionFailed("Conversion failed: code " + returnCode + ", error: " + errorOutput);
+                System.out.println("Conversion failed: code " + returnCode + ", error: " + errorOutput);
             }
         });
     }
