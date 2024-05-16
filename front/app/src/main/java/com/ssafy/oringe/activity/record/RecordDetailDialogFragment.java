@@ -416,7 +416,7 @@ public class RecordDetailDialogFragment extends DialogFragment {
 
     private View createTTSView(String content) {
         Button button = new Button(getActivity());
-        button.setText(content);
+        button.setText("Play TTS Audio");
         button.setTextSize(18);
         button.setBackgroundResource(R.drawable.button_color_gray_huge);
         button.setPadding(16, 16, 16, 16);
@@ -426,8 +426,33 @@ public class RecordDetailDialogFragment extends DialogFragment {
         );
         params.setMargins(20, 20, 20, 20);
         button.setLayoutParams(params);
+
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(content);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        button.setOnClickListener(v -> {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+                button.setText("Resume TTS Audio");
+            } else {
+                mediaPlayer.start();
+                button.setText("Pause TTS Audio");
+            }
+        });
+
+        mediaPlayer.setOnCompletionListener(mp -> {
+            button.setText("Play TTS Audio");
+            mediaPlayer.reset();
+        });
+
         return button;
     }
+
     private int dpToPx(int dp) {
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
