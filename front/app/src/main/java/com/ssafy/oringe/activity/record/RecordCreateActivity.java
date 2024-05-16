@@ -1,6 +1,7 @@
 package com.ssafy.oringe.activity.record;
 
 import android.content.Intent;
+
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_AUDIO;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_CONTENT;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_IMAGE;
@@ -83,6 +84,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     Button buttonTTS;
     Button buttonOK;
     VideoView videoView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,10 +176,12 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Challenge selectedChallenge = (Challenge) parent.getItemAtPosition(position);
-        Long challengeId = selectedChallenge.getChallengeId();
-        Toast.makeText(this, "현재 챌린지 : " + selectedChallenge.getChallengeTitle(), Toast.LENGTH_LONG).show();
+        if (selectedChallenge.getChallengeId() != null && selectedChallenge.getChallengeId() != -1) {
+            Long challengeId = selectedChallenge.getChallengeId();
+            Toast.makeText(this, "현재 챌린지 : " + selectedChallenge.getChallengeTitle(), Toast.LENGTH_LONG).show();
 
-        getChallengeDetailIdAndOrderList(challengeId);
+            getChallengeDetailIdAndOrderList(challengeId);
+        }
     }
 
     public void showButton() {
@@ -186,13 +190,13 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
         for (int value : challengeDetailOrder) {
             Button buttonToAdd = null;
-            if (value == CHALLENGE_DETAIL_TITLE.getOrderCode())      buttonToAdd = buttonTitle;
-            if (value == CHALLENGE_DETAIL_CONTENT.getOrderCode())    buttonToAdd = buttonContent;
-            if (value == CHALLENGE_DETAIL_IMAGE.getOrderCode())      buttonToAdd = buttonImage;
-            if (value == CHALLENGE_DETAIL_AUDIO.getOrderCode())      buttonToAdd = buttonVideo;
-            if (value == CHALLENGE_DETAIL_VIDEO.getOrderCode())      buttonToAdd = buttonAudio;
-            if (value == CHALLENGE_DETAIL_STT.getOrderCode())        buttonToAdd = buttonSTT;
-            if (value == CHALLENGE_DETAIL_TTS.getOrderCode())        buttonToAdd = buttonTTS;
+            if (value == CHALLENGE_DETAIL_TITLE.getOrderCode()) buttonToAdd = buttonTitle;
+            if (value == CHALLENGE_DETAIL_CONTENT.getOrderCode()) buttonToAdd = buttonContent;
+            if (value == CHALLENGE_DETAIL_IMAGE.getOrderCode()) buttonToAdd = buttonImage;
+            if (value == CHALLENGE_DETAIL_AUDIO.getOrderCode()) buttonToAdd = buttonVideo;
+            if (value == CHALLENGE_DETAIL_VIDEO.getOrderCode()) buttonToAdd = buttonAudio;
+            if (value == CHALLENGE_DETAIL_STT.getOrderCode()) buttonToAdd = buttonSTT;
+            if (value == CHALLENGE_DETAIL_TTS.getOrderCode()) buttonToAdd = buttonTTS;
 
             // Remove the button from its parent before adding it to the new container
             if (buttonToAdd != null) {
@@ -223,15 +227,43 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
         Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(memberId, 2);
         call.enqueue(new Callback<List<Challenge>>() {
+            //            @Override
+//            public void onResponse(Call<List<Challenge>> call, Response<List<Challenge>> response) {
+//                if (response.isSuccessful()) {
+//                    challengeList = response.body();
+//                    ArrayAdapter<Challenge> adapter = new ArrayAdapter<>(RecordCreateActivity.this,
+//                            android.R.layout.simple_spinner_item,
+//                            challengeList);
+//                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                    spinner.setAdapter(adapter);
+//                } else {
+//                    Toast.makeText(RecordCreateActivity.this, "Failed to fetch challenges", Toast.LENGTH_SHORT).show();
+//                }
+//            }
             @Override
             public void onResponse(Call<List<Challenge>> call, Response<List<Challenge>> response) {
                 if (response.isSuccessful()) {
-                    challengeList = response.body();
+                    List<Challenge> challenges = new ArrayList<>();
+                    // "선택하세요"를 첫 번째 아이템으로 추가
+                    Challenge placeholder = new Challenge();
+                    placeholder.setChallengeTitle("선택하세요");
+                    challenges.add(placeholder);
+                    challenges.addAll(response.body());
+
                     ArrayAdapter<Challenge> adapter = new ArrayAdapter<>(RecordCreateActivity.this,
-                            android.R.layout.simple_spinner_item,
-                            challengeList);
+                            android.R.layout.simple_spinner_item, challenges);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(adapter);
+
+                    // 인텐트에서 받은 challengeTitle과 일치하는 항목 찾기
+                    if (selectedChallengeTitle != null && !selectedChallengeTitle.isEmpty()) {
+                        for (int i = 0; i < challenges.size(); i++) {
+                            if (selectedChallengeTitle.equals(challenges.get(i).getChallengeTitle())) {
+                                spinner.setSelection(i);
+                                break;
+                            }
+                        }
+                    }
                 } else {
                     Toast.makeText(RecordCreateActivity.this, "Failed to fetch challenges", Toast.LENGTH_SHORT).show();
                 }
@@ -320,10 +352,10 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             public void onClick(DialogInterface dialog, int which) {
                 String inputText = input.getText().toString();
 
-                if(challengeDetailOrders == CHALLENGE_DETAIL_TITLE && inputText.length() > 100) {
+                if (challengeDetailOrders == CHALLENGE_DETAIL_TITLE && inputText.length() > 100) {
                     Toast.makeText(RecordCreateActivity.this, "제목은 100자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
                     return;
-                } else if(challengeDetailOrders == CHALLENGE_DETAIL_CONTENT && inputText.length() > 1000) {
+                } else if (challengeDetailOrders == CHALLENGE_DETAIL_CONTENT && inputText.length() > 1000) {
                     Toast.makeText(RecordCreateActivity.this, "본문은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -343,9 +375,9 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
     private void updateButtonTitle(String text, ChallengeDetailOrders challengeDetailOrders) {
         Button buttonTextTemp = null;
-        if(challengeDetailOrders == CHALLENGE_DETAIL_TITLE) {
+        if (challengeDetailOrders == CHALLENGE_DETAIL_TITLE) {
             buttonTextTemp = findViewById(R.id.button_title);
-        } else if(challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
+        } else if (challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
             buttonTextTemp = findViewById(R.id.button_content);
         }
         buttonTextTemp.setText(text);
@@ -357,7 +389,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
     private static final int PICK_IMAGE_REQUEST = 1;  // Request code for picking an image
 
-    private void openImageSelector(){
+    private void openImageSelector() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
@@ -381,7 +413,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
     }
 
-//    private void setButtonBackground(Uri imageUri) {
+    //    private void setButtonBackground(Uri imageUri) {
 //        Button buttonImage = findViewById(R.id.button_image);
 //        buttonImage.post(() -> {
 //            try {
@@ -437,6 +469,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
     /**
      * Convert dp to pixel based on the screen density.
+     *
      * @param dp the value in dp to convert
      * @return the corresponding pixel value
      */
@@ -525,7 +558,6 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             videoView.resume();
         }
     }
-
 
 
 }
