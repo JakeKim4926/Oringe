@@ -71,6 +71,7 @@ public class ChallengeCreateActivity extends AppCompatActivity {
     /* member */
     private String API_URL;
     private Long memberId;
+    private Long challengeId;
 
     private ViewGroup templateListContainer; // 동적 뷰를 추가할 컨테이너
     private ViewGroup modifyContainer; // 동적 뷰를 추가할 컨테이너
