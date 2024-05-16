@@ -9,9 +9,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface ChallengeDetailService {
-    @GET("challengeDetail")
+    @GET("/oringe/api/challengeDetail")
     Call<ChallengeDetailIdResponse> getTemplatesId(@Query("challengeId") Long challengeId);
 
-    @GET("challengeDetail/order")
+    @GET("/oringe/api/challengeDetail/order")
     Call<List<Integer>> getTemplatesOrder(@Query("challengeDetailId") Long challengeDetailId);
 }

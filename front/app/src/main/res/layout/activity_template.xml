@@ -17,33 +17,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:gravity="center_horizontal">
 
         <!--문구-->
-        <com.ssafy.oringe.ui.component.common.TitleView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            app:text="템플릿을 선택하여"
-            app:textSize="5.5sp" />
+            android:text="템플릿을 선택하여\n나만의 템플릿을 골라보세요"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
 
-        <com.ssafy.oringe.ui.component.common.TitleView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:text="나만의 템플릿을 골라보세요."
-            app:textSize="5.5sp" />
-
-        <com.ssafy.oringe.ui.component.common.TitleView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="30dp"
-            app:text="최대 5개까지만 가능합니다."
-            app:textColor="@color/oringe_sub"
-            app:textSize="4.5sp" />
+            android:text="최대 5개까지만 가능합니다"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/oringe_sub"/>
 
         <!--카테고리-->
         <HorizontalScrollView
@@ -54,42 +51,42 @@
 
             <LinearLayout
                 android:id="@+id/template_category"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" />
         </HorizontalScrollView>
 
-        <!--상세 템플릿-->
-        <ScrollView
+    </LinearLayout>
+
+    <!--상세 템플릿-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="30dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="450dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
 
             <LinearLayout
                 android:id="@+id/template_templateDetail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:orientation="vertical"/>
-        </ScrollView>
-    </LinearLayout>
+                android:orientation="vertical" />
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        </LinearLayout>
+    </ScrollView>
 
     <!--버튼-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="50dp"
         android:gravity="end"
+        android:layout_marginBottom="50dp"
         android:orientation="horizontal">
 
         <TextView
@@ -101,10 +98,11 @@
             android:paddingTop="5dp"
             android:paddingRight="12dp"
             android:paddingBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
             android:text="선택완료"
             android:textColor="@color/oringe_main"
             android:textStyle="bold" />
     </LinearLayout>
-
 
 </LinearLayout>

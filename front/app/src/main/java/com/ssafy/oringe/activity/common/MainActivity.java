@@ -31,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.activity.challenge.ChallengeDetailActivity;
 import com.ssafy.oringe.activity.challenge.ChallengeListActivity;
 import com.ssafy.oringe.activity.record.RecordCreateActivity;
 import com.ssafy.oringe.api.TrustOkHttpClientUtil;
@@ -232,6 +233,19 @@ public class MainActivity extends AppCompatActivity {
             }
             orgView.setImageResource(R.drawable.sad_org);
             successView.setText("오늘은 달성하지 못했어요");
+            challengeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, ChallengeDetailActivity.class);
+                    intent.putExtra("challengeId", challenge.getChallengeId());
+                    intent.putExtra("challengeTitle", challenge.getChallengeTitle());
+                    intent.putExtra("challengeMemo", challenge.getChallengeMemo());
+                    intent.putExtra("challengeStart", challenge.getChallengeStart());
+                    intent.putExtra("challengeEnd", challenge.getChallengeEnd());
+                    intent.putExtra("challengeStatus", 2);
+                    startActivity(intent);
+                }
+            });
 //            alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE);
 //            successView.setText(인증있으면?"오늘 달성 완료!":"오늘은 달성하지 못했어요");
             challengeListContainer.addView(challengeView);

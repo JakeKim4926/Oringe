@@ -71,34 +71,45 @@
             </LinearLayout>
 
             <!--목록-->
-            <ScrollView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical"
+                android:id="@+id/animated_layout">
 
-                <LinearLayout
-                    android:id="@+id/challengeList_list"
+                <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:orientation="vertical" >
-                    <com.kizitonwose.calendar.view.CalendarView
-                        android:id="@+id/calendarView"
+                    android:id="@+id/scroll_view">
+
+                    <LinearLayout
+                        android:id="@+id/challengeList_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cv_dayViewResource="@layout/calendar_day_layout"
-                        app:cv_monthHeaderResource="@layout/calendar_month_header"/>
-                </LinearLayout>
-            </ScrollView>
-            <Button
-                android:id="@+id/btn_record"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:background="@drawable/record_btn"
-                android:text="오린지 인증하기 ✏"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold" />
+                        android:orientation="vertical" >
+                        <com.kizitonwose.calendar.view.CalendarView
+                            android:id="@+id/calendarView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cv_dayViewResource="@layout/calendar_day_layout"
+                            app:cv_monthHeaderResource="@layout/calendar_month_header"/>
+                    </LinearLayout>
+                </ScrollView>
+
+                <Button
+                    android:id="@+id/btn_record"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/record_btn"
+                    android:text="오린지 인증하기 ✏"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:layout_below="@id/scroll_view"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
         </LinearLayout>
 
         <!--메뉴-->

@@ -3,7 +3,9 @@ package com.ssafy.oringe.api.record;
 import com.ssafy.oringe.api.challengeDetail.dto.ChallengeDetailIdResponse;
 import com.ssafy.oringe.api.record.dto.RecordCreateReqDto;
 import com.ssafy.oringe.api.record.dto.RecordCreateTTSDto;
+import com.ssafy.oringe.api.record.dto.RecordResponse;
 
+import java.util.List;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -60,4 +62,14 @@ public interface RecordService {
     // TTS 인증 생성
     @POST("record/tts")
     Call<String> insertTTS(@Body RecordCreateTTSDto recordCreateTTSDto);
+
+    @GET("api/record/challenge")
+    Call<List<Record>> fetchMonthlyRecords(@Query("memberId") Long memberId, @Query("challengeId") Long challengeId, @Query("month") int month);
+
+    @GET("/oringe/api/challenge/cycle")
+    Call<List<Integer>> fetchCycleDays(@Query("challengeId") Long challengeId);
+
+    @GET("oringe/api/record")
+    Call<RecordResponse> getRecord(@Query("recordId") Long recordId);
 }
+
