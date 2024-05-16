@@ -9,8 +9,10 @@ services:
       - "8050:8050"
     environment:
       - TZ=Asia/Seoul
+      - GOOGLE_APPLICATION_CREDENTIALS=/credentials/MyGC.json
     volumes:
       - /home/ubuntu/oringe/devway/src/main/resources/static:/app/static
+      - /home/ubuntu/MyGC.json:/credentials/MyGC.json
     networks:
       - devway_network
     depends_on:
