@@ -308,14 +308,7 @@ public class ChallengeDetailActivity extends AppCompatActivity {
     }
 
 
-    private void showRecordDetails(Long recordId) {
-        // Show a modal dialog with the record details
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Record Details");
-        builder.setMessage("Record ID: " + recordId);
-        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
-        builder.show();
-    }
+
 
     class MonthViewContainer extends ViewContainer {
         TextView monthText;

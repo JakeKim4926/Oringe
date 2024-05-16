@@ -1,20 +1,23 @@
 package com.ssafy.oringe.activity.record;
 
 import android.app.Dialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +25,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.ssafy.oringe.R;
 import com.ssafy.oringe.api.challengeDetail.ChallengeDetailService;
 import com.ssafy.oringe.api.challengeDetail.dto.ChallengeDetailIdResponse;
@@ -29,8 +34,10 @@ import com.ssafy.oringe.api.record.RecordService;
 import com.ssafy.oringe.api.record.dto.RecordResponse;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,23 +73,59 @@ public class RecordDetailDialogFragment extends DialogFragment {
         challengeDetailService = retrofit.create(ChallengeDetailService.class);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setTitle("Record Details")
-                .setView(R.layout.fragment_record_detail_dialog)
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+
+        // Inflate custom layout
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_record_detail, null);
+
+        // Set up OK button
+//        Button buttonOk = view.findViewById(R.id.button_ok);
+//        buttonOk.setOnClickListener(v -> dismiss());
+
+        // Set up date TextView
+        TextView textDate = view.findViewById(R.id.text_date);
+
+        builder.setView(view);
 
         Long recordId = getArguments().getLong(ARG_RECORD_ID);
-        fetchRecordDetails(recordId);
+        fetchRecordDetails(recordId, textDate);
 
-        return builder.create();
+        AlertDialog dialog = builder.create();
+
+        // Set the dialog background to transparent
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
+
+        return dialog;
     }
 
-    private void fetchRecordDetails(Long recordId) {
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Set the dialog width and height to wrap content
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+    }
+
+    private void fetchRecordDetails(Long recordId, TextView textDate) {
         recordService.getRecord(recordId).enqueue(new Callback<RecordResponse>() {
             @Override
             public void onResponse(Call<RecordResponse> call, Response<RecordResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     RecordResponse recordResponse = response.body();
                     recordTemplates = recordResponse.getRecordTemplates();
+
+                    // Set the date in the TextView
+                    try {
+                        Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(recordResponse.getRecordDate());
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM월 dd일", Locale.getDefault());
+                        textDate.setText(dateFormat.format(date));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     fetchChallengeDetail(recordResponse.getChallengeId());
                 } else {
                     Toast.makeText(getActivity(), "Failed to load record details", Toast.LENGTH_SHORT).show();
@@ -104,15 +147,12 @@ public class RecordDetailDialogFragment extends DialogFragment {
                     challengeDetailId = response.body().getBody();
                     fetchChallengeDetailOrder(challengeDetailId);
                 } else {
-                    Log.e("ChallengeDetail", "Response code: " + response.code());
-                    Log.e("ChallengeDetail", "Response message: " + response.message());
                     Toast.makeText(getActivity(), "Failed to load challenge detail", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ChallengeDetailIdResponse> call, Throwable t) {
-                Log.e("ChallengeDetail", "Error: " + t.getMessage(), t);
                 Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -181,33 +221,96 @@ public class RecordDetailDialogFragment extends DialogFragment {
     }
 
     private View createTitleView(String content) {
-        TextView textView = new TextView(getActivity());
-        textView.setText(content);
-        textView.setTextSize(24);
-        return textView;
+        Button button = new Button(getActivity());
+        button.setText(content);
+        button.setTextSize(18);
+        button.setTextColor(getResources().getColor(android.R.color.black));
+        button.setTypeface(null, Typeface.BOLD);
+        button.setBackgroundResource(R.drawable.button_color_light_huge);
+        button.setPadding(16, 16, 16, 16);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(20, 20, 20, 20);
+        button.setLayoutParams(params);
+        return button;
     }
 
     private View createContentView(String content) {
-        TextView textView = new TextView(getActivity());
-        textView.setText(content);
-        textView.setTextSize(16);
-        return textView;
+        Button button = new Button(getActivity());
+        button.setText(content);
+        button.setTextSize(18);
+        button.setBackgroundResource(R.drawable.button_color_light_huge);
+        button.setPadding(16, 16, 16, 16);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dpToPx(193)
+        );
+        params.setMargins(20, 20, 20, 20);
+        button.setLayoutParams(params);
+        return button;
     }
-
 
     private View createImageView(String content) {
         ImageView imageView = new ImageView(getActivity());
-        // Load the image from the URL using Glide
+
+        // Set layout parameters with initial width and height
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(20, 20, 20, 20);
+        imageView.setLayoutParams(params);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+        // Load the image with Glide
         Glide.with(getActivity())
                 .load(content)
-                .placeholder(R.drawable.logo_org) // You can use a placeholder image if needed
-                .into(imageView);
+                .placeholder(R.drawable.loading)// 수정필요.
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        // Get the intrinsic dimensions of the loaded image
+                        int width = resource.getIntrinsicWidth();
+                        int height = resource.getIntrinsicHeight();
+
+                        // Calculate aspect ratio
+                        float aspectRatio = (float) width / height;
+
+                        // Set the ImageView dimensions based on the aspect ratio
+                        int maxWidth = getResources().getDisplayMetrics().widthPixels - dpToPx(40); // subtracting margins
+                        int targetHeight = (int) (maxWidth / aspectRatio);
+
+                        // Update layout parameters with calculated dimensions
+                        params.width = maxWidth;
+                        params.height = targetHeight;
+                        imageView.setLayoutParams(params);
+                        imageView.setImageDrawable(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        imageView.setImageDrawable(placeholder);
+                    }
+                });
+
         return imageView;
     }
+
 
     private View createAudioView(String content) {
         Button button = new Button(getActivity());
         button.setText("Play Audio");
+        button.setTextSize(18);
+        button.setBackgroundResource(R.drawable.button_color_gray_huge);
+        button.setPadding(16, 16, 16, 16);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dpToPx(193)
+        );
+        params.setMargins(20, 20, 20, 20);
+        button.setLayoutParams(params);
 
         MediaPlayer mediaPlayer = new MediaPlayer();
         try {
@@ -237,6 +340,40 @@ public class RecordDetailDialogFragment extends DialogFragment {
 
     private View createVideoView(String content) {
         VideoView videoView = new VideoView(getActivity());
+
+        // Set initial layout parameters
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(20, 20, 20, 20);
+        videoView.setLayoutParams(params);
+
+        // Retrieve video dimensions
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(content);
+        String widthStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+        String heightStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+        int width = Integer.parseInt(widthStr);
+        int height =     Integer.parseInt(heightStr);
+        try {
+            retriever.release();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Calculate aspect ratio
+        float aspectRatio = (float) width / height;
+
+        // Set the VideoView dimensions based on the aspect ratio
+        int maxWidth = getResources().getDisplayMetrics().widthPixels - dpToPx(40); // subtracting margins
+        int targetHeight = (int) (maxWidth / aspectRatio);
+
+        // Update layout parameters with calculated dimensions
+        params.width = maxWidth;
+        params.height = targetHeight;
+        videoView.setLayoutParams(params);
+
         videoView.setVideoPath(content);
         videoView.setMediaController(new android.widget.MediaController(getActivity()));
         videoView.requestFocus();
@@ -246,16 +383,35 @@ public class RecordDetailDialogFragment extends DialogFragment {
     }
 
     private View createSTTView(String content) {
-        TextView textView = new TextView(getActivity());
-        textView.setText(content); // STT text
-        textView.setTextSize(16);
-        return textView;
+        Button button = new Button(getActivity());
+        button.setText(content);
+        button.setTextSize(18);
+        button.setBackgroundResource(R.drawable.button_color_gray_huge);
+        button.setPadding(16, 16, 16, 16);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dpToPx(193)
+        );
+        params.setMargins(20, 20, 20, 20);
+        button.setLayoutParams(params);
+        return button;
     }
 
     private View createTTSView(String content) {
-        TextView textView = new TextView(getActivity());
-        textView.setText(content); // TTS text
-        textView.setTextSize(16);
-        return textView;
+        Button button = new Button(getActivity());
+        button.setText(content);
+        button.setTextSize(18);
+        button.setBackgroundResource(R.drawable.button_color_gray_huge);
+        button.setPadding(16, 16, 16, 16);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dpToPx(193)
+        );
+        params.setMargins(20, 20, 20, 20);
+        button.setLayoutParams(params);
+        return button;
+    }
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
     }
 }
