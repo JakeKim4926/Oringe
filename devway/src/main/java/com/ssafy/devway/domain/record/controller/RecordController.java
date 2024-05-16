@@ -50,6 +50,12 @@ public class RecordController {
         return recordService.getSuccess(recordId);
     }
 
+    @GetMapping("/success/today")
+    @Operation(summary = "금일 인증 성공 여부 조회")
+    public ResponseEntity<Integer> getTodaySuccess(@RequestParam Long memberId, @RequestParam Long challengeId) {
+        return recordService.getSuccessToday(memberId, challengeId);
+    }
+
     @PatchMapping("/success")
     @Operation(summary = "인증 성공 하기")
     public ResponseEntity<?> setSuccess(@RequestParam Long recordId) {

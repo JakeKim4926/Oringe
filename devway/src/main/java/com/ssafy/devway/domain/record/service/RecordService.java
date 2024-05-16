@@ -305,6 +305,20 @@ public class RecordService {
         );
     }
 
+
+    public ResponseEntity<Integer> getSuccessToday(Long memberId, Long challengeId) {
+        List<Record> byChallengeChallengeIdAndMemberMemberIdAndRecordDate = recordRespository.findByChallenge_ChallengeIdAndMember_MemberIdAndRecordDate(
+                challengeId, memberId, LocalDate.now());
+
+        final int TRUE = 1;
+        final int FALSE = 0;
+
+        if(byChallengeChallengeIdAndMemberMemberIdAndRecordDate.isEmpty())
+            return ResponseEntity.ok(FALSE);
+
+        return ResponseEntity.ok(TRUE);
+    }
+
     private Boolean confirmTemplates(Integer challengeDetailIndex,
             RecordCreateReqDto recordTemplateDto) {
 
