@@ -63,6 +63,9 @@ public interface RecordService {
     @POST("record/tts")
     Call<String> insertTTS(@Body RecordCreateTTSDto recordCreateTTSDto);
 
+    @GET("record/success/today")
+    Call<Integer> getTodaySuccess(@Query("memberId") Long memberId, @Query("challengeId") Long challengeId);
+
     @GET("api/record/challenge")
     Call<List<Record>> fetchMonthlyRecords(@Query("memberId") Long memberId, @Query("challengeId") Long challengeId, @Query("month") int month);
 
