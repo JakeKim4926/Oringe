@@ -1,6 +1,7 @@
 package com.ssafy.oringe.activity.record;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -28,6 +29,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.activity.common.FullscreenImageActivity;
+import com.ssafy.oringe.activity.common.FullscreenVideoActivity;
 import com.ssafy.oringe.api.challengeDetail.ChallengeDetailService;
 import com.ssafy.oringe.api.challengeDetail.dto.ChallengeDetailIdResponse;
 import com.ssafy.oringe.api.record.RecordService;
@@ -267,7 +270,7 @@ public class RecordDetailDialogFragment extends DialogFragment {
         // Load the image with Glide
         Glide.with(getActivity())
                 .load(content)
-                .placeholder(R.drawable.loading)// 수정필요.
+                .placeholder(R.drawable.logo_org)
                 .into(new CustomTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -295,8 +298,15 @@ public class RecordDetailDialogFragment extends DialogFragment {
                     }
                 });
 
+        imageView.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), FullscreenImageActivity.class);
+            intent.putExtra("image_url", content);
+            startActivity(intent);
+        });
+
         return imageView;
     }
+
 
 
     private View createAudioView(String content) {
@@ -378,6 +388,13 @@ public class RecordDetailDialogFragment extends DialogFragment {
         videoView.setMediaController(new android.widget.MediaController(getActivity()));
         videoView.requestFocus();
         videoView.start();
+
+        videoView.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), FullscreenVideoActivity.class);
+            intent.putExtra("video_url", content);
+            startActivity(intent);
+        });
+
 
         return videoView;
     }

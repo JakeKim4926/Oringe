@@ -85,6 +85,14 @@
             android:name=".activity.challenge.ChallengeDetailActivity"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".activity.common.FullscreenImageActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".activity.common.FullscreenVideoActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>
