@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -23,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kizitonwose.calendar.core.CalendarDay;
@@ -37,6 +38,8 @@ import com.ssafy.oringe.R;
 import com.ssafy.oringe.activity.record.RecordCreateActivity;
 import com.ssafy.oringe.activity.record.RecordDetailDialogFragment;
 import com.ssafy.oringe.api.RetrofitClient;
+import com.ssafy.oringe.api.TrustOkHttpClientUtil;
+import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.record.Record;
 import com.ssafy.oringe.api.record.RecordService;
 import com.ssafy.oringe.ui.component.common.TitleView;
@@ -52,7 +55,12 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChallengeDetailActivity extends AppCompatActivity {
     private String memberNickname;
@@ -105,13 +113,19 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             return null;
         });
 
-        btn_record = findViewById(R.id.btn_record);
+        View buttonLayout = findViewById(R.id.button_layout);
+        btn_record = buttonLayout.findViewById(R.id.calendar_btn_record);
+        Button deleteBtn = buttonLayout.findViewById(R.id.calendar_btn_delete);
         int challengeStatus = intent.getIntExtra("challengeStatus", -1);
+        System.out.println("challengeStatus: "+challengeStatus);
         if (challengeStatus == 2) { // 2 == "In Progress" status
             btn_record.setVisibility(View.VISIBLE);
+            deleteBtn.setVisibility(View.VISIBLE);
+            deleteBtn.setOnClickListener(v -> checkDelete());
         } else {
             btn_record.setVisibility(View.GONE);
         }
+
         // 비활성화된 레코드버튼 예외처리.
         btn_record.setOnClickListener(v -> {
             if (!btn_record.isClickable()) {
@@ -122,6 +136,7 @@ public class ChallengeDetailActivity extends AppCompatActivity {
                 startActivity(recordIntent);
             }
         });
+
     }
 
     private void setDefaultInfo() {
@@ -216,10 +231,10 @@ public class ChallengeDetailActivity extends AppCompatActivity {
 
     private void animateImageView(ImageView imageView) {
         ScaleAnimation scaleAnimation = new ScaleAnimation(
-                0f, 1f,  // Start and end values for the X axis scaling
-                0f, 1f,  // Start and end values for the Y axis scaling
-                Animation.RELATIVE_TO_SELF, 0.5f,  // Pivot point of X scaling
-                Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
+            0f, 1f,  // Start and end values for the X axis scaling
+            0f, 1f,  // Start and end values for the Y axis scaling
+            Animation.RELATIVE_TO_SELF, 0.5f,  // Pivot point of X scaling
+            Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
 
         scaleAnimation.setDuration(300);
         scaleAnimation.setFillAfter(true);  // Needed to keep the result of the animation
@@ -227,7 +242,8 @@ public class ChallengeDetailActivity extends AppCompatActivity {
     }
 
     private boolean shouldHighlightDay(LocalDate date) {
-        if (date.isBefore(challengeStartDate) || date.isAfter(LocalDate.now())) return false; // Only highlight days between the challenge start date and today
+        if (date.isBefore(challengeStartDate) || date.isAfter(LocalDate.now()))
+            return false; // Only highlight days between the challenge start date and today
         if (date.equals(LocalDate.now())) return false; // Exclude today
         if (!cycleDays.contains(date.getDayOfWeek().getValue())) return false;
         if (monthlyRecords == null) return false;
@@ -296,7 +312,7 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             int[] location = new int[2];
             btn_record.getLocationOnScreen(location);
             float startY = btn_record.getY();
-            float endY = location[1] - btn_record.getTop()+200;  // Get the relative Y position
+            float endY = location[1] - btn_record.getTop() + 200;  // Get the relative Y position
 
             // Check if the animation is already running
             if (btn_record.getTag() != null && (boolean) btn_record.getTag()) {
@@ -304,9 +320,9 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             }
 
             ObjectAnimator animator = ObjectAnimator.ofFloat(
-                    btn_record,
-                    View.TRANSLATION_Y,
-                    startY - endY
+                btn_record,
+                View.TRANSLATION_Y,
+                startY - endY
             );
             animator.setDuration(300);
             animator.start();
@@ -339,13 +355,46 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             view.setOnClickListener(v -> {
                 if (recordId != null) {
                     RecordDetailDialogFragment.newInstance(recordId)
-                            .show(getSupportFragmentManager(), "recordDetails");
+                        .show(getSupportFragmentManager(), "recordDetails");
                 }
             });
         }
     }
 
+    // 챌린지 삭제
+    private void checkDelete() {
+        new AlertDialog.Builder(ChallengeDetailActivity.this)
+            .setTitle("정말 삭제하시겠습니까?")
+            .setPositiveButton("삭제하기", (dialog, which) -> {
+                deleteChallenge();
+            })
+            .setNegativeButton("취소", null)
+            .show();
+    }
 
+    private void deleteChallenge() {
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build();
+
+        Call<Void> call = retrofit.create(ChallengeService.class).deleteChallenge(challengeId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(ChallengeDetailActivity.this, "삭제되었습니다!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ChallengeDetailActivity.this, ChallengeListActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(ChallengeDetailActivity.this, "다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
     class MonthViewContainer extends ViewContainer {

@@ -72,43 +72,63 @@
 
             <!--목록-->
             <RelativeLayout
+                android:id="@+id/animated_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:orientation="vertical"
-                android:id="@+id/animated_layout">
+                android:orientation="vertical">
 
                 <ScrollView
+                    android:id="@+id/scroll_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/scroll_view">
+                    android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:id="@+id/challengeList_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" >
+                        android:orientation="vertical">
+
                         <com.kizitonwose.calendar.view.CalendarView
                             android:id="@+id/calendarView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:cv_dayViewResource="@layout/calendar_day_layout"
-                            app:cv_monthHeaderResource="@layout/calendar_month_header"/>
+                            app:cv_monthHeaderResource="@layout/calendar_month_header" />
                     </LinearLayout>
                 </ScrollView>
 
-                <Button
-                    android:id="@+id/btn_record"
-                    android:layout_width="150dp"
+                <LinearLayout
+                    android:id="@+id/button_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:background="@drawable/record_btn"
-                    android:text="오린지 인증하기 ✏"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
                     android:layout_below="@id/scroll_view"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_marginTop="30dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/calendar_btn_delete"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/scroll_view"
+                        android:layout_marginRight="30dp"
+                        android:background="@drawable/button_border_semi"
+                        android:text="삭제하기"
+                        android:textColor="@color/semi_oringe"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/calendar_btn_record"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/scroll_view"
+                        android:background="@drawable/record_btn"
+                        android:text="오린지 인증하기 ✏"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
 
