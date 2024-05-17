@@ -1,5 +1,7 @@
 package com.ssafy.oringe.activity.challenge;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
@@ -103,7 +105,6 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             return null;
         });
 
-        // Set up the button to start the RecordCreateActivity
         btn_record = findViewById(R.id.btn_record);
         int challengeStatus = intent.getIntExtra("challengeStatus", -1);
         if (challengeStatus == 2) { // 2 == "In Progress" status
@@ -111,10 +112,15 @@ public class ChallengeDetailActivity extends AppCompatActivity {
         } else {
             btn_record.setVisibility(View.GONE);
         }
+        // 비활성화된 레코드버튼 예외처리.
         btn_record.setOnClickListener(v -> {
-            Intent recordIntent = new Intent(ChallengeDetailActivity.this, RecordCreateActivity.class);
-            recordIntent.putExtra("challengeTitle", challengeTitle);
-            startActivity(recordIntent);
+            if (!btn_record.isClickable()) {
+                Toast.makeText(ChallengeDetailActivity.this, "오늘 인증을 완료했습니다", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent recordIntent = new Intent(ChallengeDetailActivity.this, RecordCreateActivity.class);
+                recordIntent.putExtra("challengeTitle", challengeTitle);
+                startActivity(recordIntent);
+            }
         });
     }
 
@@ -147,6 +153,13 @@ public class ChallengeDetailActivity extends AppCompatActivity {
                 LocalDate date = day.getDate();
                 container.textView.setText(String.valueOf(date.getDayOfMonth()));
                 container.recordId = null;  // Reset recordId
+
+                // 오늘 날짜의 TextView 배경 설정
+                if (date.equals(LocalDate.now())) { // 오늘은 배경있음
+                    container.textView.setBackgroundResource(R.drawable.today_circle);
+                } else {
+                    container.textView.setBackgroundResource(0); // 다른 날짜는 배경 없음
+                }
 
                 if (dayHasEvent(date)) {
                     TypedArray oranges = getResources().obtainTypedArray(R.array.orange_images_orange);
@@ -215,10 +228,12 @@ public class ChallengeDetailActivity extends AppCompatActivity {
 
     private boolean shouldHighlightDay(LocalDate date) {
         if (date.isBefore(challengeStartDate) || date.isAfter(LocalDate.now())) return false; // Only highlight days between the challenge start date and today
+        if (date.equals(LocalDate.now())) return false; // Exclude today
         if (!cycleDays.contains(date.getDayOfWeek().getValue())) return false;
         if (monthlyRecords == null) return false;
         return monthlyRecords.stream().noneMatch(record -> record.getRecordDate().equals(date));
     }
+
 
     private Record getRecordForDate(LocalDate date) {
         for (Record record : monthlyRecords) {
@@ -240,6 +255,11 @@ public class ChallengeDetailActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         monthlyRecords = response.body();
                         calendarView.notifyCalendarChanged();
+                        // Check if today has an event and disable the button if so
+                        if (dayHasEvent(LocalDate.now())) {
+                            btn_record.setClickable(false);
+                            btn_record.setAlpha(0.5f);
+                        }
                     } else {
                         Toast.makeText(ChallengeDetailActivity.this, "Failed to load records", Toast.LENGTH_SHORT).show();
                     }
@@ -276,7 +296,12 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             int[] location = new int[2];
             btn_record.getLocationOnScreen(location);
             float startY = btn_record.getY();
-            float endY = location[1] - btn_record.getTop() + 150;  // Get the relative Y position
+            float endY = location[1] - btn_record.getTop()+200;  // Get the relative Y position
+
+            // Check if the animation is already running
+            if (btn_record.getTag() != null && (boolean) btn_record.getTag()) {
+                return;
+            }
 
             ObjectAnimator animator = ObjectAnimator.ofFloat(
                     btn_record,
@@ -285,8 +310,21 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             );
             animator.setDuration(300);
             animator.start();
+
+            // Set a tag to indicate animation is running
+            btn_record.setTag(true);
+
+            // Add an AnimatorListener to reset the tag when animation ends
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    btn_record.setTag(false);
+                }
+            });
         });
     }
+
 
     class DayViewContainer extends ViewContainer {
         TextView textView;

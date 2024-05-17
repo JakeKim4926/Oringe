@@ -8,11 +8,13 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -270,7 +272,7 @@ public class RecordDetailDialogFragment extends DialogFragment {
         // Load the image with Glide
         Glide.with(getActivity())
                 .load(content)
-                .placeholder(R.drawable.logo_org)
+                .placeholder(R.drawable.loading)
                 .into(new CustomTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -348,56 +350,128 @@ public class RecordDetailDialogFragment extends DialogFragment {
         return button;
     }
 
-    private View createVideoView(String content) {
-        VideoView videoView = new VideoView(getActivity());
+//    private View createVideoView(String content) {
+//        VideoView videoView = new VideoView(getActivity());
+//
+//        // Set initial layout parameters
+//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        );
+//        params.setMargins(20, 20, 20, 20);
+//        videoView.setLayoutParams(params);
+//
+//        // Retrieve video dimensions
+//        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//        retriever.setDataSource(content);
+//        String widthStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+//        String heightStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+//        int width = Integer.parseInt(widthStr);
+//        int height =     Integer.parseInt(heightStr);
+//        try {
+//            retriever.release();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        // Calculate aspect ratio
+//        float aspectRatio = (float) width / height;
+//
+//        // Set the VideoView dimensions based on the aspect ratio
+//        int maxWidth = getResources().getDisplayMetrics().widthPixels - dpToPx(40); // subtracting margins
+//        int targetHeight = (int) (maxWidth / aspectRatio);
+//
+//        // Update layout parameters with calculated dimensions
+//        params.width = maxWidth;
+//        params.height = targetHeight;
+//        videoView.setLayoutParams(params);
+//
+//        videoView.setVideoPath(content);
+//        videoView.setMediaController(new android.widget.MediaController(getActivity()));
+//        videoView.requestFocus();
+//        videoView.start();
+//
+//        videoView.setOnClickListener(v -> {
+//            Intent intent = new Intent(getActivity(), FullscreenVideoActivity.class);
+//            intent.putExtra("video_url", content);
+//            startActivity(intent);
+//        });
+//
+//
+//        return videoView;
+//    }
+private View createVideoView(String content) {
+    RelativeLayout videoLayout = new RelativeLayout(getActivity());
+    VideoView videoView = new VideoView(getActivity());
+    ProgressBar progressBar = new ProgressBar(getActivity());
 
-        // Set initial layout parameters
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(20, 20, 20, 20);
-        videoView.setLayoutParams(params);
+    // Set initial layout parameters
+    RelativeLayout.LayoutParams videoParams = new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+    );
+    videoParams.setMargins(20, 20, 20, 20);
+    videoView.setLayoutParams(videoParams);
 
-        // Retrieve video dimensions
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(content);
-        String widthStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
-        String heightStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
-        int width = Integer.parseInt(widthStr);
-        int height =     Integer.parseInt(heightStr);
-        try {
-            retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    RelativeLayout.LayoutParams progressParams = new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+    );
+    progressParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+    progressBar.setLayoutParams(progressParams);
 
-        // Calculate aspect ratio
-        float aspectRatio = (float) width / height;
+    videoLayout.addView(videoView);
+    videoLayout.addView(progressBar);
 
-        // Set the VideoView dimensions based on the aspect ratio
-        int maxWidth = getResources().getDisplayMetrics().widthPixels - dpToPx(40); // subtracting margins
-        int targetHeight = (int) (maxWidth / aspectRatio);
-
-        // Update layout parameters with calculated dimensions
-        params.width = maxWidth;
-        params.height = targetHeight;
-        videoView.setLayoutParams(params);
-
-        videoView.setVideoPath(content);
-        videoView.setMediaController(new android.widget.MediaController(getActivity()));
-        videoView.requestFocus();
-        videoView.start();
-
-        videoView.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), FullscreenVideoActivity.class);
-            intent.putExtra("video_url", content);
-            startActivity(intent);
-        });
-
-
-        return videoView;
+    // Retrieve video dimensions
+    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+    retriever.setDataSource(content);
+    String widthStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+    String heightStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+    int width = Integer.parseInt(widthStr);
+    int height = Integer.parseInt(heightStr);
+    try {
+        retriever.release();
+    } catch (IOException e) {
+        throw new RuntimeException(e);
     }
+
+    // Calculate aspect ratio
+    float aspectRatio = (float) width / height;
+
+    // Set the VideoView dimensions based on the aspect ratio
+    int maxWidth = getResources().getDisplayMetrics().widthPixels - dpToPx(40); // subtracting margins
+    int targetHeight = (int) (maxWidth / aspectRatio);
+
+    // Update layout parameters with calculated dimensions
+    videoParams.width = maxWidth;
+    videoParams.height = targetHeight;
+    videoView.setLayoutParams(videoParams);
+
+    videoView.setVideoPath(content);
+    videoView.setMediaController(new android.widget.MediaController(getActivity()));
+    videoView.setOnPreparedListener(mp -> progressBar.setVisibility(View.GONE)); // Hide progress bar when video is ready
+    videoView.setOnInfoListener((mp, what, extra) -> {
+        if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+            progressBar.setVisibility(View.VISIBLE); // Show progress bar when buffering starts
+        } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
+            progressBar.setVisibility(View.GONE); // Hide progress bar when buffering ends
+        }
+        return false;
+    });
+
+    videoView.requestFocus();
+    videoView.start();
+
+    videoView.setOnClickListener(v -> {
+        Intent intent = new Intent(getActivity(), FullscreenVideoActivity.class);
+        intent.putExtra("video_url", content);
+        startActivity(intent);
+    });
+
+    return videoLayout;
+}
+
 
     private View createSTTView(String content) {
         Button button = new Button(getActivity());

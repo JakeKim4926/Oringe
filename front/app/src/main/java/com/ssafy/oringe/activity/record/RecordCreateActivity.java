@@ -209,7 +209,6 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         if (selectedChallenge.getChallengeId() != null && selectedChallenge.getChallengeId() != -1) {
             challengeId = selectedChallenge.getChallengeId();
             Toast.makeText(this, "현재 챌린지 : " + selectedChallenge.getChallengeTitle(), Toast.LENGTH_LONG).show();
-
             getChallengeDetailIdAndOrderList(challengeId);
         }
     }
