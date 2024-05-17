@@ -37,17 +37,22 @@ import com.ssafy.oringe.activity.record.RecordCreateActivity;
 import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
+import com.ssafy.oringe.api.challengeDetail.ChallengeDetailService;
+import com.ssafy.oringe.api.challengeDetail.dto.ChallengeDetailIdResponse;
 import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
+import com.ssafy.oringe.api.record.RecordService;
 import com.ssafy.oringe.ui.component.common.MenuView;
 import com.ssafy.oringe.ui.component.common.TitleView;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -73,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewGroup challengeListContainer; // 동적 뷰를 추가할 컨테이너
 
+    private RecordService recordService;
+
+    private Long memberId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +88,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         API_URL = getString(R.string.APIURL);
+
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        recordService = retrofit.create(RecordService.class);
+
 
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -123,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Member memberResponse = response.body();
                     Long loginId = memberResponse.getMemberId();
+                    memberId = loginId;
                     String loginNickName = memberResponse.getMemberNickName();
 
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -231,8 +250,7 @@ public class MainActivity extends AppCompatActivity {
                     progressBarView.setProgress((int) ((double) nowdate / totaldate * 100));
                 }
             }
-            orgView.setImageResource(R.drawable.sad_org);
-            successView.setText("오늘은 달성하지 못했어요");
+            getSuccessToday(memberId, challenge.getChallengeId(), orgView, successView);
             challengeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -246,10 +264,48 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-//            alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE);
-//            successView.setText(인증있으면?"오늘 달성 완료!":"오늘은 달성하지 못했어요");
+
             challengeListContainer.addView(challengeView);
 
         }
     }
+
+    private void getSuccessToday(Long memberId, Long challengeId, ImageView imageView, TextView textView) {
+        int TRUE = 1;
+        Call<Integer> call = recordService.getTodaySuccess(memberId, challengeId);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    Integer result = response.body();
+                    if (result != null && result == TRUE) {
+                        runOnUiThread(() -> {
+                            imageView.setImageResource(R.drawable.main_org);
+                            textView.setText("오늘의 챌린지 성공 !  ");
+                        });
+                    } else {
+                        runOnUiThread(() -> {
+                            imageView.setImageResource(R.drawable.sad_org);
+                            textView.setText("오늘은 챌린지를 인증해주세요  ");
+                        });
+                    }
+                } else {
+                    try {
+                        System.out.println("Response was not successful: " + response.code());
+                        System.out.println("Response error body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                System.out.println("Request failed: " + t.getMessage());
+                t.printStackTrace();
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "An error occurred while success of today", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
 }

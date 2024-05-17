@@ -1,5 +1,6 @@
 package com.ssafy.oringe.activity.record;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_AUDIO;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_CONTENT;
@@ -15,8 +16,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +27,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -62,6 +66,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -108,6 +113,8 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     Button buttonTTS;
     Button buttonOK;
     VideoView videoView;
+
+    private AlertDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,13 +191,8 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLoadingDialog();
                 sendData();
-
-                Intent intent = new Intent(RecordCreateActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-
-                challengeDetailOrder.clear();
             }
         });
 
@@ -247,6 +249,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
         AtomicInteger completedCalls = new AtomicInteger(0);
         int totalCall = challengeDetailOrder.size();
+        System.out.println("Size ===== " + totalCall);
         // completedCalls, totalCall
         for (int value : challengeDetailOrder) {
             if (value == CHALLENGE_DETAIL_TITLE.getOrderCode())      insertRecordTitle(recordCreateReqDtoSave.getRecordTitle(), completedCalls, totalCall);
@@ -372,18 +375,36 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             public void onClick(DialogInterface dialog, int which) {
                 String inputText = input.getText().toString();
 
-                if (challengeDetailOrders == CHALLENGE_DETAIL_TITLE && inputText.length() > 100) {
-                    Toast.makeText(RecordCreateActivity.this, "제목은 100자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (challengeDetailOrders == CHALLENGE_DETAIL_CONTENT && inputText.length() > 1000) {
-                    Toast.makeText(RecordCreateActivity.this, "본문은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
-                    return;
+                if (challengeDetailOrders == CHALLENGE_DETAIL_TITLE) {
+                    if (inputText.length() > 100) {
+                        Toast.makeText(RecordCreateActivity.this, "제목은 100자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    recordCreateReqDtoSave.setRecordTitle(inputText);
+                } else if (challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
+                    if ( inputText.length() > 1000 ) {
+                        Toast.makeText(RecordCreateActivity.this, "본문은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    recordCreateReqDtoSave.setRecordContent(inputText);
+                } else if (challengeDetailOrders == CHALLENGE_DETAIL_TTS) {
+                    if (inputText.length() > 100) {
+                        Toast.makeText(RecordCreateActivity.this, "해당 내용은 100자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Pattern pattern = Pattern.compile("^[a-zA-Z\\s]+$");
+                    if (!pattern.matcher(inputText).matches()) {
+                        Toast.makeText(RecordCreateActivity.this, "영어만 입력 가능합니다", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    recordCreateTTSDto.setRecordTTS(inputText);
                 }
 
                 updateButtonTitle(inputText, challengeDetailOrders);
-                if(challengeDetailOrders == CHALLENGE_DETAIL_TITLE)     recordCreateReqDtoSave.setRecordTitle(inputText);
-                else if(challengeDetailOrders == CHALLENGE_DETAIL_CONTENT)     recordCreateReqDtoSave.setRecordContent(inputText);
-                else if(challengeDetailOrders == CHALLENGE_DETAIL_TTS)     recordCreateTTSDto.setRecordTTS(inputText);
             }
         });
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -402,6 +423,8 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             buttonTextTemp = findViewById(R.id.button_title);
         } else if (challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
             buttonTextTemp = findViewById(R.id.button_content);
+        } else if (challengeDetailOrders == CHALLENGE_DETAIL_TTS) {
+            buttonTextTemp = findViewById(R.id.button_tts);
         }
         buttonTextTemp.setText(text);
         // Adjust button width based on the text length
@@ -435,13 +458,12 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             setupAudioButton(audioUri);
             String audioPath = getPathFromUriAudio(audioUri);
             if (audioPath != null) {
-                File file = new File(audioPath);
+                audioFile = new File(audioPath);
                 if(audioPath.endsWith(".mp3")
                         || audioPath.endsWith(".wav")
                         || audioPath.endsWith(".aac")
                         || audioPath.endsWith(".ogg")
                         || audioPath.endsWith(".flac")) {
-                    audioFile = file;
                 } else {
                     Toast.makeText(RecordCreateActivity.this, "m4a,mp3,wav,aac,ogg,flac 파일만 허용 가능합니다.", Toast.LENGTH_SHORT).show();
                 }
@@ -457,9 +479,19 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             Uri audioUri = data.getData();
             setupSTTButton(audioUri);
             String audioPath = getPathFromUriAudio(audioUri);
+            System.out.println("여기 ? ");
             if (audioPath != null) {
-                STTFile = new File(audioPath);
+                System.out.println("여긴 ?");
+                if (audioPath.endsWith(".wav")) {
+                    STTFile = new File(audioPath);
+                } else {
+                    Toast.makeText(RecordCreateActivity.this, "wav 파일만 허용 가능합니다.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Log.e("RecordCreateActivity", "Failed to get audio path");
             }
+        } else {
+            Log.e("RecordCreateActivity", "Request failed or canceled");
         }
 
     }
@@ -503,18 +535,6 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         return null;
     }
 
-//    private void setButtonBackground(Uri imageUri) {
-//        Button buttonImage = findViewById(R.id.button_image);
-//        buttonImage.post(() -> {
-//            try {
-//                InputStream inputStream = getContentResolver().openInputStream(imageUri);
-//                Drawable drawable = Drawable.createFromStream(inputStream, imageUri.toString());
-//                buttonImage.setBackground(drawable);
-//            } catch (FileNotFoundException e) {
-//                Toast.makeText(this, "Image file not found", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
     private void setButtonBackground(Uri imageUri) {
         Button buttonImage = findViewById(R.id.button_image);
         final int maxHeightPx = dpToPx(200);  // Convert dp to pixel
@@ -523,39 +543,67 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             try {
                 InputStream inputStream = getContentResolver().openInputStream(imageUri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                if (bitmap.getHeight() > maxHeightPx) {
+
+                // Close the input stream to reopen it for Exif data
+                inputStream.close();
+
+                inputStream = getContentResolver().openInputStream(imageUri);
+                ExifInterface exif = new ExifInterface(inputStream);
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+                bitmap = rotateBitmap(bitmap, orientation);
+
+                int originalWidth = bitmap.getWidth();
+                int originalHeight = bitmap.getHeight();
+                int newWidth = originalWidth;
+                int newHeight = originalHeight;
+
+                if (originalHeight > maxHeightPx) {
                     // Calculate the scale factor
-                    float scale = (float) maxHeightPx / bitmap.getHeight();
-                    int newWidth = (int) (bitmap.getWidth() * scale);
-
-                    // Create a new scaled bitmap
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, maxHeightPx, true);
-                    bitmap.recycle();  // Recycle the original bitmap as it's no longer needed
-
-                    BitmapDrawable drawable = new BitmapDrawable(getResources(), scaledBitmap);
-                    buttonImage.setBackground(drawable);
-
-                    // Adjust the button size to match the scaled image
-                    ViewGroup.LayoutParams params = buttonImage.getLayoutParams();
-                    params.width = newWidth;
-                    params.height = maxHeightPx;
-                    buttonImage.setLayoutParams(params);
-                } else {
-                    // Use the original bitmap if it's within limits
-                    BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
-                    buttonImage.setBackground(drawable);
-
-                    ViewGroup.LayoutParams params = buttonImage.getLayoutParams();
-                    params.width = bitmap.getWidth();
-                    params.height = bitmap.getHeight();
-                    buttonImage.setLayoutParams(params);
+                    float scale = (float) maxHeightPx / originalHeight;
+                    newWidth = (int) (originalWidth * scale);
+                    newHeight = maxHeightPx;
                 }
+
+                // Create a new scaled bitmap
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+                bitmap.recycle();  // Recycle the original bitmap as it's no longer needed
+
+                BitmapDrawable drawable = new BitmapDrawable(getResources(), scaledBitmap);
+                buttonImage.setBackground(drawable);
+
+                // Adjust the button size to match the scaled image
+                ViewGroup.LayoutParams params = buttonImage.getLayoutParams();
+                params.width = newWidth;
+                params.height = newHeight;
+                buttonImage.setLayoutParams(params);
+
                 buttonImage.setText("");
             } catch (FileNotFoundException e) {
                 Toast.makeText(this, "Image file not found", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.postRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.postRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.postRotate(270);
+                break;
+            default:
+                return bitmap;  // No rotation needed
+        }
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
 
     /**
      * Convert dp to pixel based on the screen density.
@@ -569,13 +617,9 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     private static final int PICK_AUDIO_REQUEST = 101;  // Request code for picking an audio file
 
     private void openAudioSelector() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("audio/*"); // 기본 오디오 MIME 유형
-
-        // 추가 형식 필터링을 위한 MIME 유형 배열
-        String[] mimeTypes = {"audio/mpeg", "audio/wav", "audio/aac", "audio/ogg", "audio/flac"};
-
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("audio/*"); // Only allow .wav files to be selected
 
         startActivityForResult(Intent.createChooser(intent, "Select Audio"), PICK_AUDIO_REQUEST);
     }
@@ -681,11 +725,29 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
     private static final int PICK_WAV_REQUEST = 3;
     private void openSTTSelector() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("audio/wav");
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("audio/*"); // Only allow .wav files to be selected
         startActivityForResult(intent, PICK_WAV_REQUEST);
     }
 
+    private void showLoadingDialog() {
+        if (loadingDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = this.getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.loading_dialog, null);
+            builder.setView(dialogView);
+            builder.setCancelable(false);
+            loadingDialog = builder.create();
+        }
+        loadingDialog.show();
+    }
+
+    private void hideLoadingDialog() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+        }
+    }
 
     // ==========================================================
     // =
@@ -722,13 +784,19 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(RecordCreateActivity.this, "인증 생성 성공", Toast.LENGTH_SHORT).show();
+                    onSuccess.run();
+                } else {
+                    System.out.println("Response was not successful: " + response.code());
+                    onFailure.run();
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                // 실패 처리
-                Toast.makeText(RecordCreateActivity.this, "An error occurred while add record", Toast.LENGTH_SHORT).show();
+                System.out.println("Request failed: " + t.getMessage());
+                t.printStackTrace();
+                Toast.makeText(RecordCreateActivity.this, "An error occurred while adding record", Toast.LENGTH_SHORT).show();
+                onFailure.run();
             }
         });
     }
@@ -865,6 +933,8 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                 if (response.isSuccessful()) {
                     String result = response.body();
                     recordCreateReqDto.setRecordSTT(result);
+                } else {
+                    Toast.makeText(RecordCreateActivity.this, "An error occurred while getting res", Toast.LENGTH_SHORT).show();
                 }
                 checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
@@ -901,9 +971,11 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         if (completedCalls.incrementAndGet() >= totalCalls) {
             System.out.println(completedCalls.get());
             System.out.println("All API calls completed");
+
             postRecord(
                     () -> {
                         // 성공 시
+                        hideLoadingDialog();  // 로딩 화면 숨기기
                         Intent intent = new Intent(RecordCreateActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -911,6 +983,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                     },
                     () -> {
                         // 실패 시
+                        hideLoadingDialog();  // 로딩 화면 숨기기
                         Toast.makeText(RecordCreateActivity.this, "Please try again.", Toast.LENGTH_SHORT).show();
                     }
             );
