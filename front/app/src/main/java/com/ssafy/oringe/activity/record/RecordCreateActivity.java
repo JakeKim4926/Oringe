@@ -394,7 +394,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                         return;
                     }
 
-                    Pattern pattern = Pattern.compile("^[a-zA-Z\\s]+$");
+                    Pattern pattern = Pattern.compile("^[a-zA-Z\\s0-9]+$");
                     if (!pattern.matcher(inputText).matches()) {
                         Toast.makeText(RecordCreateActivity.this, "영어만 입력 가능합니다", Toast.LENGTH_SHORT).show();
                         return;
