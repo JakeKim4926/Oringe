@@ -1,5 +1,7 @@
 package com.ssafy.oringe.activity.challenge;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
@@ -278,7 +280,12 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             int[] location = new int[2];
             btn_record.getLocationOnScreen(location);
             float startY = btn_record.getY();
-            float endY = location[1] - btn_record.getTop() + 150;  // Get the relative Y position
+            float endY = location[1] - btn_record.getTop()+200;  // Get the relative Y position
+
+            // Check if the animation is already running
+            if (btn_record.getTag() != null && (boolean) btn_record.getTag()) {
+                return;
+            }
 
             ObjectAnimator animator = ObjectAnimator.ofFloat(
                     btn_record,
@@ -287,8 +294,21 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             );
             animator.setDuration(300);
             animator.start();
+
+            // Set a tag to indicate animation is running
+            btn_record.setTag(true);
+
+            // Add an AnimatorListener to reset the tag when animation ends
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    btn_record.setTag(false);
+                }
+            });
         });
     }
+
 
     class DayViewContainer extends ViewContainer {
         TextView textView;
