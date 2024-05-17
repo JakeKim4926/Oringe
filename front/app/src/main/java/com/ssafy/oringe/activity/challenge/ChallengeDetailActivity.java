@@ -215,10 +215,12 @@ public class ChallengeDetailActivity extends AppCompatActivity {
 
     private boolean shouldHighlightDay(LocalDate date) {
         if (date.isBefore(challengeStartDate) || date.isAfter(LocalDate.now())) return false; // Only highlight days between the challenge start date and today
+        if (date.equals(LocalDate.now())) return false; // Exclude today
         if (!cycleDays.contains(date.getDayOfWeek().getValue())) return false;
         if (monthlyRecords == null) return false;
         return monthlyRecords.stream().noneMatch(record -> record.getRecordDate().equals(date));
     }
+
 
     private Record getRecordForDate(LocalDate date) {
         for (Record record : monthlyRecords) {
