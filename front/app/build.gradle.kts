@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.androidApplication)
     id("com.google.gms.google-services")
-    alias(libs.plugins.jetbrainsKotlinAndroid)
 }
 
 android {
@@ -40,12 +39,6 @@ android {
     buildFeatures {
         viewBinding = true
         compose = true
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
