@@ -48,7 +48,7 @@
 <hr>
 <img src="/uploads/c663c5af0dc4d22b6b1d8b1fc9303145/image.png">
 
-### 🎈 개발자 소개
+## 🎈 개발자 소개
 
 <table>
     <tr>
