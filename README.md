@@ -22,13 +22,13 @@
 # 기능 상세 소개
 
 <h3>챌린지 생성</h3>
-<img src="/uploads/7e3769d19e0a098c95cb7a7cc83dc820/챌린지_생성.gif" >
+<img src="/uploads/7e3769d19e0a098c95cb7a7cc83dc820/챌린지_생성.gif" height="800px" >
 <h3>챌린지 확인</h3>
-<img src="/uploads/6683f2b32120b4c708c293d3f4a53f5f/챌린지_확인.gif">
+<img src="/uploads/6683f2b32120b4c708c293d3f4a53f5f/챌린지_확인.gif" height="800px" >
 <h3>인증 생성</h3>
-<img src="/uploads/368d757eec3073b7d99283d80e00cddf/인증_생성.gif">
+<img src="/uploads/368d757eec3073b7d99283d80e00cddf/인증_생성.gif" height="800px" >
 <h3>인증 확인</h3>
-<img src="/uploads/956fe06425f3f40561be0e27de03fde1/인증_확인.gif">
+<img src="/uploads/956fe06425f3f40561be0e27de03fde1/인증_확인.gif" height="800px" >
 
 
 <br />
