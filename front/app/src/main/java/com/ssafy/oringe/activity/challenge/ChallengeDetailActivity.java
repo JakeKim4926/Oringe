@@ -109,20 +109,16 @@ public class ChallengeDetailActivity extends AppCompatActivity {
 
         calendarView.setMonthScrollListener(calendarMonth -> {
             loadMonthlyRecordsSync(calendarMonth.getYearMonth());
-            animateButton();
             return null;
         });
 
-        View buttonLayout = findViewById(R.id.button_layout);
-        btn_record = buttonLayout.findViewById(R.id.calendar_btn_record);
-        Button deleteBtn = buttonLayout.findViewById(R.id.calendar_btn_delete);
+        Button deleteBtn = findViewById(R.id.calendar_btn_delete);
+        deleteBtn.setOnClickListener(v -> checkDelete());
+
+        btn_record = findViewById(R.id.calendar_btn_record);
         int challengeStatus = intent.getIntExtra("challengeStatus", -1);
-        System.out.println("challengeStatus: "+challengeStatus);
-        if (challengeStatus == 2) { // 2 == "In Progress" status
-            btn_record.setVisibility(View.VISIBLE);
-            deleteBtn.setVisibility(View.VISIBLE);
-            deleteBtn.setOnClickListener(v -> checkDelete());
-        } else {
+        System.out.println("challengeStatus: " + challengeStatus);
+        if (challengeStatus != 2) { // 2 == "In Progress" status
             btn_record.setVisibility(View.GONE);
         }
 
@@ -306,41 +302,6 @@ public class ChallengeDetailActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void animateButton() {
-        btn_record.post(() -> {
-            int[] location = new int[2];
-            btn_record.getLocationOnScreen(location);
-            float startY = btn_record.getY();
-            float endY = location[1] - btn_record.getTop() + 200;  // Get the relative Y position
-
-            // Check if the animation is already running
-            if (btn_record.getTag() != null && (boolean) btn_record.getTag()) {
-                return;
-            }
-
-            ObjectAnimator animator = ObjectAnimator.ofFloat(
-                btn_record,
-                View.TRANSLATION_Y,
-                startY - endY
-            );
-            animator.setDuration(300);
-            animator.start();
-
-            // Set a tag to indicate animation is running
-            btn_record.setTag(true);
-
-            // Add an AnimatorListener to reset the tag when animation ends
-            animator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    btn_record.setTag(false);
-                }
-            });
-        });
-    }
-
 
     class DayViewContainer extends ViewContainer {
         TextView textView;
