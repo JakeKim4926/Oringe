@@ -6,9 +6,10 @@
     <EditText
         android:id="@+id/calendar_date"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:backgroundTint="@color/oringe_main"
         android:clickable="true"
+        android:textSize="14sp"
         android:focusable="false"
         android:textAlignment="center" />
 

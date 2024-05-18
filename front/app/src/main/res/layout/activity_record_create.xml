@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        tools:context=".activity.record.RecordCallActivity">
+
+        <com.ssafy.oringe.ui.component.common.HeaderOrangeView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="챌린지 인증하기"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MainActivity">
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/background_spinner_option" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/no_content"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text=""
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/buttonContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/button_color_light_huge"
+                android:padding="16dp"
+                android:text="제목 입력"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/button_content"
+                android:layout_width="match_parent"
+                android:layout_height="193dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/button_color_light_huge"
+                android:padding="16dp"
+                android:text="본문 입력"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/button_image"
+                android:layout_width="match_parent"
+                android:layout_height="193dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/button_color_gray_huge"
+                android:padding="16dp"
+                android:text="이미지 입력"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/button_audio"
+                android:layout_width="match_parent"
+                android:layout_height="193dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/button_color_gray_huge"
+                android:padding="16dp"
+                android:text="오디오 입력"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/button_video"
+                android:layout_width="match_parent"
+                android:layout_height="193dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/button_color_gray_huge"
+                android:padding="16dp"
+                android:text="비디오 입력"
+                android:textSize="18sp" />
+
+            <VideoView
+                android:id="@+id/video_view"
+                android:layout_width="match_parent"
+                android:layout_height="193dp"
+                android:layout_margin="20dp" />
+
+            <Button
+                android:id="@+id/button_stt"
+                android:layout_width="match_parent"
+                android:layout_height="193dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/button_color_gray_huge"
+                android:padding="16dp"
+                android:text="Speech to text (.wav)"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/button_tts"
+                android:layout_width="match_parent"
+                android:layout_height="193dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/button_color_gray_huge"
+                android:padding="16dp"
+                android:text="Text to speech"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/button_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="65dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/button_color_orange_huge"
+                android:padding="16dp"
+                android:text="완료"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/record_create"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

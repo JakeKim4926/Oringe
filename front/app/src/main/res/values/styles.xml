@@ -10,10 +10,20 @@
         <item name="android:scaleType">fitXY</item>
     </style>
 
-    <style name="Widget.Theme.Oringe.MyView" parent="">
-        <item name="android:background">@color/gray_400</item>
-        <item name="exampleColor">@color/light_blue_400</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--custom font-family 적용-->
+        <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
+        <item name="android:buttonStyle">@style/customButtonFontStyle</item>
+        <item name="android:editTextStyle">@style/customEditTextFontStyle</item>
+        <item name="android:radioButtonStyle">@style/customRadioButtonFontStyle</item>
+        <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>
     </style>
 
+    <style name="AppInputStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:inputType">text</item>
+    </style>
 
+    <style name="NumberInputStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:inputType">number</item>
+    </style>
 </resources>

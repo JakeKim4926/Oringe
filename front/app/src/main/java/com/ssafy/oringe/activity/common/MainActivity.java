@@ -1,141 +1,311 @@
 package com.ssafy.oringe.activity.common;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Gravity;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.Gson;
+
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.activity.challenge.ChallengeDetailActivity;
 import com.ssafy.oringe.activity.challenge.ChallengeListActivity;
-import com.ssafy.oringe.activity.login.SignupActivity;
+import com.ssafy.oringe.activity.record.RecordCreateActivity;
+import com.ssafy.oringe.api.TrustOkHttpClientUtil;
+import com.ssafy.oringe.api.challenge.Challenge;
+import com.ssafy.oringe.api.challenge.ChallengeService;
+import com.ssafy.oringe.api.challengeDetail.ChallengeDetailService;
+import com.ssafy.oringe.api.challengeDetail.dto.ChallengeDetailIdResponse;
+import com.ssafy.oringe.api.member.Member;
+import com.ssafy.oringe.api.member.MemberService;
+import com.ssafy.oringe.api.record.RecordService;
+import com.ssafy.oringe.ui.component.common.MenuView;
+import com.ssafy.oringe.ui.component.common.TitleView;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String API_URL;
     private FirebaseAuth auth;
-    Button btn_record;
+    private Button btn_record;
+
+    private TextView titleView;
+    private TextView progressView;
+    private ProgressBar progressBarView;
+    private TextView successView;
+
+    private ImageView orgView;
+
+    private List<Challenge> challengeList;
+
+    private ViewGroup challengeListContainer; // 동적 뷰를 추가할 컨테이너
+
+    private RecordService recordService;
+
+    private Long memberId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        API_URL = getString(R.string.APIURL);
+
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        recordService = retrofit.create(RecordService.class);
+
 
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         String email = user.getEmail();
         getMemberId(email);
-        super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
 
-        //메인 인사
-//        TextView mainHi = findViewById(R.id.text_nickname_hi);
+        challengeListContainer = findViewById(R.id.main_list);
 
-        //오늘의 남은 오린지
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
-        String currentDate = dateFormat.format(new Date());
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
-        TextView dateTextView = findViewById(R.id.text_today_oringe);
+        Button btn_record = findViewById(R.id.btn_record);
+        btn_record.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecordCreateActivity.class)));
 
-        dateTextView.setText(currentDate + " \n 1개의 오린지가 남았어요");
-        dateTextView.setTypeface(null, Typeface.BOLD);
+        MenuView btn_list = findViewById(R.id.btn_list);
+        btn_list.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChallengeListActivity.class)));
+    }
 
-        //챌린지리스트로 가기
-        FloatingActionButton btn_list;
-        btn_list = findViewById(R.id.btn_list);
-        btn_list.setOnClickListener(new View.OnClickListener() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Long memberId = sharedPref.getLong("loginId", 0);
+        getTodayChallengeList(memberId);
+    }
+    private void getMemberId(String memberEmail) {
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build();
+        Call<Member> call = retrofit.create(MemberService.class).getMemberByEmail(memberEmail);
+        call.enqueue(new Callback<Member>() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ChallengeListActivity.class));
+            public void onResponse(Call<Member> call, Response<Member> response) {
+                if (response.isSuccessful()) {
+                    Member memberResponse = response.body();
+                    Long loginId = memberResponse.getMemberId();
+                    memberId = loginId;
+                    String loginNickName = memberResponse.getMemberNickName();
 
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putLong("loginId", loginId);
+                    editor.putString("loginNickName", loginNickName);
+                    editor.apply();
+
+                    runOnUiThread(() -> {
+                        TextView mainHi = findViewById(R.id.text_nickname_hi);
+                        mainHi.setText(loginNickName + "님 \n 오늘도 오린지 하세요!");
+                        // 챌린지 목록 가져오기
+                        getTodayChallengeList(loginId);
+                    });
+                } else {
+                    Log.e("API_CALL", "Response Error : " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Member> call, Throwable t) {
+                Log.e("API_CALL", "Failed to get member details", t);
             }
         });
     }
 
-    private void getMemberId(String memberEmail){
-        OkHttpClient client = new OkHttpClient();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://10.0.2.2:8050/api/signin").newBuilder();
-        urlBuilder.addQueryParameter("memberEmail", memberEmail);
-        String url = urlBuilder.build().toString();
-        Request request = new Request.Builder().url(url).build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
+    public void getTodayChallengeList(Long memberId) {
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build();
 
+        Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getTodayChallengeList(memberId);
+        call.enqueue(new Callback<List<Challenge>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call<List<Challenge>> call, Response<List<Challenge>> response) {
                 if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
+                    challengeList = response.body();
+                    int challengeCount = challengeList != null ? challengeList.size() : 0;
 
-                    Gson gson = new Gson();
-                    MemberResponse memberResponse = gson.fromJson(responseBody, MemberResponse.class);
-
-
-                    Long loginId = memberResponse.getMemberId();
-                    String loginNickName = memberResponse.getMemberNickName();
-
-//                    Intent intent = new Intent(MainActivity.this, ChallengeListActivity.class);
-//                    intent.putExtra("memberId", loginId);
-//                    intent.putExtra("memberNickname", loginNickName);
-//                    startActivity(intent);
-
-                    //이거 사용할 때
-//                    Intent intent = getIntent();
-//                    Long memberId = intent.getLongExtra("memberId", -1); // 기본값으로 -1을 설정하여 에러를 방지
-//                    String memberNickname = intent.getStringExtra("memberNickname");
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // 메인 인사 텍스트뷰 업데이트
-                            TextView mainHi = findViewById(R.id.text_nickname_hi);
-                            mainHi.setText(loginNickName  + "님 \n 오늘도 오린지 하세요!");
-                        }
+                    runOnUiThread(() -> {
+                        TextView dateTextView = findViewById(R.id.text_today_oringe);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
+                        String currentDate = dateFormat.format(new Date());
+                        dateTextView.setText(currentDate + " \n" + challengeCount + "개의 오린지가 있어요");
+                        dateTextView.setTextSize(15);
+                        dateTextView.setTypeface(null, Typeface.BOLD);
+                        setData(challengeList);
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(MainActivity.this, "챌린지 조회 실패", Toast.LENGTH_SHORT).show();
+                        Log.d("HTTP Status Code", String.valueOf(response.code()));
                     });
                 }
             }
+
+            @Override
+            public void onFailure(Call<List<Challenge>> call, Throwable t) {
+                t.printStackTrace();
+            }
         });
     }
 
-}
-class MemberResponse {
-    private Long memberId;
-    private String memberEmail;
-    private String memberNickName;
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setData(List<Challenge> challengeList) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        challengeListContainer.removeAllViews();
+        if (challengeList.isEmpty()) {
+            View challengeView = inflater.inflate(R.layout.sample_main_list_view, challengeListContainer, false);
 
-    // Getter 메서드들
-    public Long getMemberId() {
-        return memberId;
+            titleView = challengeView.findViewById(R.id.main_list_title);
+            titleView.setText("오늘의 챌린지가 없어요 \n 챌린지를 생성해 보세요!");
+            challengeListContainer.addView(challengeView);
+            return;
+        }
+        for (Challenge challenge : challengeList) {
+            View challengeView = inflater.inflate(R.layout.sample_main_list_view, challengeListContainer, false);
+
+            titleView = challengeView.findViewById(R.id.main_list_title);
+            progressView = challengeView.findViewById(R.id.main_list_progress);
+            progressBarView = challengeView.findViewById(R.id.main_list_progressbar);
+            successView = challengeView.findViewById(R.id.main_list_success);
+            orgView = challengeView.findViewById(R.id.main_list_org);
+
+            LocalDate startDate = LocalDate.parse(challenge.getChallengeStart());
+            LocalDate endDate = LocalDate.parse(challenge.getChallengeEnd());
+            LocalDate today = LocalDate.now();
+
+            long totaldate = ChronoUnit.DAYS.between(startDate, endDate);
+            long nowdate = ChronoUnit.DAYS.between(startDate, today);
+
+            titleView.setText(challenge.getChallengeTitle());
+            if (nowdate == 0) {
+                progressView.setText("0" + "% 진행중");
+                progressBarView.setProgress(0);
+            } else {
+                if ((int) ((double) nowdate / totaldate * 100) >= 100) {
+                    progressView.setText("100" + "% 진행중");
+                    progressBarView.setProgress(100);
+                } else {
+                    progressView.setText((int) ((double) nowdate / totaldate * 100) + "% 진행중");
+                    progressBarView.setProgress((int) ((double) nowdate / totaldate * 100));
+                }
+            }
+            getSuccessToday(memberId, challenge.getChallengeId(), orgView, successView);
+            challengeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, ChallengeDetailActivity.class);
+                    intent.putExtra("challengeId", challenge.getChallengeId());
+                    intent.putExtra("challengeTitle", challenge.getChallengeTitle());
+                    intent.putExtra("challengeMemo", challenge.getChallengeMemo());
+                    intent.putExtra("challengeStart", challenge.getChallengeStart());
+                    intent.putExtra("challengeEnd", challenge.getChallengeEnd());
+                    intent.putExtra("challengeStatus", 2);
+                    startActivity(intent);
+                }
+            });
+
+            challengeListContainer.addView(challengeView);
+
+        }
     }
 
-    public String getMemberEmail() {
-        return memberEmail;
+    private void getSuccessToday(Long memberId, Long challengeId, ImageView imageView, TextView textView) {
+        int TRUE = 1;
+        Call<Integer> call = recordService.getTodaySuccess(memberId, challengeId);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    Integer result = response.body();
+                    if (result != null && result == TRUE) {
+                        runOnUiThread(() -> {
+                            imageView.setImageResource(R.drawable.main_org);
+                            textView.setText("오늘의 챌린지 성공 !  ");
+                        });
+                    } else {
+                        runOnUiThread(() -> {
+                            imageView.setImageResource(R.drawable.sad_org);
+                            textView.setText("오늘은 챌린지를 인증해주세요  ");
+                        });
+                    }
+                } else {
+                    try {
+                        System.out.println("Response was not successful: " + response.code());
+                        System.out.println("Response error body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                System.out.println("Request failed: " + t.getMessage());
+                t.printStackTrace();
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "An error occurred while success of today", Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 
-    public String getMemberNickName() {
-        return memberNickName;
-    }
 }

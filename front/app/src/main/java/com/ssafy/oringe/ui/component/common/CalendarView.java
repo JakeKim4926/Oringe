@@ -3,21 +3,14 @@ package com.ssafy.oringe.ui.component.common;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.ssafy.oringe.R;
-import com.ssafy.oringe.activity.challenge.ChallengeCreateFormActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,7 +29,7 @@ public class CalendarView extends LinearLayout {
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
             // 출력 형식 지정
-            String myFormat = "YYYY-MM-dd";
+            String myFormat = "YYYY-MM-dd(E)";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
             current.setText(sdf.format(myCalendar.getTime()));
         }
@@ -67,8 +60,7 @@ public class CalendarView extends LinearLayout {
                 current = (EditText) v;
                 DatePickerDialog datePickerDialog = new DatePickerDialog(context, myDatepicker,
                     myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog
-                    .show();
+                datePickerDialog.show();
 
                 // 최소 오늘~1년 후까지만 선택 가능
                 Calendar minDate = Calendar.getInstance();
@@ -85,9 +77,18 @@ public class CalendarView extends LinearLayout {
         addView(view);
     }
 
-    // 내부 EditText에 대한 접근자 메서드
     public String getEditText() {
         EditText editText = findViewById(R.id.calendar_date);
         return editText.getText().toString();
+    }
+
+    public void setHint(String s) {
+        EditText editText = findViewById(R.id.calendar_date);
+        editText.setHint(s);
+    }
+
+    public void setHintColor(int color) {
+        EditText editText = findViewById(R.id.calendar_date);
+        editText.setHintTextColor(color);
     }
 }

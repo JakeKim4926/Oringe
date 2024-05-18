@@ -22,11 +22,35 @@
           }
         },
         {
+          "client_id": "674424380265-7idqeh9ejlauuhkbkivjfumpj2ff7c1m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.oringe",
+            "certificate_hash": "4138b6544d10125e84523fd4d8a872e1ea9a924a"
+          }
+        },
+        {
+          "client_id": "674424380265-dls6okb048ppq16n965m8nia0hr0ftod.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.oringe",
+            "certificate_hash": "43bacc55d9f04cc2c012075c1651fc50684fe0a2"
+          }
+        },
+        {
           "client_id": "674424380265-oq46crgrb6set32gv38oreu04f04ovn0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ssafy.oringe",
             "certificate_hash": "38e45c62efe933bd773f76a2d62ba4c9d74d7334"
+          }
+        },
+        {
+          "client_id": "674424380265-s05lcksbc02r1k6lqscnu7a7483roefe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.oringe",
+            "certificate_hash": "2fceaefdabca44459ca1194313c6f550ff556b13"
           }
         },
         {
