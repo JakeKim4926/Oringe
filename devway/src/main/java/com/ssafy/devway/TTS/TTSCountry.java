@@ -29,6 +29,11 @@ public enum TTSCountry {
     AU_B_MALE("en-AU-Standard-B"),
     AU_C_FEMALE("en-AU-Standard-C"),
     AU_D_MALE("en-AU-Standard-D"),
+    // Korea
+    KR_A_FEMALE("ko-KR-Standard-A"),
+    KR_B_FEMALE("ko-KR-Standard-B"),
+    KR_C_MALE("ko-KR-Standard-C"),
+    KR_D_MALE("ko-KR-Standard-D"),
     ;
 
     public final String textMode;

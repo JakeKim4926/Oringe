@@ -287,7 +287,7 @@ public class RecordService {
             Files.createDirectories(fileCreate);
 
             TTSBlock ttsBlock = new TTSBlock(path); // 음성 파일 저장 위치
-            ttsBlock.synthesizeText(recordCreateTTSDto.getRecordTTS(), TTSCountry.US_C_FEMALE); // 텍스트 및 음성 나라 설정
+            ttsBlock.synthesizeText(recordCreateTTSDto.getRecordTTS(), TTSCountry.KR_A_FEMALE); // 텍스트 및 음성 나라 설정
 
             String resultPath = API_PATH + directoryPath + "output.mp3";
             return ResponseEntity.ok(resultPath);
