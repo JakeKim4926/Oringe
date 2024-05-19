@@ -389,12 +389,12 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
                     recordCreateReqDtoSave.setRecordContent(inputText);
                 } else if (challengeDetailOrders == CHALLENGE_DETAIL_TTS) {
-                    if (inputText.length() > 100) {
-                        Toast.makeText(RecordCreateActivity.this, "해당 내용은 100자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+                    if (inputText.length() > 1000) {
+                        Toast.makeText(RecordCreateActivity.this, "해당 내용은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    Pattern pattern = Pattern.compile("^[가-힣0-9]+$");
+                    Pattern pattern = Pattern.compile("^[가-힣0-9,.'\"!?\\s]+$");
                     if (!pattern.matcher(inputText).matches()) {
                         Toast.makeText(RecordCreateActivity.this, "한글과 숫자만 입력 가능합니다", Toast.LENGTH_SHORT).show();
                         return;
