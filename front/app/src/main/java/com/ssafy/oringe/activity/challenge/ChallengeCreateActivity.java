@@ -102,9 +102,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         memberId = sharedPref.getLong("loginId", 0);
 
-        // 알람 토글
-        setAlarm();
-
         // 요일 설정
         chooseCycle();
 
@@ -186,43 +183,6 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         }
     }
 
-
-    // 알람 설정
-    private void setAlarm() {
-        Switch toggle = findViewById(R.id.challengeCreate_alarm);
-        TextView textView = findViewById(R.id.challnegeCreate_input_alarmTime);
-        Calendar myCalendar = Calendar.getInstance();
-
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    textView.setVisibility(View.VISIBLE);
-                    View.OnClickListener timeClickListener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            TimePickerDialog timePickerDialog = new TimePickerDialog(ChallengeCreateActivity.this,
-                                android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
-                                @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                    formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
-                                    textView.setText(formattedTime);
-                                }
-                            }, myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), true);
-
-                            timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            timePickerDialog.show();
-                        }
-                    };
-                    isAlarm = isChecked;
-                    textView.setOnClickListener(timeClickListener);
-                } else {
-                    textView.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), "알람이 꺼졌습니다.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
 
     // 요일 설정
     public void chooseCycle() {
@@ -353,6 +313,7 @@ public class ChallengeCreateActivity extends AppCompatActivity {
                     break loop;
                 }
             }
+            System.out.println("선택: "+str+","+k);
             if (isThere) templates.add(k);
             else templates.add(0);
         }
@@ -373,8 +334,8 @@ public class ChallengeCreateActivity extends AppCompatActivity {
                 .challengeStart(start.substring(0,10))
                 .challengeEnd(end.substring(0,10))
                 .challengeCycle(cycle)
-                .challengeAlarm(isAlarm)
-                .challengeAlarmTime(isAlarm ? formattedTime : null)
+                .challengeAlarm(false)
+                .challengeAlarmTime(null)
                 .challengeMemo(memo)
                 .order(templates)
                 .build();
