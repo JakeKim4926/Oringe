@@ -1,7 +1,7 @@
 # 오린지 (oringe) - 나만의 챌린지 기록/인증 서비스
 
 <div align="center">
-<img src="/uploads/1a7cd8167745561eb0772d3cc55fbce4/image.png" width="300px" />
+<img src="./assets/image.png" width="300px" />
 </div>
 
 ## ✨ 앱 소개
@@ -22,13 +22,13 @@
 # 기능 상세 소개
 
 <h3>챌린지 생성</h3>
-<img src="/uploads/7e3769d19e0a098c95cb7a7cc83dc820/챌린지_생성.gif" height="800px" >
+<img src="./assets/챌린지_생성.gif" height="800px" >
 <h3>챌린지 확인</h3>
-<img src="/uploads/6683f2b32120b4c708c293d3f4a53f5f/챌린지_확인.gif" height="800px" >
+<img src="./assets/챌린지_확인.gif" height="800px" >
 <h3>인증 생성</h3>
-<img src="/uploads/368d757eec3073b7d99283d80e00cddf/인증_생성.gif" height="800px" >
+<img src="./assets/인증_생성.gif" height="800px" >
 <h3>인증 확인</h3>
-<img src="/uploads/956fe06425f3f40561be0e27de03fde1/인증_확인.gif" height="800px" >
+<img src="./assets/인증_확인.gif" height="800px" >
 
 
 <br />
@@ -53,13 +53,13 @@
 <table>
     <tr>
         <td height="140px" align="center"> 
-            <img src="/uploads/6d6a008e6bd017aa46d12431ade6b024/image.png" width="140px" /> <br> 김동학 <br>(Full-Stack) </a> <br></td>
+            <img src="./assets/image(1).png" width="140px" /> <br> 김동학 <br>(Full-Stack) </a> <br></td>
         <td height="140px" align="center"> 
-            <img src="/uploads/ac216e1363d5dbc81fb2e79accef5cef/image.png" width="140px" /> <br> 박소현 <br>(Full-Stack) </a> <br></td>
+            <img src="./assets/image(2).png" width="140px" /> <br> 박소현 <br>(Full-Stack) </a> <br></td>
         <td height="140px" align="center"> 
-            <img src="/uploads/1fc32043f52ca63874e54321bc4f86a6/image.png" width="130px" /> <br> 양성주 <br>(Full-Stack) </a> <br></td>
+            <img src="./assets/image(3).png" width="130px" /> <br> 양성주 <br>(Full-Stack) </a> <br></td>
         <td height="140px" align="center"> 
-            <img src="/uploads/63f55a95fb9ca9d2dd8aabad5d8d4f8b/image.png" width="150px" /> <br> 김준섭 <br>(Full-Stack) <br> (devops) </a> <br></td>
+            <img src="./assets/image(4).png" width="150px" /> <br> 김준섭 <br>(Full-Stack) <br> (devops) </a> <br></td>
     <tr>
         <td align="center">Spring-boot<br/>Android-native with Java<br/></td>
         <td align="center">Spring-boot<br/>Android-native with Java<br/></td>
