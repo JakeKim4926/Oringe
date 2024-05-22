@@ -57,7 +57,7 @@
         <td height="140px" align="center"> 
             <img src="./assets/so.png" width="140px" /> <br> 박소현 <br>(Full-Stack) </a> <br></td>
         <td height="140px" align="center"> 
-            <img src="./assets/seong(3).png" width="130px" /> <br> 양성주 <br>(Full-Stack) </a> <br></td>
+            <img src="./assets/seong.png" width="130px" /> <br> 양성주 <br>(Full-Stack) </a> <br></td>
         <td height="140px" align="center"> 
             <img src="./assets/jake.png" width="150px" /> <br> 김준섭 <br>(Full-Stack) <br> (devops) </a> <br></td>
     <tr>
