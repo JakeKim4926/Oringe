@@ -53,13 +53,13 @@
 <table>
     <tr>
         <td height="140px" align="center"> 
-            <img src="./assets/image(1).png" width="140px" /> <br> 김동학 <br>(Full-Stack) </a> <br></td>
+            <img src="./assets/dong.png" width="140px" /> <br> 김동학 <br>(Full-Stack) </a> <br></td>
         <td height="140px" align="center"> 
-            <img src="./assets/image(2).png" width="140px" /> <br> 박소현 <br>(Full-Stack) </a> <br></td>
+            <img src="./assets/so.png" width="140px" /> <br> 박소현 <br>(Full-Stack) </a> <br></td>
         <td height="140px" align="center"> 
-            <img src="./assets/image(3).png" width="130px" /> <br> 양성주 <br>(Full-Stack) </a> <br></td>
+            <img src="./assets/seong(3).png" width="130px" /> <br> 양성주 <br>(Full-Stack) </a> <br></td>
         <td height="140px" align="center"> 
-            <img src="./assets/image(4).png" width="150px" /> <br> 김준섭 <br>(Full-Stack) <br> (devops) </a> <br></td>
+            <img src="./assets/jake.png" width="150px" /> <br> 김준섭 <br>(Full-Stack) <br> (devops) </a> <br></td>
     <tr>
         <td align="center">Spring-boot<br/>Android-native with Java<br/></td>
         <td align="center">Spring-boot<br/>Android-native with Java<br/></td>
