@@ -2,8 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="background_color">#FFF4ED</color>
-    <color name="background_color_deep">#FDE5D4</color>
+    <color name="background_color">#FFFFFF</color>
+    <color name="background_color_deep">#D8D8D8</color>
     <color name="light_blue_400">#FF29B6F6</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="gray_200">#D8D8D8</color>
@@ -14,7 +14,7 @@
     <color name="mid_oringe">#FFEFE4</color>
     <color name="light_oringe">#fff8f3</color>
     <color name="oringe_text">#FF9344</color>
-    <color name="oringe_sub">#5FCBC2</color>
+    <color name="oringe_sub">#49CC4E</color>
     <color name="pink">#FFB5B5</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="light_blue_900">#FF01579B</color>
