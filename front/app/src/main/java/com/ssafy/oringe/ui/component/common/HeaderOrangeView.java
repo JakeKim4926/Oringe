@@ -15,8 +15,6 @@ import com.ssafy.oringe.R;
 import com.ssafy.oringe.activity.common.MainActivity;
 
 public class HeaderOrangeView extends FrameLayout {
-
-    private ImageButton backButton;
     private ImageView logoImageView;
 
     public HeaderOrangeView(Context context) {
@@ -37,14 +35,6 @@ public class HeaderOrangeView extends FrameLayout {
     private void init(Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.sample_header_orange_view, this, false);
         addView(view);
-
-        // 뒤로 가기
-        backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> {
-            if (context instanceof Activity) {
-                ((Activity) context).onBackPressed();
-            }
-        });
 
         // 홈으로 가기
         logoImageView = findViewById(R.id.logoImageView);

@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="BackView">
+        <attr name="headerText" format="string" />
+    </declare-styleable>
+</resources>

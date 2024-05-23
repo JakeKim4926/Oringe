@@ -24,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.activity.common.MainActivity;
 import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
@@ -50,6 +51,7 @@ public class ChallengeListActivity extends AppCompatActivity {
     private String memberNickname;
 
     /* challenge */
+    private ImageView headerView;
     private TextView titleView;
     private ImageView alarmView;
     private TextView dDayView;
@@ -76,6 +78,16 @@ public class ChallengeListActivity extends AppCompatActivity {
         memberId = sharedPref.getLong("loginId", 0);
         memberNickname = sharedPref.getString("loginNickName", "(알 수 없음)");
         getMemberNickname();
+
+        // 헤더
+        headerView = findViewById(R.id.challengeList_header);
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChallengeListActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // 맨 처음에는 진행중 리스트 조회
         currentStatus = 2;

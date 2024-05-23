@@ -26,4 +26,8 @@
     <style name="NumberInputStyle" parent="Widget.AppCompat.EditText">
         <item name="android:inputType">number</item>
     </style>
+
+    <style name="Widget.Theme.Oringe.MyView" parent="">
+        <item name="android:background">@color/gray_400</item>
+    </style>
 </resources>
