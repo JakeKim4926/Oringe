@@ -5,13 +5,16 @@
     android:id="@+id/challenge_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:orientation="vertical"
     tools:context=".activity.challenge.ChallengeListActivity">
 
     <!--헤더-->
-    <com.ssafy.oringe.ui.component.common.HeaderWhiteView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/challengeList_header"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:src="@drawable/logo_org" />
 
     <!--텍스트-->
     <com.ssafy.oringe.ui.component.common.TitleView
