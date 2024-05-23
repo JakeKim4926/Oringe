@@ -1,5 +1,6 @@
 package com.ssafy.oringe.ui.component.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -50,9 +51,14 @@ public class BackView extends LinearLayout {
 
         // 뒤로 가기
         backButton = findViewById(R.id.backHeader_backButton);
+//        backButton.setOnClickListener(v -> {
+//            if (onBackButtonClickListener != null) {
+//                onBackButtonClickListener.onBackButtonClick();
+//            }
+//        });
         backButton.setOnClickListener(v -> {
-            if (onBackButtonClickListener != null) {
-                onBackButtonClickListener.onBackButtonClick();
+            if (context instanceof Activity) {
+                ((Activity) context).finish();
             }
         });
     }

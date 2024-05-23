@@ -106,8 +106,8 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
         memberId = sharedPref.getLong("loginId", 0);
 
         // 뒤로 가기
-        backView = findViewById(R.id.challengeCreate_header);
-        backView.setOnBackButtonClickListener(this);
+//        backView = findViewById(R.id.challengeCreate_header);
+//        backView.setOnBackButtonClickListener(this);
 
         // 알람 토글
         setAlarm();
@@ -489,6 +489,7 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
     @Override
     public void onBackButtonClick() {
         Intent intent = new Intent(this, ChallengeListActivity.class);
+
         startActivity(intent);
     }
 }
