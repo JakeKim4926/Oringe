@@ -262,6 +262,39 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
+                <!--알림 설정-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.ssafy.oringe.ui.component.common.TitleView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        app:text="알림 설정"
+                        app:textColor="@color/gray_600" />
+
+                    <Switch
+                        android:id="@+id/challengeCreate_alarm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false" />
+
+                    <TextView
+                        android:id="@+id/challnegeCreate_input_alarmTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:padding="5dp"
+                        android:text="시간설정"
+                        android:textColor="@color/oringe_main"
+                        android:textStyle="bold|italic"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+
                 <!--메모-->
                 <LinearLayout
                     android:id="@+id/challnegeCreate_memoLayout"
