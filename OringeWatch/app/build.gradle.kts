@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.compose.foundation)
     implementation(libs.activity.compose)
     implementation(libs.core.splashscreen)
+    implementation(libs.appcompat)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
@@ -70,6 +71,8 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-auth:8.0.0")
     implementation("com.github.bumptech.glide:glide:4.12.0")
     implementation("com.google.android.gms:play-services-auth:20.2.0")
+
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
