@@ -40,7 +40,9 @@ import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
+import com.ssafy.oringe.ui.component.common.BackView;
 import com.ssafy.oringe.ui.component.common.CalendarView;
+import com.ssafy.oringe.ui.component.common.OnBackButtonClickListener;
 
 import org.w3c.dom.Text;
 
@@ -66,7 +68,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ChallengeCreateActivity extends AppCompatActivity {
+public class ChallengeCreateActivity extends AppCompatActivity implements OnBackButtonClickListener {
     private static final int REQUEST_CODE = 222;
     /* member */
     private String API_URL;
@@ -75,6 +77,7 @@ public class ChallengeCreateActivity extends AppCompatActivity {
 
     private ViewGroup templateListContainer; // 동적 뷰를 추가할 컨테이너
     private ViewGroup modifyContainer; // 동적 뷰를 추가할 컨테이너
+    private BackView backView;
 
     /* challenge */
     private boolean[] clicked;
@@ -101,6 +104,10 @@ public class ChallengeCreateActivity extends AppCompatActivity {
         // 로그인 정보
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         memberId = sharedPref.getLong("loginId", 0);
+
+        // 뒤로 가기
+//        backView = findViewById(R.id.challengeCreate_header);
+//        backView.setOnBackButtonClickListener(this);
 
         // 알람 토글
         setAlarm();
@@ -477,5 +484,12 @@ public class ChallengeCreateActivity extends AppCompatActivity {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public void onBackButtonClick() {
+        Intent intent = new Intent(this, ChallengeListActivity.class);
+
+        startActivity(intent);
     }
 }

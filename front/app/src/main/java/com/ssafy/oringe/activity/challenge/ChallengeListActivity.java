@@ -24,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ssafy.oringe.R;
+import com.ssafy.oringe.activity.common.MainActivity;
 import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;

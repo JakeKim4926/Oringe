@@ -5,12 +5,13 @@
     android:id="@+id/challenge_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:orientation="vertical"
     tools:context=".activity.challenge.ChallengeListActivity">
 
     <!--헤더-->
-    <com.ssafy.oringe.ui.component.common.HeaderWhiteView
-        android:layout_width="wrap_content"
+    <com.ssafy.oringe.ui.component.common.HeaderOrangeView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <!--텍스트-->
@@ -21,7 +22,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
-        app:textColor="@color/white"
+        app:textColor="@color/black"
         app:textSize="7sp" />
 
     <FrameLayout
@@ -32,7 +33,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/background_white"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -82,6 +82,7 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <LinearLayout
                     android:id="@+id/challengeList_list"
                     android:layout_width="match_parent"
