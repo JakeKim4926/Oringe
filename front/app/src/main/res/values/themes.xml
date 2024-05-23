@@ -3,7 +3,6 @@
     <style name="Base.Theme.Oringe" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="android:background">@color/backgruound</item>
     </style>
 
     <style name="Theme.Oringe" parent="Base.Theme.Oringe" />
