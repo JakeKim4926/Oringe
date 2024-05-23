@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             titleView.setText(challenge.getChallengeTitle());
             if (nowdate == 0) {
                 progressView.setText("0" + "% 진행중");
-                progressBarView.setProgress(0);
+                progressBarView.setProgress(1);
             } else {
                 if ((int) ((double) nowdate / totaldate * 100) >= 100) {
                     progressView.setText("100" + "% 진행중");
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         runOnUiThread(() -> {
                             imageView.setImageResource(R.drawable.sad_org);
-                            textView.setText("오늘은 챌린지를 인증해주세요  ");
+                            textView.setText("오늘의 챌린지를 인증해주세요  ");
                         });
                     }
                 } else {

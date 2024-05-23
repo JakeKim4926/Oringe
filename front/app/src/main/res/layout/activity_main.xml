@@ -7,11 +7,13 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".activity.common.MainActivity">
+    tools:context=".activity.common.MainActivity"
+    android:background="@color/background_color">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingHorizontal="20dp">
 
         <LinearLayout
             android:id="@+id/challengeList"
@@ -36,7 +38,7 @@
 
                 <ImageView
                     android:id="@+id/image_main_org"
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:src="@drawable/main_org" />
 
@@ -49,7 +51,9 @@
                         android:id="@+id/image_bubble"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
-                        android:src="@drawable/bubble"/>
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/bubble"
+                        app:tint="@color/white"/>
 
                     <TextView
                         android:id="@+id/text_nickname_hi"
@@ -67,36 +71,39 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/text_today_oringe"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:background="@drawable/main_today_radius"
                     android:lineSpacingExtra="10dp"
                     android:padding="20dp"
                     android:textColor="@color/black"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:backgroundTint="@color/white"
+                    android:layout_weight="1"/>
 
                 <Button
                     android:id="@+id/btn_record"
-                    android:layout_width="150dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginStart="50dp"
                     android:background="@drawable/record_btn"
                     android:text="오린지 인증하기 ✏"
                     android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="30dp"
+                android:layout_gravity="center"
                 android:text="오늘의 챌린지"
+                android:layout_marginVertical="20dp"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -105,8 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/main_list"
