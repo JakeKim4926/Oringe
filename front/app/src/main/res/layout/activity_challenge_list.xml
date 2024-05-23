@@ -10,11 +10,9 @@
     tools:context=".activity.challenge.ChallengeListActivity">
 
     <!--헤더-->
-    <ImageView
-        android:id="@+id/challengeList_header"
+    <com.ssafy.oringe.ui.component.common.HeaderOrangeView
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:src="@drawable/logo_org" />
+        android:layout_height="wrap_content" />
 
     <!--텍스트-->
     <com.ssafy.oringe.ui.component.common.TitleView
