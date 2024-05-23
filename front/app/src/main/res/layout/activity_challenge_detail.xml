@@ -8,6 +8,12 @@
     android:orientation="vertical"
     android:background="@color/background_color"
     tools:context=".activity.challenge.ChallengeListActivity">
+    <!--헤더-->
+    <ImageView
+        android:id="@+id/challengeList_header"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:src="@drawable/logo_org" />
     <com.ssafy.oringe.ui.component.common.TitleView
         android:id="@+id/challengeList_who"
         android:layout_width="match_parent"
