@@ -86,10 +86,4 @@ dependencies {
 
     //for desugaring
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
-
-    // The view calendar library
-    implementation ("com.kizitonwose.calendar:view:2.5.1")
-
-    // The compose calendar library
-    implementation ("com.kizitonwose.calendar:compose:2.5.1")
 }
