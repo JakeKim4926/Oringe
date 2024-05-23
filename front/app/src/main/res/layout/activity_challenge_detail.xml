@@ -5,7 +5,6 @@
     android:id="@+id/challenge_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/oringe_main"
     android:orientation="vertical"
     tools:context=".activity.challenge.ChallengeListActivity">
 

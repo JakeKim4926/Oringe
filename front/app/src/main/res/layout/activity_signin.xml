@@ -15,6 +15,7 @@
         android:layout_width="400dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
+        android:background="@color/oringe_main"
         android:src="@drawable/logo_singin" />
 
     <com.google.android.gms.common.SignInButton

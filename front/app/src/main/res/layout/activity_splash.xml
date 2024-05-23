@@ -13,5 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_gravity="center"
+        android:background="@color/oringe_main"
         android:src="@drawable/splash" />
 </LinearLayout>
