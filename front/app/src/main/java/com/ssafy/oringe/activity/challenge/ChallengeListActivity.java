@@ -220,7 +220,7 @@ public class ChallengeListActivity extends AppCompatActivity {
 
                 challengeView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View v ) {
                         Intent intent = new Intent(ChallengeListActivity.this, ChallengeDetailActivity.class);
                         intent.putExtra("challengeId", challenge.getChallengeId());
                         intent.putExtra("challengeTitle", challenge.getChallengeTitle());
