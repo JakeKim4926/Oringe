@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <!-- Guideline for vertical positioning at 90% (10% from bottom) -->
+    <!-- Vertical Guideline at 91% from the top (10% from the bottom) -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineVertical"
         android:layout_width="wrap_content"
@@ -13,48 +14,83 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.91" />
 
-    <!-- ImageView with size adjusted to 1/4th of the screen and positioned accordingly -->
+    <!-- Horizontal Guideline at 25% from the left -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
 
+    <!-- Horizontal Guideline at 75% from the left -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <!-- Horizontal Guideline at 30% from the top -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.34" />
+
+    <!-- Horizontal Guideline at 25% from the top for speech bubble -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSpeechBubbleTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.14" />
+
+    <!-- Guideline for the left side of the speech bubble -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSpeechBubbleStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.30" />
+
+    <!-- Guideline for the right side of the speech bubble -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSpeechBubbleEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.70" />
+
+    <!-- ImageView for the character -->
     <ImageView
         android:id="@+id/imageViewSample"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="centerInside"
         android:src="@drawable/oringe_charecter"
+        app:layout_constraintTop_toBottomOf="@id/guidelineTop"
         app:layout_constraintBottom_toTopOf="@id/guidelineVertical"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.835"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintDimensionRatio="1:1" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.25" />
+    <!-- TextView for the speech bubble -->
+    <TextView
+        android:id="@+id/speechBubble"
+        android:layout_width="77dp"
+        android:layout_height="28dp"
+        android:background="@drawable/speech_bubble"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="J크님 하이!"
+        android:textColor="@android:color/black"
+        android:textSize="9sp"
+        android:paddingBottom="3dp"
+        app:layout_constraintBottom_toTopOf="@id/imageViewSample"
+        app:layout_constraintEnd_toEndOf="@id/guidelineSpeechBubbleEnd"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="@id/guidelineSpeechBubbleStart"
+        app:layout_constraintTop_toBottomOf="@id/guidelineSpeechBubbleTop"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
