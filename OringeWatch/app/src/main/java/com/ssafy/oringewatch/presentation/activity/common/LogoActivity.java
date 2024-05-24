@@ -21,9 +21,6 @@ public class LogoActivity extends ComponentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logo);
 
-        ImageView imageViewLogo = findViewById(R.id.imageViewLogo);
-        // PNG 이미지를 로드합니다.
-        Glide.with(this).load(R.drawable.splash).into(imageViewLogo);
         gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
     }
 
