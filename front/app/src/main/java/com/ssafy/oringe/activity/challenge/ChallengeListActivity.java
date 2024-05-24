@@ -89,7 +89,7 @@ public class ChallengeListActivity extends AppCompatActivity {
         doView = findViewById(R.id.challengeList_ing);
         didView = findViewById(R.id.challengeList_did);
 
-        challengeListContainer = findViewById(R.id.challengeList_list); // XML에서 레이아웃을 찾음
+        challengeListContainer = findViewById(R.id.challengeList_listLayout); // XML에서 레이아웃을 찾음
 
         View.OnClickListener tabListener = new View.OnClickListener() {
             @Override
@@ -130,6 +130,7 @@ public class ChallengeListActivity extends AppCompatActivity {
             getChallengeList(currentStatus);
         }
     }
+
     private void setActiveActivity(Context context, String activityName) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -139,7 +140,7 @@ public class ChallengeListActivity extends AppCompatActivity {
 
     // 로그인 정보
     private void getMemberNickname() {
-        TitleView whoView = findViewById(R.id.challengeList_who);
+        TextView whoView = findViewById(R.id.challengeList_who);
         whoView.setText(memberNickname + "님의 챌린지");
         getChallengeList(2);
 
@@ -149,10 +150,10 @@ public class ChallengeListActivity extends AppCompatActivity {
     public void getChallengeList(int status) {
         OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
+            .baseUrl(API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build();
         Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(memberId, status);
         call.enqueue(new Callback<List<Challenge>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -233,7 +234,7 @@ public class ChallengeListActivity extends AppCompatActivity {
 
                 challengeView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v ) {
+                    public void onClick(View v) {
                         Intent intent = new Intent(ChallengeListActivity.this, ChallengeDetailActivity.class);
                         intent.putExtra("challengeId", challenge.getChallengeId());
                         intent.putExtra("challengeTitle", challenge.getChallengeTitle());
