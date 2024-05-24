@@ -16,7 +16,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
     }
 
     buildTypes {
@@ -74,6 +73,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-messaging-ktx") // 추가된 부분
     implementation("com.firebaseui:firebase-ui-auth:8.0.0")
     implementation("com.github.bumptech.glide:glide:4.12.0")
     implementation("com.google.android.gms:play-services-auth:20.2.0")

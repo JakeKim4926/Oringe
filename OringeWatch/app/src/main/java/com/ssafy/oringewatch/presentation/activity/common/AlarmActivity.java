@@ -4,22 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 
 import androidx.activity.ComponentActivity;
 
-import com.bumptech.glide.Glide;
 import com.ssafy.oringewatch.R;
 import com.ssafy.oringewatch.presentation.activity.MainActivity;
 
-public class LogoActivity extends ComponentActivity {
+public class AlarmActivity extends ComponentActivity {
 
     private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logo);
+        setContentView(R.layout.activity_alarm);
 
         gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
     }
@@ -39,14 +37,13 @@ public class LogoActivity extends ComponentActivity {
 
             float diffX = e2.getX() - e1.getX();
             if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                if (diffX < 0) {
+                if (diffX > 0) {
                     // Left swipe
-                    Intent intent = new Intent(LogoActivity.this, MainActivity.class);
+                    Intent intent = new Intent(AlarmActivity.this, MainActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     return true;
-                } else
-                    return false;
+                }
             }
             return false;
         }

@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity;
 import androidx.core.splashscreen.SplashScreen;
 
 import com.ssafy.oringewatch.R;
+import com.ssafy.oringewatch.presentation.activity.common.AlarmActivity;
 import com.ssafy.oringewatch.presentation.activity.common.LogoActivity;
 
 public class MainActivity extends ComponentActivity {
@@ -48,6 +49,12 @@ public class MainActivity extends ComponentActivity {
                     Intent intent = new Intent(MainActivity.this, LogoActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                    return true;
+                } else if(diffX < 0){
+                    // Right swipe
+                    Intent intent = new Intent(MainActivity.this, AlarmActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     return true;
                 }
             }

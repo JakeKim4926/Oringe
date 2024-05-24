@@ -44,6 +44,12 @@
         <!-- LogoActivity 선언 -->
         <activity
             android:name=".presentation.activity.common.LogoActivity"
-            android:exported="true" />
+            android:exported="false" />
+
+        <!-- AlarmActivity 선언 -->
+        <activity
+            android:name=".presentation.activity.common.AlarmActivity"
+            android:exported="false" />
+
     </application>
 </manifest>

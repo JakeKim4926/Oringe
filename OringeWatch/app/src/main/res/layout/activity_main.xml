@@ -29,7 +29,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
 
-    <!-- Horizontal Guideline at 30% from the top -->
+    <!-- Horizontal Guideline at 34% from the top -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTop"
         android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.34" />
 
-    <!-- Horizontal Guideline at 25% from the top for speech bubble -->
+    <!-- Horizontal Guideline at 14% from the top for speech bubble -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineSpeechBubbleTop"
         android:layout_width="wrap_content"
@@ -77,19 +77,20 @@
     <!-- TextView for the speech bubble -->
     <TextView
         android:id="@+id/speechBubble"
-        android:layout_width="77dp"
-        android:layout_height="28dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:background="@drawable/speech_bubble"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="J크님 하이!"
+        android:gravity="center"
+        android:maxWidth="0dp"
+        android:text="J크님 금일은 총 0개의 챌린지를 인증하셨습니다."
         android:textColor="@android:color/black"
-        android:textSize="9sp"
-        android:paddingBottom="3dp"
+        android:textSize="@dimen/speech_bubble_text_size"
+        android:padding="@dimen/speech_bubble_padding"
         app:layout_constraintBottom_toTopOf="@id/imageViewSample"
         app:layout_constraintEnd_toEndOf="@id/guidelineSpeechBubbleEnd"
-        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/guidelineSpeechBubbleStart"
         app:layout_constraintTop_toBottomOf="@id/guidelineSpeechBubbleTop"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
