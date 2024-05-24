@@ -1,5 +1,6 @@
 package com.ssafy.oringe.activity.challenge;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -30,6 +31,7 @@ import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
 import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
+import com.ssafy.oringe.ui.component.common.FooterBarView;
 import com.ssafy.oringe.ui.component.common.TitleView;
 
 import java.time.LocalDate;
@@ -63,7 +65,8 @@ public class ChallengeListActivity extends AppCompatActivity {
     private TitleView doView;
     private TitleView willView;
     private int currentStatus;
-
+    private static final String PREFS_NAME = "FooterBarPrefs";
+    private static final String KEY_ACTIVE_ACTIVITY = "ActiveActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +123,18 @@ public class ChallengeListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setActiveActivity(this, ChallengeListActivity.class.getSimpleName());
+        FooterBarView footerBarView = findViewById(R.id.footerBar);
+        footerBarView.updateIcons(this);
         if (memberId != null) {
             getChallengeList(currentStatus);
         }
+    }
+    private void setActiveActivity(Context context, String activityName) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_ACTIVE_ACTIVITY, activityName);
+        editor.apply();
     }
 
     // 로그인 정보

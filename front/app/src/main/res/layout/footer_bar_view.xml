@@ -1,0 +1,28 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/icon1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/list"/>
+<!--        android:contentDescription="@string/icon1_desc"/>-->
+
+    <ImageView
+        android:id="@+id/icon2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/home"/>
+<!--        android:contentDescription="@string/icon2_desc" />-->
+
+    <ImageView
+        android:id="@+id/icon3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/stamp"/>
+<!--        android:contentDescription="@string/icon3_desc" />-->
+
+</merge>
