@@ -1,27 +1,29 @@
-package com.ssafy.oringewatch.presentation.activity;
+package com.ssafy.oringewatch.presentation.activity.common;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 
 import androidx.activity.ComponentActivity;
-import androidx.core.splashscreen.SplashScreen;
 
+import com.bumptech.glide.Glide;
 import com.ssafy.oringewatch.R;
-import com.ssafy.oringewatch.presentation.activity.common.LogoActivity;
+import com.ssafy.oringewatch.presentation.activity.MainActivity;
 
-public class MainActivity extends ComponentActivity {
+public class LogoActivity extends ComponentActivity {
 
     private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
-        setTheme(android.R.style.Theme_DeviceDefault);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_logo);
 
+        ImageView imageViewLogo = findViewById(R.id.imageViewLogo);
+        // PNG 이미지를 로드합니다.
+        Glide.with(this).load(R.drawable.splash).into(imageViewLogo);
         gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
     }
 
@@ -39,11 +41,11 @@ public class MainActivity extends ComponentActivity {
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             float diffX = e2.getX() - e1.getX();
             if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                if (diffX > 0) {
-                    // Right swipe
-                    Intent intent = new Intent(MainActivity.this, LogoActivity.class);
+                if (diffX < 0) {
+                    // Left swipe
+                    Intent intent = new Intent(LogoActivity.this, MainActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     return true;
                 }
             }

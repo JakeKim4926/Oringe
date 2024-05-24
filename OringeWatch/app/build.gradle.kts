@@ -49,7 +49,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.play.services.wearable)
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
@@ -65,7 +64,7 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
 
     implementation("androidx.fragment:fragment:1.3.6")
-    implementation("androidx.viewpager:viewpager:1.0.0")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("com.google.android.material:material:1.4.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.20")
     implementation("androidx.core:core-ktx:1.6.0")
@@ -94,6 +93,6 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.20")
     annotationProcessor("org.projectlombok:lombok:1.18.20")
 
-    //for desugaring
+    // for desugaring
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }
