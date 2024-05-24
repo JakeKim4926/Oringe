@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/challenge_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_color"
+    tools:context=".activity.challenge.ChallengeDetailFragment">
+
+    <!--헤더-->
+<!--    <com.ssafy.oringe.ui.component.common.HeaderOrangeView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content" />-->
+
+<!--    <com.ssafy.oringe.ui.component.common.TitleView-->
+<!--        android:id="@+id/challengeList_who"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="20dp"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        app:text="***의 챌린지입니다."-->
+<!--        app:textColor="@color/black"-->
+<!--        app:textSize="7sp" />-->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <!--진행상황-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center">
+
+                <com.ssafy.oringe.ui.component.common.TitleView
+                    android:id="@+id/challengeDetail_titleView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:text="챌린지 제목"
+                    app:textColor="@color/oringe_main"
+                    app:textSize="8sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center">
+
+                <com.ssafy.oringe.ui.component.common.TitleView
+                    android:id="@+id/challengeDetail_memoView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:text="챌린지 메모"
+                    app:textColor="@color/gray_600"
+                    app:textSize="4.5sp" />
+            </LinearLayout>
+
+            <!--목록-->
+            <RelativeLayout
+                android:id="@+id/animated_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <ScrollView
+                    android:id="@+id/scroll_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/challengeList_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.kizitonwose.calendar.view.CalendarView
+                            android:id="@+id/calendarView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cv_dayViewResource="@layout/calendar_day_layout"
+                            app:cv_monthHeaderResource="@layout/calendar_month_header" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:layout_marginTop="20dp"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/calendar_btn_delete"
+                                android:layout_width="90dp"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/button_border_semi"
+                                android:text="삭제하기"
+                                android:textColor="@color/semi_oringe"
+                                android:textStyle="bold" />
+
+                            <Button
+                                android:id="@+id/calendar_btn_record"
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="30dp"
+                                android:background="@drawable/record_btn"
+                                android:text="오린지 인증하기 ✏"
+                                android:textColor="#FFFFFF"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </ScrollView>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!--메뉴-->
+        <com.ssafy.oringe.ui.component.common.MenuView
+            android:id="@+id/menu_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            app:src="@drawable/plus_btn" />
+
+    </FrameLayout>
+</LinearLayout>
