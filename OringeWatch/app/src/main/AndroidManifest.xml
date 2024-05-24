@@ -51,5 +51,21 @@
             android:name=".presentation.activity.common.AlarmActivity"
             android:exported="false" />
 
+        <!-- Firebase -->
+        <!-- Ensure that the service is enabled on devices running Android O or later -->
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <!-- Add the permission to receive messages -->
+        <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+        <!-- Prevent devices from sleeping when message is received -->
+        <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     </application>
 </manifest>
