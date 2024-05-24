@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity;
 
 import com.ssafy.oringewatch.R;
 import com.ssafy.oringewatch.presentation.activity.MainActivity;
+import com.ssafy.oringewatch.presentation.activity.alarm.CustomToggleButton;
 
 public class AlarmActivity extends ComponentActivity {
 
@@ -18,6 +19,9 @@ public class AlarmActivity extends ComponentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
+
+        CustomToggleButton customToggleButton = findViewById(R.id.custom_toggle_button);
+        customToggleButton.setChecked(false); // 초기 상태 설정
 
         gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
     }

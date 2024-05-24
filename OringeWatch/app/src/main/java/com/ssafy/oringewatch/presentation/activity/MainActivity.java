@@ -13,7 +13,6 @@ import androidx.core.splashscreen.SplashScreen;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.ssafy.oringewatch.Manifest;
 import com.ssafy.oringewatch.R;
 import com.ssafy.oringewatch.presentation.activity.common.AlarmActivity;
 import com.ssafy.oringewatch.presentation.activity.common.LogoActivity;
@@ -30,18 +29,18 @@ public class MainActivity extends ComponentActivity {
         setTheme(android.R.style.Theme_DeviceDefault);
         setContentView(R.layout.activity_main);
 
-        // Initialize Firebase
-        FirebaseApp.initializeApp(this);
-
-        // Subscribe to topic (optional)
-        FirebaseMessaging.getInstance().subscribeToTopic("all")
-                .addOnCompleteListener(task -> {
-                    String msg = "Subscribed to topic";
-                    if (!task.isSuccessful()) {
-                        msg = "Subscription failed";
-                    }
-                    // Log or toast the message
-                });
+//        // Initialize Firebase
+//        FirebaseApp.initializeApp(this);
+//
+//        // Subscribe to topic (optional)
+//        FirebaseMessaging.getInstance().subscribeToTopic("all")
+//                .addOnCompleteListener(task -> {
+//                    String msg = "Subscribed to topic";
+//                    if (!task.isSuccessful()) {
+//                        msg = "Subscription failed";
+//                    }
+//                    // Log or toast the message
+//                });
 
         gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
     }
