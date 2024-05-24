@@ -14,6 +14,7 @@ import com.ssafy.oringewatch.presentation.activity.common.LogoActivity;
 public class MainActivity extends ComponentActivity {
 
     private GestureDetector gestureDetector;
+    private boolean isSwipeHandled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,9 @@ public class MainActivity extends ComponentActivity {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if(isSwipeHandled)
+                return false;
+
             float diffX = e2.getX() - e1.getX();
             if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                 if (diffX > 0) {
