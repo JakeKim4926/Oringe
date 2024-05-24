@@ -10,15 +10,17 @@
 
 
     <!--텍스트-->
-    <com.ssafy.oringe.ui.component.common.TitleView
+    <TextView
         android:id="@+id/challengeList_who"
+        style="@style/CommonMarginLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
-        app:textColor="@color/black"
-        style="@style/CommonMarginLayout"
-        app:textSize="7sp" />
+        android:textAlignment="center"
+        android:textColor="@color/oringe_main"
+        android:textSize="21sp"
+        android:textStyle="bold" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -30,28 +32,33 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            style="@style/CommonMarginLayout"
             android:orientation="vertical">
 
             <!--진행상황-->
             <LinearLayout
                 android:id="@+id/challengeList_status"
+                style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:layout_marginBottom="30dp"
-                android:gravity="center_horizontal">
+                android:layout_marginBottom="30dp">
 
                 <com.ssafy.oringe.ui.component.common.TitleView
                     android:id="@+id/challengeList_will"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
                     app:text="진행예정"
-                    app:textColor="@color/gray_400"
+                    app:textColor="@color/gray_600"
                     app:textSize="5.5sp"
                     tools:ignore="SmallSp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
                 <com.ssafy.oringe.ui.component.common.TitleView
                     android:id="@+id/challengeList_ing"
@@ -65,13 +72,20 @@
                     app:textSize="5.5sp"
                     tools:ignore="SmallSp" />
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
                 <com.ssafy.oringe.ui.component.common.TitleView
                     android:id="@+id/challengeList_did"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     app:text="진행완료"
-                    app:textColor="@color/gray_400"
+                    app:textColor="@color/gray_600"
                     app:textSize="5.5sp"
                     tools:ignore="SmallSp" />
             </LinearLayout>
@@ -79,14 +93,15 @@
             <!--목록-->
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"
+                android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/challengeList_list"
+                    android:id="@+id/challengeList_listLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:orientation="vertical" />
             </ScrollView>
         </LinearLayout>
@@ -109,7 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
         android:elevation="24dp"
-        android:paddingTop="8dp"
-        android:background="@android:color/white"/>
+        android:paddingTop="8dp" />
 </RelativeLayout>

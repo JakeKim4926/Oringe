@@ -5,6 +5,7 @@
     android:id="@+id/challnegeCreate"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".activity.challenge.ChallengeCreateActivity">
@@ -29,11 +30,13 @@
 
             <!--챌린지 생성하기-->
             <LinearLayout
+                style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="vertical"
-                android:padding="35dp">
+                android:paddingTop="35dp"
+                android:paddingBottom="35dp">
 
                 <!--제목-->
                 <LinearLayout
@@ -67,6 +70,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
+                            android:backgroundTint="@color/oringe_main"
                             android:maxLength="20" />
 
                         <TextView
@@ -298,15 +302,19 @@
                     <com.ssafy.oringe.ui.component.common.TitleView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="top"
                         android:layout_marginRight="15dp"
+                        android:paddingTop="15dp"
                         app:text="메모"
                         app:textColor="@color/gray_600" />
 
                     <EditText
                         android:id="@+id/challnegeCreate_input_memo"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="150dp"
                         android:layout_gravity="center_vertical"
+                        android:backgroundTint="@color/oringe_main"
+                        android:gravity="top"
                         android:inputType="textMultiLine"
                         android:maxLength="50" />
 
@@ -365,7 +373,7 @@
 
                     <LinearLayout
                         android:id="@+id/challengeCreate_templateLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:orientation="horizontal" />
@@ -378,47 +386,42 @@
     <!--버튼-->
     <LinearLayout
         android:id="@+id/challengeCreate_buttonLayout"
+        style="@style/CommonMarginLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp"
+        android:layout_above="@id/footerBar"
+        android:layout_marginBottom="20dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/challnegeCreate_cancel"
-            android:layout_width="65dp"
-            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
+            android:layout_weight="1"
             android:background="@drawable/button_border_sub"
-            android:paddingLeft="4dp"
-            android:paddingTop="2dp"
-            android:paddingRight="4dp"
-            android:paddingBottom="2dp"
             android:text="취소"
             android:textColor="@color/oringe_sub"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/challnegeCreate_create"
-            android:layout_width="65dp"
-            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/button_color_orange"
-            android:paddingLeft="4dp"
-            android:paddingTop="2dp"
-            android:paddingRight="4dp"
-            android:paddingBottom="2dp"
             android:text="생성"
             android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>
+
     <com.ssafy.oringe.ui.component.common.FooterBarView
         android:id="@+id/footerBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
         android:elevation="24dp"
-        android:paddingTop="8dp"
-        android:background="@android:color/white"/>
+        android:paddingTop="8dp" />
 </RelativeLayout>
