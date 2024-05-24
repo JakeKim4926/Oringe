@@ -123,7 +123,7 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
         setTemplates();
 
         // 챌린지 생성
-        Button create = findViewById(R.id.challnegeCreate_create);
+        TextView create = findViewById(R.id.challnegeCreate_create);
         cycle = new ArrayList<>();
         create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,15 +133,15 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
         });
 
         // 취소
-        Button cancel = findViewById(R.id.challnegeCreate_cancel);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "취소되었습니다!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ChallengeCreateActivity.this, ChallengeListActivity.class);
-                startActivity(intent);
-            }
-        });
+//        Button cancel = findViewById(R.id.challnegeCreate_cancel);
+//        cancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(), "취소되었습니다!", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(ChallengeCreateActivity.this, ChallengeListActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.challnegeCreate), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -260,9 +260,9 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
 
                 clicked[i] = !clicked[i];
                 if (clicked[i])
-                    dayView.setBackgroundColor(ContextCompat.getColor(ChallengeCreateActivity.this, R.color.oringe_sub));
+                    dayView.setBackgroundResource(R.drawable.background_table_sub);
                 else
-                    dayView.setBackgroundColor(ContextCompat.getColor(ChallengeCreateActivity.this, R.color.transparent));
+                    dayView.setBackgroundResource(R.drawable.background_table_white);
             }
         };
         monView.setOnClickListener(clickListener);

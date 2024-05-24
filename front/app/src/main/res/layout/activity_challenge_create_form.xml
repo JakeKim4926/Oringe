@@ -13,7 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/challengeCreate_buttonLayout"
+        android:layout_above="@id/challnegeCreate_create"
         android:layout_marginBottom="20dp">
 
         <LinearLayout
@@ -34,8 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical"
-                android:paddingTop="35dp"
                 android:paddingBottom="35dp">
 
                 <!--제목-->
@@ -43,6 +43,7 @@
                     android:id="@+id/challnegeCreate_titleLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -157,8 +158,9 @@
                     android:id="@+id/challnegeCreate_dayLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="20dp"
                     android:gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -192,6 +194,8 @@
 
                             <TextView
                                 android:id="@+id/monday"
+                                android:layout_margin="3dp"
+                                android:background="@drawable/background_table_white"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
@@ -200,6 +204,8 @@
 
                             <TextView
                                 android:id="@+id/tuesday"
+                                android:layout_margin="3dp"
+                                android:background="@drawable/background_table_white"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
@@ -208,6 +214,8 @@
 
                             <TextView
                                 android:id="@+id/wednesday"
+                                android:layout_margin="3dp"
+                                android:background="@drawable/background_table_white"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
@@ -216,6 +224,8 @@
 
                             <TextView
                                 android:id="@+id/thursday"
+                                android:layout_margin="3dp"
+                                android:background="@drawable/background_table_white"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
@@ -224,6 +234,8 @@
 
                             <TextView
                                 android:id="@+id/friday"
+                                android:layout_margin="3dp"
+                                android:background="@drawable/background_table_white"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
@@ -232,14 +244,19 @@
 
                             <TextView
                                 android:id="@+id/saturday"
+                                android:layout_margin="3dp"
+                                android:background="@drawable/background_table_white"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
                                 android:paddingBottom="8dp"
                                 android:text="토" />
 
+
                             <TextView
                                 android:id="@+id/sunday"
+                                android:layout_margin="3dp"
+                                android:background="@drawable/background_table_white"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
@@ -262,6 +279,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -276,6 +295,7 @@
                         android:id="@+id/challengeCreate_alarm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:backgroundTint="@color/oringe_main"
                         android:checked="false" />
 
                     <TextView
@@ -311,7 +331,7 @@
                     <EditText
                         android:id="@+id/challnegeCreate_input_memo"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="120dp"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/oringe_main"
                         android:gravity="top"
@@ -384,37 +404,35 @@
     </ScrollView>
 
     <!--버튼-->
-    <LinearLayout
-        android:id="@+id/challengeCreate_buttonLayout"
+
+
+    <!--        <Button-->
+    <!--            android:id="@+id/challnegeCreate_cancel"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginRight="10dp"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:background="@drawable/button_border_sub"-->
+    <!--            android:text="취소"-->
+    <!--            android:textColor="@color/oringe_sub"-->
+    <!--            android:textStyle="bold" />-->
+
+    <TextView
+        android:id="@+id/challnegeCreate_create"
         style="@style/CommonMarginLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/footerBar"
-        android:layout_marginBottom="20dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_marginBottom="30dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_color_orange"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="생성"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/challnegeCreate_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_border_sub"
-            android:text="취소"
-            android:textColor="@color/oringe_sub"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/challnegeCreate_create"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/button_color_orange"
-            android:text="생성"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-    </LinearLayout>
 
     <com.ssafy.oringe.ui.component.common.FooterBarView
         android:id="@+id/footerBar"
