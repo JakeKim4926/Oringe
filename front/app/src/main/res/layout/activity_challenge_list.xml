@@ -8,22 +8,16 @@
     android:background="@color/background_color"
     tools:context=".activity.challenge.ChallengeListActivity">
 
-    <!--헤더-->
-    <com.ssafy.oringe.ui.component.common.HeaderOrangeView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
 
     <!--텍스트-->
     <com.ssafy.oringe.ui.component.common.TitleView
         android:id="@+id/challengeList_who"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/challenge_list"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
         app:textColor="@color/black"
+        style="@style/CommonMarginLayout"
         app:textSize="7sp" />
 
     <FrameLayout
@@ -37,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
+            style="@style/CommonMarginLayout"
             android:orientation="vertical">
 
             <!--진행상황-->
