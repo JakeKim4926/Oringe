@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="30dp" />
-            <solid android:color="#5FCBC2" />
+            <solid android:color="@color/oringe_sub" />
         </shape>
     </item>
 </selector>

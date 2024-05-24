@@ -413,4 +413,12 @@
             android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>
+    <com.ssafy.oringe.ui.component.common.FooterBarView
+        android:id="@+id/footerBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:elevation="24dp"
+        android:paddingTop="8dp"
+        android:background="@android:color/white"/>
 </RelativeLayout>

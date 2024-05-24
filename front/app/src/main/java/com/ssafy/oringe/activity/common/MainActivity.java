@@ -1,5 +1,6 @@
 package com.ssafy.oringe.activity.common;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -42,6 +43,7 @@ import com.ssafy.oringe.api.challengeDetail.dto.ChallengeDetailIdResponse;
 import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
 import com.ssafy.oringe.api.record.RecordService;
+import com.ssafy.oringe.ui.component.common.FooterBarView;
 import com.ssafy.oringe.ui.component.common.MenuView;
 import com.ssafy.oringe.ui.component.common.TitleView;
 
@@ -81,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
     private RecordService recordService;
 
     private Long memberId;
+    private static final String PREFS_NAME = "FooterBarPrefs";
+    private static final String KEY_ACTIVE_ACTIVITY = "ActiveActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,16 +120,24 @@ public class MainActivity extends AppCompatActivity {
         Button btn_record = findViewById(R.id.btn_record);
         btn_record.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecordCreateActivity.class)));
 
-        MenuView btn_list = findViewById(R.id.btn_list);
-        btn_list.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChallengeListActivity.class)));
+//        MenuView btn_list = findViewById(R.id.btn_list);
+//        btn_list.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChallengeListActivity.class)));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        setActiveActivity(this, MainActivity.class.getSimpleName());
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Long memberId = sharedPref.getLong("loginId", 0);
         getTodayChallengeList(memberId);
+        FooterBarView footerBarView = findViewById(R.id.footerBar);
+        footerBarView.updateIcons(this);    }
+    private void setActiveActivity(Context context, String activityName) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_ACTIVE_ACTIVITY, activityName);
+        editor.apply();
     }
     private void getMemberId(String memberEmail) {
         OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();

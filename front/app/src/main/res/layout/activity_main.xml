@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    tools:context=".activity.common.MainActivity"
-    android:background="@color/background_color">
+    tools:context=".activity.common.MainActivity">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/footerBar"
         android:paddingHorizontal="20dp">
 
         <LinearLayout
@@ -25,10 +25,9 @@
                 android:id="@+id/image_logo_org"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:layout_marginBottom="15dp"
                 android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:src="@drawable/logo_org"
-                android:layout_marginBottom="15dp"/>
+                android:src="@drawable/logo_org" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,21 +51,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_marginStart="20dp"
+                        android:scaleType="fitXY"
                         android:src="@drawable/bubble"
-                        app:tint="@color/white"
-                        android:scaleType="fitXY"/>
+                        app:tint="@color/white" />
 
                     <TextView
                         android:id="@+id/text_nickname_hi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginStart="15dp"
                         android:fontFamily="@font/jamsil"
                         android:gravity="center"
                         android:lineSpacingExtra="10dp"
                         android:textColor="@color/black"
-                        android:layout_marginStart="15dp"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -81,31 +80,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:background="@drawable/main_today_radius"
+                    android:backgroundTint="@color/white"
+                    android:layout_weight="1"
                     android:lineSpacingExtra="10dp"
                     android:padding="20dp"
                     android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:backgroundTint="@color/white"
-                    android:layout_weight="1"/>
+                    android:textSize="15sp" />
 
                 <Button
                     android:id="@+id/btn_record"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="50dp"
+                    android:layout_weight="1"
                     android:background="@drawable/record_btn"
                     android:text="오린지 인증하기 ✏"
                     android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:layout_weight="1"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="오늘의 챌린지"
                 android:layout_marginVertical="20dp"
+                android:text="오늘의 챌린지"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -127,14 +126,13 @@
         </LinearLayout>
     </ScrollView>
 
-    <com.ssafy.oringe.ui.component.common.MenuView
-        android:id="@+id/btn_list"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentEnd="true"
+    <com.ssafy.oringe.ui.component.common.FooterBarView
+        android:id="@+id/footerBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        app:src="@drawable/main_menu" />
-</RelativeLayout>
+        android:elevation="24dp"
+        android:paddingTop="8dp"
+        android:background="@android:color/white"/>
 
+</RelativeLayout>
