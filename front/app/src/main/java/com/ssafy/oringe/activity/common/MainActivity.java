@@ -117,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button btn_record = findViewById(R.id.btn_record);
-        btn_record.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecordCreateActivity.class)));
+//        Button btn_record = findViewById(R.id.btn_record);
+//        btn_record.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecordCreateActivity.class)));
 
 //        MenuView btn_list = findViewById(R.id.btn_list);
 //        btn_list.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChallengeListActivity.class)));
@@ -198,12 +198,12 @@ public class MainActivity extends AppCompatActivity {
                     int challengeCount = challengeList != null ? challengeList.size() : 0;
 
                     runOnUiThread(() -> {
-                        TextView dateTextView = findViewById(R.id.text_today_oringe);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
-                        String currentDate = dateFormat.format(new Date());
-                        dateTextView.setText(currentDate + " \n" + challengeCount + "개의 오린지가 있어요");
-                        dateTextView.setTextSize(15);
-                        dateTextView.setTypeface(null, Typeface.BOLD);
+//                        TextView dateTextView = findViewById(R.id.text_today_oringe);
+//                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
+//                        String currentDate = dateFormat.format(new Date());
+//                        dateTextView.setText(currentDate + " \n" + challengeCount + "개의 오린지가 있어요");
+//                        dateTextView.setTextSize(15);
+//                        dateTextView.setTypeface(null, Typeface.BOLD);
                         setData(challengeList);
                     });
                 } else {
