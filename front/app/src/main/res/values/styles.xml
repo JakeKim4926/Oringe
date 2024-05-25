@@ -30,4 +30,13 @@
     <style name="Widget.Theme.Oringe.MyView" parent="">
         <item name="android:background">@color/gray_400</item>
     </style>
+    <!-- BottomSheetDialog 테마 추가 -->
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <!-- BottomSheet 스타일 추가 -->
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_dialog_border</item>
+    </style>
 </resources>

@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="20dp"
-    android:background="@drawable/main_oringe_list"
+    android:background="@drawable/shadow_component"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:backgroundTint="@color/white">
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 

@@ -1,5 +1,8 @@
 <!-- res/drawable/today_circle.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/oringe_sub" />
+    <size
+        android:width="5dp"
+        android:height="5dp" />
+    <solid android:color="#8049CC4E" />
     <corners android:radius="25dp" />
 </shape>

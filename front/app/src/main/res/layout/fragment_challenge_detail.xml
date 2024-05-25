@@ -6,13 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:elevation="24dp"
     android:background="@drawable/background_white"
     tools:context=".activity.challenge.ChallengeDetailFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/radius_top"
+        android:background="@drawable/background_white"
         android:orientation="vertical">
 
         <LinearLayout
@@ -35,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:text="챌린지 제목"
-                    app:textColor="@color/oringe_main"
+                    app:textColor="@color/black"
                     app:textSize="8sp" />
             </LinearLayout>
 
@@ -90,7 +91,7 @@
 
                             <Button
                                 android:id="@+id/calendar_btn_delete"
-                                android:layout_width="90dp"
+                                android:layout_width="92dp"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/button_border_semi"
                                 android:text="삭제하기"
@@ -99,12 +100,12 @@
 
                             <Button
                                 android:id="@+id/calendar_btn_record"
-                                android:layout_width="150dp"
+                                android:layout_width="144dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="30dp"
                                 android:background="@drawable/record_btn"
                                 android:text="오린지 인증하기 ✏"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/oringe_sub"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>

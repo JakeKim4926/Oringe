@@ -27,12 +27,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.ssafy.oringe.R;
 import com.ssafy.oringe.activity.challenge.ChallengeDetailActivity;
+import com.ssafy.oringe.activity.challenge.ChallengeDetailFragment;
 import com.ssafy.oringe.activity.challenge.ChallengeListActivity;
 import com.ssafy.oringe.activity.record.RecordCreateActivity;
 import com.ssafy.oringe.api.TrustOkHttpClientUtil;
@@ -117,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button btn_record = findViewById(R.id.btn_record);
-        btn_record.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecordCreateActivity.class)));
+//        Button btn_record = findViewById(R.id.btn_record);
+//        btn_record.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecordCreateActivity.class)));
 
 //        MenuView btn_list = findViewById(R.id.btn_list);
 //        btn_list.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChallengeListActivity.class)));
@@ -198,12 +200,12 @@ public class MainActivity extends AppCompatActivity {
                     int challengeCount = challengeList != null ? challengeList.size() : 0;
 
                     runOnUiThread(() -> {
-                        TextView dateTextView = findViewById(R.id.text_today_oringe);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
-                        String currentDate = dateFormat.format(new Date());
-                        dateTextView.setText(currentDate + " \n" + challengeCount + "개의 오린지가 있어요");
-                        dateTextView.setTextSize(15);
-                        dateTextView.setTypeface(null, Typeface.BOLD);
+//                        TextView dateTextView = findViewById(R.id.text_today_oringe);
+//                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
+//                        String currentDate = dateFormat.format(new Date());
+//                        dateTextView.setText(currentDate + " \n" + challengeCount + "개의 오린지가 있어요");
+//                        dateTextView.setTextSize(15);
+//                        dateTextView.setTypeface(null, Typeface.BOLD);
                         setData(challengeList);
                     });
                 } else {
@@ -263,18 +265,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             getSuccessToday(memberId, challenge.getChallengeId(), orgView, successView);
-            challengeView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, ChallengeDetailActivity.class);
-                    intent.putExtra("challengeId", challenge.getChallengeId());
-                    intent.putExtra("challengeTitle", challenge.getChallengeTitle());
-                    intent.putExtra("challengeMemo", challenge.getChallengeMemo());
-                    intent.putExtra("challengeStart", challenge.getChallengeStart());
-                    intent.putExtra("challengeEnd", challenge.getChallengeEnd());
-                    intent.putExtra("challengeStatus", 2);
-                    startActivity(intent);
-                }
+
+            challengeView.setOnClickListener(v -> {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                ChallengeDetailFragment challengeDetailFragment = ChallengeDetailFragment.newInstance(
+                        challenge.getChallengeId(),
+                        challenge.getChallengeTitle(),
+                        challenge.getChallengeMemo(),
+                        challenge.getChallengeStart(),
+                        challenge.getChallengeEnd(),
+                        2
+                );
+                challengeDetailFragment.show(fragmentManager, "challengeDetail");
             });
 
             challengeListContainer.addView(challengeView);
