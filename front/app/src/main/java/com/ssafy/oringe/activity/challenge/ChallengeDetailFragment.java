@@ -205,8 +205,6 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
         }
     }
     private void setDefaultInfo(View view) {
-//        TitleView whoView = view.findViewById(R.id.challengeList_who);
-//        whoView.setText(memberNickname + "님의 챌린지");
 
         TitleView titleView = view.findViewById(R.id.challengeDetail_titleView);
         TitleView memoView = view.findViewById(R.id.challengeDetail_memoView);

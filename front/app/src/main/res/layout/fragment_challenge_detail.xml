@@ -12,7 +12,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/radius_top"
+        android:background="@drawable/background_white"
         android:orientation="vertical">
 
         <LinearLayout
