@@ -216,7 +216,7 @@ public class ChallengeDetailActivity extends AppCompatActivity {
 
             @Override
             public void bind(MonthViewContainer container, CalendarMonth month) {
-                container.monthText.setText(String.format(Locale.ENGLISH, "<   %s   >", month.getYearMonth().getMonth()));
+                container.monthText.setText(String.format(Locale.ENGLISH, "%s", month.getYearMonth().getMonth()));
             }
         });
 

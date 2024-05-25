@@ -84,6 +84,7 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
     private List<Integer> cycleDays = new ArrayList<>();
     private LocalDate challengeStartDate;
     private LocalDate challengeEndDate;
+    private YearMonth currentMonth;
 
     public static ChallengeDetailFragment newInstance(long challengeId, String challengeTitle, String challengeMemo, String challengeStart, String challengeEnd, int challengeStatus) {
         ChallengeDetailFragment fragment = new ChallengeDetailFragment();
@@ -187,24 +188,24 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
         setupTouchListeners(view);
     }
     private void setupTouchListeners(View view) {
-        View leftTouchArea = view.findViewById(R.id.left_touch_area);
-        View rightTouchArea = view.findViewById(R.id.right_touch_area);
+        ImageView leftTouchArea = view.findViewById(R.id.left_touch_area);
+        ImageView rightTouchArea = view.findViewById(R.id.right_touch_area);
 
-//        leftTouchArea.setOnClickListener(v -> navigateToPreviousMonth());
-//        rightTouchArea.setOnClickListener(v -> navigateToNextMonth());
+        leftTouchArea.setOnClickListener(v -> navigateToPreviousMonth());
+        rightTouchArea.setOnClickListener(v -> navigateToNextMonth());
     }
 
-//    private void navigateToPreviousMonth() {
-//        currentMonth = calendarView.findFirstVisibleMonth().getYearMonth();
-//        YearMonth previousMonth = currentMonth.minusMonths(1);
-//        calendarView.smoothScrollToMonth(previousMonth);
-//    }
-//
-//    private void navigateToNextMonth() {
-//        currentMonth = calendarView.findFirstVisibleMonth().getYearMonth();
-//        YearMonth nextMonth = currentMonth.plusMonths(1);
-//        calendarView.smoothScrollToMonth(nextMonth);
-//    }
+    private void navigateToPreviousMonth() {
+        currentMonth = calendarView.findFirstVisibleMonth().getYearMonth();
+        YearMonth previousMonth = currentMonth.minusMonths(1);
+        calendarView.smoothScrollToMonth(previousMonth);
+    }
+
+    private void navigateToNextMonth() {
+        currentMonth = calendarView.findFirstVisibleMonth().getYearMonth();
+        YearMonth nextMonth = currentMonth.plusMonths(1);
+        calendarView.smoothScrollToMonth(nextMonth);
+    }
     private void setDefaultInfo(View view) {
 
         TitleView titleView = view.findViewById(R.id.challengeDetail_titleView);
@@ -284,7 +285,7 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
 
             @Override
             public void bind(@NonNull MonthViewContainer container, CalendarMonth month) {
-                container.monthText.setText(String.format(Locale.ENGLISH, "<   %s   >", month.getYearMonth().getMonth()));
+                container.monthText.setText(String.format(Locale.ENGLISH, "%s", month.getYearMonth().getMonth()));
             }
         });
 
