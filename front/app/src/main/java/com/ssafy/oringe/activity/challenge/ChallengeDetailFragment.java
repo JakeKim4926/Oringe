@@ -183,6 +183,7 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
                 startActivity(recordIntent);
             }
         });
+
     }
     private void setDefaultInfo(View view) {
 
