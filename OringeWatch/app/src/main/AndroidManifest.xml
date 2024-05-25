@@ -1,0 +1,72 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ssafy.oringewatch">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <!-- Add the permission to receive messages -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <!-- Prevent devices from sleeping when message is received -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="true" />
+
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
+        <!-- StartActivity 선언 -->
+        <activity
+            android:name=".presentation.activity.common.StartActivity"
+            android:exported="true"
+            android:theme="@style/MainActivityTheme.Starting">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- MainActivity 선언 -->
+        <activity
+            android:name=".presentation.activity.MainActivity"
+            android:theme="@style/AppTheme"
+            android:exported="true">
+            <!-- <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter> -->
+        </activity>
+
+        <!-- LogoActivity 선언 -->
+        <activity
+            android:name=".presentation.activity.common.LogoActivity"
+            android:exported="false" />
+
+        <!-- AlarmActivity 선언 -->
+        <activity
+            android:name=".presentation.activity.common.AlarmActivity"
+            android:exported="false" />
+
+        <!-- Firebase -->
+        <!-- Ensure that the service is enabled on devices running Android O or later -->
+        <service
+            android:name=".presentation.activity.alarm.MyFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+
+    </application>
+</manifest>

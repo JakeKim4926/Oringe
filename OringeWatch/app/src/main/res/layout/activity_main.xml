@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- Vertical Guideline at 91% from the top (10% from the bottom) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.91" />
+
+    <!-- Horizontal Guideline at 25% from the left -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <!-- Horizontal Guideline at 75% from the left -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <!-- Horizontal Guideline at 34% from the top -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.34" />
+
+    <!-- Horizontal Guideline at 14% from the top for speech bubble -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSpeechBubbleTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.14" />
+
+    <!-- Guideline for the left side of the speech bubble -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSpeechBubbleStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.30" />
+
+    <!-- Guideline for the right side of the speech bubble -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSpeechBubbleEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.70" />
+
+    <!-- ImageView for the character -->
+    <ImageView
+        android:id="@+id/imageViewSample"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/oringe_charecter"
+        app:layout_constraintTop_toBottomOf="@id/guidelineTop"
+        app:layout_constraintBottom_toTopOf="@id/guidelineVertical"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintDimensionRatio="1:1" />
+
+    <!-- TextView for the speech bubble -->
+    <TextView
+        android:id="@+id/speechBubble"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@drawable/speech_bubble"
+        android:gravity="center"
+        android:maxWidth="0dp"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/speech_bubble_text_size"
+        android:padding="@dimen/speech_bubble_padding"
+        app:layout_constraintBottom_toTopOf="@id/imageViewSample"
+        app:layout_constraintEnd_toEndOf="@id/guidelineSpeechBubbleEnd"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/guidelineSpeechBubbleStart"
+        app:layout_constraintTop_toBottomOf="@id/guidelineSpeechBubbleTop"
+        app:layout_constraintVertical_bias="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
