@@ -75,6 +75,21 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <View
+                            android:id="@+id/left_touch_area"
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentStart="true"
+                            android:background="?attr/selectableItemBackground" />
+
+                        <View
+                            android:id="@+id/right_touch_area"
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentEnd="true"
+                            android:background="?attr/selectableItemBackground" />
+
+
                         <com.kizitonwose.calendar.view.CalendarView
                             android:id="@+id/calendarView"
                             android:layout_width="match_parent"

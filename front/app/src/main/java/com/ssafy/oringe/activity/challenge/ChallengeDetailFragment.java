@@ -184,7 +184,27 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
             }
         });
 
+        setupTouchListeners(view);
     }
+    private void setupTouchListeners(View view) {
+        View leftTouchArea = view.findViewById(R.id.left_touch_area);
+        View rightTouchArea = view.findViewById(R.id.right_touch_area);
+
+//        leftTouchArea.setOnClickListener(v -> navigateToPreviousMonth());
+//        rightTouchArea.setOnClickListener(v -> navigateToNextMonth());
+    }
+
+//    private void navigateToPreviousMonth() {
+//        currentMonth = calendarView.findFirstVisibleMonth().getYearMonth();
+//        YearMonth previousMonth = currentMonth.minusMonths(1);
+//        calendarView.smoothScrollToMonth(previousMonth);
+//    }
+//
+//    private void navigateToNextMonth() {
+//        currentMonth = calendarView.findFirstVisibleMonth().getYearMonth();
+//        YearMonth nextMonth = currentMonth.plusMonths(1);
+//        calendarView.smoothScrollToMonth(nextMonth);
+//    }
     private void setDefaultInfo(View view) {
 
         TitleView titleView = view.findViewById(R.id.challengeDetail_titleView);
@@ -389,6 +409,8 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Toast.makeText(getContext(), "삭제되었습니다!", Toast.LENGTH_SHORT).show();
                 dismiss();
+                Intent intent = new Intent(getContext(), ChallengeListActivity.class);
+                startActivity(intent);
             }
 
             @Override
