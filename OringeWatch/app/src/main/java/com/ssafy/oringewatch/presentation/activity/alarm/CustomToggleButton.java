@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.ssafy.oringewatch.R;
@@ -36,14 +37,15 @@ public class CustomToggleButton extends ConstraintLayout {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggle();
+                toggle(context);
             }
         });
     }
 
-    private void toggle() {
+    private void toggle(Context context) {
         isChecked = !isChecked;
         updateView();
+        showToastMessage(context);
     }
 
     private void updateView() {
@@ -51,6 +53,14 @@ public class CustomToggleButton extends ConstraintLayout {
             transitionDrawable.startTransition(300); // 300ms 애니메이션
         } else {
             transitionDrawable.reverseTransition(300); // 300ms 애니메이션
+        }
+    }
+
+    private void showToastMessage(Context context) {
+        if (isChecked) {
+            Toast.makeText(context, "챌린지 알람을 수신합니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "챌린지 알람을 수신하지 않습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -65,5 +75,7 @@ public class CustomToggleButton extends ConstraintLayout {
         } else {
             transitionDrawable.reverseTransition(0); // 즉시 OFF 상태로 전환
         }
+        // 상태 변경 시 토스트 메시지 표시
+        showToastMessage(getContext());
     }
 }
