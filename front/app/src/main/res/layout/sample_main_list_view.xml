@@ -21,7 +21,8 @@
             android:layout_weight="1"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:fontFamily="@font/suite" />
 
         <TextView
             android:id="@+id/main_list_progress"
@@ -29,7 +30,8 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical|end"
             android:textColor="@color/oringe_sub"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            android:fontFamily="@font/suite"/>
     </LinearLayout>
 
     <ProgressBar
@@ -53,7 +55,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:fontFamily="@font/suite" />
 
         <ImageView
             android:id="@+id/main_list_org"
