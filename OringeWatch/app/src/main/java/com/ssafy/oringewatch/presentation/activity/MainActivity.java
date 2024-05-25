@@ -2,9 +2,14 @@ package com.ssafy.oringewatch.presentation.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
 import androidx.core.app.ActivityCompat;
@@ -28,6 +33,18 @@ public class MainActivity extends ComponentActivity {
         super.onCreate(savedInstanceState);
         setTheme(android.R.style.Theme_DeviceDefault);
         setContentView(R.layout.activity_main);
+
+        TextView speechBubble = findViewById(R.id.speechBubble);
+        String colorText = "2개";
+        String text = "오늘의 챌린지가 " +  colorText + " 남아있어요!";
+        SpannableString spannableString = new SpannableString(text);
+
+        // "2개" 부분에 다른 색상을 적용
+        int start = text.indexOf(colorText);
+        int end = start + colorText.length();
+        spannableString.setSpan(new ForegroundColorSpan(Color.rgb(255,107,0)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        speechBubble.setText(spannableString);
 
 //        // Initialize Firebase
 //        FirebaseApp.initializeApp(this);
