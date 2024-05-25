@@ -115,12 +115,8 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
                 BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 behavior.setSkipCollapsed(true);
-                // 초기 높이 설정
-                bottomSheet.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                bottomSheet.requestLayout();
             }
         });
-
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
@@ -187,22 +183,6 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
                 startActivity(recordIntent);
             }
         });
-    }
-    //초기높이설정위한 onStart
-    @Override
-    public void onStart() {
-        super.onStart();
-        BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
-        if (dialog != null) {
-            FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-            if (bottomSheet != null) {
-                ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
-                layoutParams.height = 1300; // 초기 높이를 원하는 값으로 설정 (단위: 픽셀)
-                bottomSheet.setLayoutParams(layoutParams);
-                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
-                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        }
     }
     private void setDefaultInfo(View view) {
 
