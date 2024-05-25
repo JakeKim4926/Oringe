@@ -10,12 +10,13 @@
         android:id="@+id/register_template"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:padding="4dp"
+        android:layout_gravity="center_horizontal"
         android:layout_margin="4dp"
         android:background="@drawable/button_color_mid"
+        android:fontFamily="@font/suite"
         android:gravity="center_vertical|center_horizontal"
-        android:layout_gravity="center_horizontal"
-        android:textStyle="bold"
-        android:textColor="@color/gray_600" />
+        android:padding="4dp"
+        android:textColor="@color/gray_600"
+        android:textStyle="bold" />
 
 </LinearLayout>

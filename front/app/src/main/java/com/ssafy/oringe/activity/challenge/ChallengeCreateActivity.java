@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TableLayout;
@@ -105,10 +106,6 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         memberId = sharedPref.getLong("loginId", 0);
 
-        // 뒤로 가기
-//        backView = findViewById(R.id.challengeCreate_header);
-//        backView.setOnBackButtonClickListener(this);
-
         // 알람 토글
         setAlarm();
 
@@ -124,6 +121,7 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
 
         // 챌린지 생성
         TextView create = findViewById(R.id.challnegeCreate_create);
+        create.setClickable(false);
         cycle = new ArrayList<>();
         create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,17 +129,6 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
                 createChallenge();
             }
         });
-
-        // 취소
-//        Button cancel = findViewById(R.id.challnegeCreate_cancel);
-//        cancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getApplicationContext(), "취소되었습니다!", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(ChallengeCreateActivity.this, ChallengeListActivity.class);
-//                startActivity(intent);
-//            }
-//        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.challnegeCreate), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -293,10 +280,11 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
 
         if (orderMap.isEmpty()) {
             View addInstance = inflater.inflate(R.layout.sample_add_template_view, templateListContainer, false);
-            TextView plusView = addInstance.findViewById(R.id.plus_template);
-            plusView.setText("템플릿 설정하러 가기");
+            ImageView plusView = addInstance.findViewById(R.id.addTemplate_add);
+//            ImageView plusView = addInstance.findViewById(R.id.plus_template);
+//            plusView.setText("템플릿 설정하러 가기");
             plusView.setOnClickListener(moveTemplate);
-            templateListContainer.addView(addInstance);
+            modifyContainer.addView(addInstance);
         } else {
             for (String str : normalTemplates) {
                 View seeInstance = inflater.inflate(R.layout.sample_see_template_view, templateListContainer, false);
@@ -305,7 +293,7 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
                 templateListContainer.addView(seeInstance);
             }
             View modifyInstance = inflater.inflate(R.layout.sample_modify_view, modifyContainer, false);
-            TextView modifyView = modifyInstance.findViewById(R.id.modify_template);
+            ImageView modifyView = modifyInstance.findViewById(R.id.modify_template);
             modifyView.setOnClickListener(moveTemplate);
             modifyContainer.addView(modifyInstance);
         }
@@ -337,7 +325,7 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
         try {
             Date startDate = format.parse(start);
             Date endDate = format.parse(end);
-            if (startDate.getDate()-endDate.getDate()<=7) {
+            if (startDate.getDate() - endDate.getDate() <= 7) {
 
             }
         } catch (ParseException e) {
@@ -360,7 +348,7 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
                     break loop;
                 }
             }
-            System.out.println("선택: "+str+","+k);
+            System.out.println("선택: " + str + "," + k);
             if (isThere) templates.add(k);
             else templates.add(0);
         }
@@ -378,8 +366,8 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
             System.out.println("challengeDetail: " + templates);
             Challenge challenge = Challenge.builder()
                 .challengeTitle(title)
-                .challengeStart(start.substring(0,10))
-                .challengeEnd(end.substring(0,10))
+                .challengeStart(start.substring(0, 10))
+                .challengeEnd(end.substring(0, 10))
                 .challengeCycle(cycle)
                 .challengeAlarm(isAlarm)
                 .challengeAlarmTime(isAlarm ? formattedTime : null)
@@ -424,6 +412,7 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
 
     private int checkInputs() {
         View view = findViewById(R.id.challnegeCreate);
+        TextView createView = findViewById(R.id.challnegeCreate_create);
 
         TextView titleView = view.findViewById(R.id.challengeCreate_title_setting);
         TextView duringView = view.findViewById(R.id.challengeCreate_during_setting);
@@ -456,6 +445,8 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
             dayView.setVisibility(View.GONE);
         }
 
+
+        // 템플릿
         boolean isTemplate = false;
         for (int nums : templates) {
             if (nums > 0) {
@@ -464,7 +455,6 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
             }
         }
 
-        // 템플릿
         if (!isTemplate) {
             templateView.setVisibility(View.VISIBLE);
             return 1005;

@@ -3,11 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal">
+
     <TextView
         android:id="@+id/nothing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/suite"
         android:text="아직 챌린지가 없어요!"
+        android:layout_marginTop="10dp"
         android:textColor="@color/gray_600"
         android:textSize="25sp"
         android:textStyle="bold"/>

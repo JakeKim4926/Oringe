@@ -5,17 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/plus_template"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_border_orange_thin"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:textAlignment="center"
-        android:textColor="@color/oringe_main"
-        android:textStyle="bold" />
-
-
+    <ImageView
+        android:id="@+id/addTemplate_add"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/add_tem" />
 </LinearLayout>

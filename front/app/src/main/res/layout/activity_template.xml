@@ -9,37 +9,40 @@
     tools:context=".activity.challenge.TemplateActivity">
 
     <!--헤더-->
-    <com.ssafy.oringe.ui.component.common.HeaderOrangeView
+    <com.ssafy.oringe.ui.component.common.BackView
+        android:id="@+id/template_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:headerText="템플릿 선택하기" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:gravity="center_horizontal">
+        style="@style/CommonMarginLayout"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <!--문구-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/suite"
             android:text="템플릿을 선택하여\n나만의 템플릿을 골라보세요"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="30dp"
+            android:fontFamily="@font/suite"
             android:text="최대 5개까지만 가능합니다"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/oringe_sub"/>
+            android:textColor="@color/oringe_sub"
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
         <!--카테고리-->
         <HorizontalScrollView
@@ -61,15 +64,14 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp">
+            style="@style/CommonMarginLayout"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/template_templateDetail"
@@ -81,27 +83,42 @@
     </ScrollView>
 
     <!--버튼-->
-    <LinearLayout
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginBottom="50dp"-->
+    <!--        android:gravity="end"-->
+    <!--        android:orientation="horizontal">-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/template_create"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginTop="10dp"-->
+    <!--            android:layout_marginRight="30dp"-->
+    <!--            android:background="@drawable/button_border_orange"-->
+    <!--            android:paddingLeft="12dp"-->
+    <!--            android:paddingTop="5dp"-->
+    <!--            android:paddingRight="12dp"-->
+    <!--            android:paddingBottom="5dp"-->
+    <!--            android:text="선택완료"-->
+    <!--            android:textColor="@color/oringe_main"-->
+    <!--            android:textStyle="bold" />-->
+    <!--    </LinearLayout>-->
+    <TextView
+        android:id="@+id/template_create"
+        style="@style/CommonMarginLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:layout_marginBottom="50dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/template_create"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_border_orange"
-            android:paddingLeft="12dp"
-            android:paddingTop="5dp"
-            android:paddingRight="12dp"
-            android:paddingBottom="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="30dp"
-            android:text="선택완료"
-            android:textColor="@color/oringe_main"
-            android:textStyle="bold" />
-    </LinearLayout>
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/button_color_orange"
+        android:fontFamily="@font/suite"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="선택완료"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

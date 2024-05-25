@@ -5,13 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <ImageView
         android:id="@+id/modify_template"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="수정"
-        android:textStyle="bold|italic"
-        android:textColor="@color/oringe_main" />
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:src="@drawable/modify_tem" />
 
 </LinearLayout>

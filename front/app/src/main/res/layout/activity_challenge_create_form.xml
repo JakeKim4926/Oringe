@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:orientation="vertical"
                 android:paddingBottom="35dp">
 
@@ -52,7 +52,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="7dp"
                         app:text="제목"
-                        app:textColor="@color/gray_600" />
+                        app:textColor="@color/gray_600"
+                        app:textSize="4.5sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -72,7 +73,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:backgroundTint="@color/oringe_main"
-                            android:maxLength="20" />
+                            android:fontFamily="@font/suite"
+                            android:maxLength="15" />
 
                         <TextView
                             android:id="@+id/challengeCreate_title_setting"
@@ -98,7 +100,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="7dp"
                         app:text="기간"
-                        app:textColor="@color/gray_600" />
+                        app:textColor="@color/gray_600"
+                        app:textSize="4.5sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -158,9 +161,9 @@
                     android:id="@+id/challnegeCreate_dayLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -173,7 +176,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="7dp"
                             app:text="요일"
-                            app:textColor="@color/gray_600" />
+                            app:textColor="@color/gray_600"
+                            app:textSize="4.5sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -196,72 +200,86 @@
                                 android:id="@+id/monday"
                                 android:layout_margin="3dp"
                                 android:background="@drawable/background_table_white"
+                                android:fontFamily="@font/suite"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
                                 android:paddingBottom="8dp"
-                                android:text="월" />
+                                android:text="월"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/tuesday"
                                 android:layout_margin="3dp"
                                 android:background="@drawable/background_table_white"
+                                android:fontFamily="@font/suite"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
                                 android:paddingBottom="8dp"
-                                android:text="화" />
+                                android:text="화"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/wednesday"
                                 android:layout_margin="3dp"
                                 android:background="@drawable/background_table_white"
+                                android:fontFamily="@font/suite"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
                                 android:paddingBottom="8dp"
-                                android:text="수" />
+                                android:text="수"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/thursday"
                                 android:layout_margin="3dp"
                                 android:background="@drawable/background_table_white"
+                                android:fontFamily="@font/suite"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
                                 android:paddingBottom="8dp"
-                                android:text="목" />
+                                android:text="목"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/friday"
                                 android:layout_margin="3dp"
                                 android:background="@drawable/background_table_white"
+                                android:fontFamily="@font/suite"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
                                 android:paddingBottom="8dp"
-                                android:text="금" />
+                                android:text="금"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/saturday"
                                 android:layout_margin="3dp"
                                 android:background="@drawable/background_table_white"
+                                android:fontFamily="@font/suite"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
                                 android:paddingBottom="8dp"
-                                android:text="토" />
+                                android:text="토"
+                                android:textSize="16sp" />
 
 
                             <TextView
                                 android:id="@+id/sunday"
                                 android:layout_margin="3dp"
                                 android:background="@drawable/background_table_white"
+                                android:fontFamily="@font/suite"
                                 android:paddingLeft="13dp"
                                 android:paddingTop="8dp"
                                 android:paddingRight="13dp"
                                 android:paddingBottom="8dp"
-                                android:text="일" />
+                                android:text="일"
+                                android:textSize="16sp" />
                         </TableRow>
                     </TableLayout>
 
@@ -289,7 +307,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
                         app:text="알림 설정"
-                        app:textColor="@color/gray_600" />
+                        app:textColor="@color/gray_600"
+                        app:textSize="4.5sp" />
 
                     <Switch
                         android:id="@+id/challengeCreate_alarm"
@@ -326,7 +345,8 @@
                         android:layout_marginRight="15dp"
                         android:paddingTop="15dp"
                         app:text="메모"
-                        app:textColor="@color/gray_600" />
+                        app:textColor="@color/gray_600"
+                        app:textSize="4.5sp" />
 
                     <EditText
                         android:id="@+id/challnegeCreate_input_memo"
@@ -334,6 +354,7 @@
                         android:layout_height="120dp"
                         android:layout_gravity="center_vertical"
                         android:backgroundTint="@color/oringe_main"
+                        android:fontFamily="@font/suite"
                         android:gravity="top"
                         android:inputType="textMultiLine"
                         android:maxLength="50" />
@@ -360,7 +381,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="7dp"
                             app:text="템플릿 설정"
-                            app:textColor="@color/gray_600" />
+                            app:textColor="@color/gray_600"
+                            app:textSize="4.5sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -389,6 +411,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:orientation="horizontal" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -404,19 +427,6 @@
     </ScrollView>
 
     <!--버튼-->
-
-
-    <!--        <Button-->
-    <!--            android:id="@+id/challnegeCreate_cancel"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginRight="10dp"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:background="@drawable/button_border_sub"-->
-    <!--            android:text="취소"-->
-    <!--            android:textColor="@color/oringe_sub"-->
-    <!--            android:textStyle="bold" />-->
-
     <TextView
         android:id="@+id/challnegeCreate_create"
         style="@style/CommonMarginLayout"
@@ -424,8 +434,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/footerBar"
         android:layout_marginBottom="30dp"
-        android:layout_weight="1"
         android:background="@drawable/button_color_orange"
+        android:fontFamily="@font/suite"
         android:gravity="center"
         android:padding="16dp"
         android:text="생성"
