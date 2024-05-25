@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "138130444366",
+    "project_id": "fireoringe",
+    "storage_bucket": "fireoringe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138130444366:android:5ef04981a8137c34e3b31f",
+        "android_client_info": {
+          "package_name": "com.ssafy.oringewatch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx9OV_kplcjgGvbf4WFBxDzycSo0Ffxk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138130444366:android:0220cf2e6cc31be8e3b31f",
+        "android_client_info": {
+          "package_name": "com.ssafy.oringewatch.presentation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx9OV_kplcjgGvbf4WFBxDzycSo0Ffxk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

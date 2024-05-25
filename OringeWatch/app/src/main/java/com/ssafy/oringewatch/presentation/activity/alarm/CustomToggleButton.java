@@ -2,6 +2,8 @@ package com.ssafy.oringewatch.presentation.activity.alarm;
 
 import android.content.Context;
 import android.graphics.drawable.TransitionDrawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.ssafy.oringewatch.R;
+
+import android.os.Parcelable;
+import android.os.Parcel;
+import android.view.View.BaseSavedState;
 
 public class CustomToggleButton extends ConstraintLayout {
 
@@ -41,6 +47,9 @@ public class CustomToggleButton extends ConstraintLayout {
                 toggle(context);
             }
         });
+
+        // 초기 상태 반영
+        updateView();
     }
 
     private void toggle(Context context) {
@@ -51,18 +60,16 @@ public class CustomToggleButton extends ConstraintLayout {
 
     private void updateView() {
         if (isChecked) {
-            transitionDrawable.startTransition(300); // 300ms 애니메이션
+            transitionDrawable.startTransition(0); // 즉시 ON 상태로 전환
         } else {
-            transitionDrawable.reverseTransition(300); // 300ms 애니메이션
+            transitionDrawable.reverseTransition(0); // 즉시 OFF 상태로 전환
         }
     }
 
     private void showCustomToast(Context context) {
-        // Inflate custom toast layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.activity_toast, (ViewGroup) findViewById(R.id.toast_container));
 
-        // Set the text and image for the toast
         TextView text = layout.findViewById(R.id.toast_text);
         ImageView icon = layout.findViewById(R.id.toast_icon);
 
@@ -74,7 +81,6 @@ public class CustomToggleButton extends ConstraintLayout {
             icon.setImageResource(R.drawable.oringe_charecter);
         }
 
-        // Create and show the toast
         Toast toast = new Toast(context);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
@@ -87,12 +93,58 @@ public class CustomToggleButton extends ConstraintLayout {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
-        if (isChecked) {
-            transitionDrawable.startTransition(0); // 즉시 ON 상태로 전환
-        } else {
-            transitionDrawable.reverseTransition(0); // 즉시 OFF 상태로 전환
+        updateView();
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState savedState = new SavedState(superState);
+        savedState.isChecked = this.isChecked;
+        return savedState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof SavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
         }
-        // 상태 변경 시 커스텀 토스트 메시지를 표시하지 않음
-        // showCustomToast(getContext());
+
+        SavedState savedState = (SavedState) state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+        this.isChecked = savedState.isChecked;
+        updateView();
+    }
+
+    static class SavedState extends BaseSavedState {
+        boolean isChecked;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            isChecked = (in.readInt() == 1);
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(isChecked ? 1 : 0);
+        }
+
+        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }
