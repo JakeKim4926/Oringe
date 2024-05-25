@@ -65,6 +65,9 @@
             android:name=".activity.common.FullscreenVideoActivity"
             android:exported="false">
         </activity>
+        <activity android:name=".activity.record.RecordDetailActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>

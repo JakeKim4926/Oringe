@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
 import com.kizitonwose.calendar.view.ViewContainer;
 import com.ssafy.oringe.R;
 import com.ssafy.oringe.activity.record.RecordCreateActivity;
-import com.ssafy.oringe.activity.record.RecordDetailDialogFragment;
+import com.ssafy.oringe.activity.record.RecordDetailActivity;
 import com.ssafy.oringe.api.RetrofitClient;
 import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.ChallengeService;
@@ -380,7 +379,10 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
 
             view.setOnClickListener(v -> {
                 if (recordId != null) {
-                    RecordDetailDialogFragment.newInstance(recordId).show(getChildFragmentManager(), "recordDetails");
+                    Intent intent = new Intent(getActivity(), RecordDetailActivity.class);
+                    intent.putExtra("record_id", recordId);
+                    startActivity(intent);
+
                 }
             });
         }
