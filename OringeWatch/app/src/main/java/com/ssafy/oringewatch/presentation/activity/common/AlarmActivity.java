@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-
 import androidx.activity.ComponentActivity;
-
 import com.ssafy.oringewatch.R;
 import com.ssafy.oringewatch.presentation.activity.MainActivity;
 import com.ssafy.oringewatch.presentation.activity.alarm.CustomToggleButton;

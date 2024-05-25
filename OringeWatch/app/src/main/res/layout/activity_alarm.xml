@@ -94,7 +94,7 @@
             android:id="@+id/alarm_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:text="오린지 인증을 위한 알람이 전송됩니다."
             android:textColor="@android:color/darker_gray"
             android:autoSizeMaxTextSize="5sp"

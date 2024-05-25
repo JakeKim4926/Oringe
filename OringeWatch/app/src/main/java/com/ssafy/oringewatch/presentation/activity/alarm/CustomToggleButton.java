@@ -5,10 +5,11 @@ import android.graphics.drawable.TransitionDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.ssafy.oringewatch.R;
 
 public class CustomToggleButton extends ConstraintLayout {
@@ -45,7 +46,7 @@ public class CustomToggleButton extends ConstraintLayout {
     private void toggle(Context context) {
         isChecked = !isChecked;
         updateView();
-        showToastMessage(context);
+        showCustomToast(context);
     }
 
     private void updateView() {
@@ -56,12 +57,28 @@ public class CustomToggleButton extends ConstraintLayout {
         }
     }
 
-    private void showToastMessage(Context context) {
+    private void showCustomToast(Context context) {
+        // Inflate custom toast layout
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View layout = inflater.inflate(R.layout.activity_toast, (ViewGroup) findViewById(R.id.toast_container));
+
+        // Set the text and image for the toast
+        TextView text = layout.findViewById(R.id.toast_text);
+        ImageView icon = layout.findViewById(R.id.toast_icon);
+
         if (isChecked) {
-            Toast.makeText(context, "챌린지 알람을 수신합니다.", Toast.LENGTH_SHORT).show();
+            text.setText("챌린지 알람을 수신합니다.");
+            icon.setImageResource(R.drawable.oringe_charecter);
         } else {
-            Toast.makeText(context, "챌린지 알람을 수신하지 않습니다.", Toast.LENGTH_SHORT).show();
+            text.setText("챌린지 알람을 수신하지 않습니다.");
+            icon.setImageResource(R.drawable.oringe_charecter);
         }
+
+        // Create and show the toast
+        Toast toast = new Toast(context);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
     }
 
     public boolean isChecked() {
@@ -75,7 +92,7 @@ public class CustomToggleButton extends ConstraintLayout {
         } else {
             transitionDrawable.reverseTransition(0); // 즉시 OFF 상태로 전환
         }
-        // 상태 변경 시 토스트 메시지 표시
-        showToastMessage(getContext());
+        // 상태 변경 시 커스텀 토스트 메시지를 표시하지 않음
+        // showCustomToast(getContext());
     }
 }
