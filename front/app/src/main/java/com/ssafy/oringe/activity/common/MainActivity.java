@@ -27,12 +27,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.ssafy.oringe.R;
 import com.ssafy.oringe.activity.challenge.ChallengeDetailActivity;
+import com.ssafy.oringe.activity.challenge.ChallengeDetailFragment;
 import com.ssafy.oringe.activity.challenge.ChallengeListActivity;
 import com.ssafy.oringe.activity.record.RecordCreateActivity;
 import com.ssafy.oringe.api.TrustOkHttpClientUtil;
@@ -263,18 +265,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             getSuccessToday(memberId, challenge.getChallengeId(), orgView, successView);
-            challengeView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, ChallengeDetailActivity.class);
-                    intent.putExtra("challengeId", challenge.getChallengeId());
-                    intent.putExtra("challengeTitle", challenge.getChallengeTitle());
-                    intent.putExtra("challengeMemo", challenge.getChallengeMemo());
-                    intent.putExtra("challengeStart", challenge.getChallengeStart());
-                    intent.putExtra("challengeEnd", challenge.getChallengeEnd());
-                    intent.putExtra("challengeStatus", 2);
-                    startActivity(intent);
-                }
+
+            challengeView.setOnClickListener(v -> {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                ChallengeDetailFragment challengeDetailFragment = ChallengeDetailFragment.newInstance(
+                        challenge.getChallengeId(),
+                        challenge.getChallengeTitle(),
+                        challenge.getChallengeMemo(),
+                        challenge.getChallengeStart(),
+                        challenge.getChallengeEnd(),
+                        2
+                );
+                challengeDetailFragment.show(fragmentManager, "challengeDetail");
             });
 
             challengeListContainer.addView(challengeView);

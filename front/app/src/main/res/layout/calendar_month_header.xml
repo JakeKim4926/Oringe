@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:textSize="24sp"
-        android:textColor="@color/oringe_main"
+        android:textColor="@color/black"
         android:textStyle="bold"/>
 
     <LinearLayout
