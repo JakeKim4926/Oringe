@@ -1,22 +1,18 @@
 package com.ssafy.oringe.activity.common;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Gravity;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,30 +29,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.ssafy.oringe.R;
-import com.ssafy.oringe.activity.challenge.ChallengeDetailActivity;
 import com.ssafy.oringe.activity.challenge.ChallengeDetailFragment;
-import com.ssafy.oringe.activity.challenge.ChallengeListActivity;
-import com.ssafy.oringe.activity.record.RecordCreateActivity;
 import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.Challenge;
 import com.ssafy.oringe.api.challenge.ChallengeService;
-import com.ssafy.oringe.api.challengeDetail.ChallengeDetailService;
-import com.ssafy.oringe.api.challengeDetail.dto.ChallengeDetailIdResponse;
 import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
 import com.ssafy.oringe.api.record.RecordService;
 import com.ssafy.oringe.ui.component.common.FooterBarView;
-import com.ssafy.oringe.ui.component.common.MenuView;
-import com.ssafy.oringe.ui.component.common.TitleView;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;

@@ -67,7 +67,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:fontFamily="@font/suite"
-            android:text="2024-05-20"
             android:textSize="13sp" />
     </LinearLayout>
 
