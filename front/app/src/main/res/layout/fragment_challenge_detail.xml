@@ -9,6 +9,12 @@
     android:elevation="24dp"
     android:background="@drawable/background_white"
     tools:context=".activity.challenge.ChallengeDetailFragment">
+    <View
+        android:layout_width="32dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/rounded_bar" />
 
     <FrameLayout
         android:layout_width="match_parent"
