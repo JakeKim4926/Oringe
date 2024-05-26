@@ -1,6 +1,7 @@
 package com.ssafy.oringe.activity.challenge;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -116,6 +117,7 @@ public class ChallengeListActivity extends AppCompatActivity {
         setActiveActivity(this, ChallengeListActivity.class.getSimpleName());
         FooterBarView footerBarView = findViewById(R.id.footerBar);
         footerBarView.updateIcons(this);
+
         if (memberId != null) {
             getChallengeList(currentStatus);
         }
@@ -229,12 +231,12 @@ public class ChallengeListActivity extends AppCompatActivity {
                 challengeView.setOnClickListener(v -> {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     ChallengeDetailFragment challengeDetailFragment = ChallengeDetailFragment.newInstance(
-                            challenge.getChallengeId(),
-                            challenge.getChallengeTitle(),
-                            challenge.getChallengeMemo(),
-                            challenge.getChallengeStart(),
-                            challenge.getChallengeEnd(),
-                            currentStatus
+                        challenge.getChallengeId(),
+                        challenge.getChallengeTitle(),
+                        challenge.getChallengeMemo(),
+                        challenge.getChallengeStart(),
+                        challenge.getChallengeEnd(),
+                        currentStatus
                     );
                     challengeDetailFragment.show(fragmentManager, "challengeDetail");
                 });
