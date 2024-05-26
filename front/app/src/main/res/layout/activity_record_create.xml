@@ -1,85 +1,107 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:background="@color/background_color"
+    tools:context=".activity.record.RecordCreateActivity">
+
+    <!-- Header -->
     <LinearLayout
-        android:id="@+id/main"
+        android:id="@+id/header_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/background_color"
-        tools:context=".activity.record.RecordCallActivity">
-        <!--헤더-->
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
         <com.ssafy.oringe.ui.component.common.BackView
             android:id="@+id/challengeCreate_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:headerText="챌린지 인증하기" />
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            tools:context=".MainActivity">
 
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center_horizontal"-->
-<!--                android:gravity="center"-->
-<!--                android:padding="20dp"-->
-<!--                android:text="챌린지 인증하기"-->
-<!--                android:textSize="20sp"-->
-<!--                android:textStyle="bold" />-->
-
-            <RelativeLayout
+            <Spinner
+                android:id="@+id/spinner"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".MainActivity">
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                style="@style/CommonMarginLayout"
+                android:background="@drawable/background_spinner_option" />
+        </RelativeLayout>
+    </LinearLayout>
 
-                <Spinner
-                    android:id="@+id/spinner"
-                    android:layout_width="250dp"
+    <!-- Footer -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:id="@+id/footer_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" >
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@drawable/button_color_orange_huge"
+            android:text="완료"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            style="@style/CommonMarginLayout"
+            />
+
+    </LinearLayout>
+
+
+    <!-- ScrollView for the content in between -->
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:background="#F2F2F2"
+        app:layout_constraintTop_toBottomOf="@id/header_layout"
+        app:layout_constraintBottom_toTopOf="@id/footer_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+                <Button
+                    android:id="@+id/button_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/background_spinner_option" />
-            </RelativeLayout>
+                    android:background="@drawable/button_color_light_huge"
+                    style="@style/CommonMarginLayout"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:padding="16dp"
+                    android:text="제목 입력"
+                    android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/no_content"
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                android:gravity="center"
-                android:padding="20dp"
-                android:text=""
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:id="@+id/buttonContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/button_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:background="@drawable/button_color_light_huge"
-                android:padding="16dp"
-                android:text="제목 입력"
-                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/button_content"
                 android:layout_width="match_parent"
                 android:layout_height="193dp"
-                android:layout_margin="20dp"
+                style="@style/CommonMarginLayout"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:padding="16dp"
                 android:text="본문 입력"
@@ -89,81 +111,77 @@
                 android:id="@+id/button_image"
                 android:layout_width="match_parent"
                 android:layout_height="193dp"
-                android:layout_margin="20dp"
+                style="@style/CommonMarginLayout"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:padding="16dp"
                 android:text="이미지 입력"
+                android:drawableTop="@drawable/camera"
                 android:textSize="18sp" />
 
             <Button
                 android:id="@+id/button_audio"
                 android:layout_width="match_parent"
                 android:layout_height="193dp"
-                android:layout_margin="20dp"
+                style="@style/CommonMarginLayout"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:padding="16dp"
                 android:text="오디오 입력"
+                android:drawableTop="@drawable/audio"
                 android:textSize="18sp" />
 
             <Button
                 android:id="@+id/button_video"
                 android:layout_width="match_parent"
                 android:layout_height="193dp"
-                android:layout_margin="20dp"
+                style="@style/CommonMarginLayout"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:padding="16dp"
                 android:text="비디오 입력"
+                android:drawableTop="@drawable/video"
                 android:textSize="18sp" />
 
             <VideoView
                 android:id="@+id/video_view"
                 android:layout_width="match_parent"
                 android:layout_height="193dp"
-                android:layout_margin="20dp" />
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                style="@style/CommonMarginLayout"
+                />
 
             <Button
                 android:id="@+id/button_stt"
                 android:layout_width="match_parent"
                 android:layout_height="193dp"
-                android:layout_margin="20dp"
+                style="@style/CommonMarginLayout"
                 android:background="@drawable/button_color_light_huge"
                 android:padding="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="Speech to text (.wav)"
+                android:drawableTop="@drawable/stt"
                 android:textSize="18sp" />
 
             <Button
                 android:id="@+id/button_tts"
                 android:layout_width="match_parent"
                 android:layout_height="193dp"
-                android:layout_margin="20dp"
+                style="@style/CommonMarginLayout"
                 android:background="@drawable/button_color_light_huge"
                 android:padding="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="Text to speech"
+                android:drawableTop="@drawable/tts"
                 android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/button_ok"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
-                android:layout_margin="20dp"
-                android:background="@drawable/button_color_orange_huge"
-                android:padding="16dp"
-                android:text="완료"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/record_create"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                </LinearLayout>
-            </ScrollView>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

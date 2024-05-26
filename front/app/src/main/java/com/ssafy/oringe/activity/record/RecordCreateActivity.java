@@ -206,7 +206,10 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Challenge selectedChallenge = (Challenge) parent.getItemAtPosition(position);
-        if (selectedChallenge.getChallengeId() != null && selectedChallenge.getChallengeId() != -1) {
+        if (selectedChallenge.getChallengeTitle().equals("선택하세요")) {
+            // Clear the button container
+            buttonContainer.removeAllViews();
+        } else if (selectedChallenge.getChallengeId() != null && selectedChallenge.getChallengeId() != -1) {
             challengeId = selectedChallenge.getChallengeId();
             Toast.makeText(this, "현재 챌린지 : " + selectedChallenge.getChallengeTitle(), Toast.LENGTH_LONG).show();
             getChallengeDetailIdAndOrderList(challengeId);
