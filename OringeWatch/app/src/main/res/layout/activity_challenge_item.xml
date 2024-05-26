@@ -34,7 +34,7 @@
         android:id="@+id/challengeDay"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="9sp"
+        android:textSize="7sp"
         android:textColor="@android:color/holo_green_dark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/challengeTitle"

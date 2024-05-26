@@ -1,5 +1,8 @@
 package com.ssafy.oringewatch.presentation.activity;
 
+import static com.ssafy.oringewatch.presentation.common.Util.API_URL;
+import static com.ssafy.oringewatch.presentation.common.Util.memberId;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -25,39 +28,40 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ssafy.oringewatch.R;
 import com.ssafy.oringewatch.presentation.activity.alarm.AlarmReceiver;
+import com.ssafy.oringewatch.presentation.activity.challenge.ChallengeAdapter;
 import com.ssafy.oringewatch.presentation.activity.common.AlarmActivity;
 import com.ssafy.oringewatch.presentation.activity.challenge.ChallengeActivity;
+import com.ssafy.oringewatch.presentation.api.TrustOkHttpClientUtil;
+import com.ssafy.oringewatch.presentation.api.challenge.Challenge;
+import com.ssafy.oringewatch.presentation.api.challenge.ChallengeService;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends ComponentActivity {
 
     private GestureDetector gestureDetector;
     private boolean isSwipeHandled = false;
+    private List<Challenge> challenges;
     private static final int REQUEST_CODE_POST_NOTIFICATIONS = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
 
-
-
         setTheme(android.R.style.Theme_DeviceDefault);
         setContentView(R.layout.activity_main);
 
-        TextView speechBubble = findViewById(R.id.speechBubble);
-        String colorText = "2개";
-        String text = "오늘의 챌린지가 " +  colorText + " 남아있어요!";
-        SpannableString spannableString = new SpannableString(text);
-
-        // "2개" 부분에 다른 색상을 적용
-        int start = text.indexOf(colorText);
-        int end = start + colorText.length();
-        spannableString.setSpan(new ForegroundColorSpan(Color.rgb(255,107,0)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        speechBubble.setText(spannableString);
-
-
+        getChallengeList(memberId);
 //        setAlarm();
         FirebaseApp.initializeApp(MainActivity.this);
 
@@ -69,8 +73,8 @@ public class MainActivity extends ComponentActivity {
                         if (!task.isSuccessful()) {
                             Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                         }
-                        // Log or toast the message
-                        Toast.makeText(MainActivity.this, "알람!aaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
+//                        // Log or toast the message
+//                        Toast.makeText(MainActivity.this, "알람!aaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
                         // 진동 발생
                         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                         if (vibrator != null) {
@@ -104,7 +108,7 @@ public class MainActivity extends ComponentActivity {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if(isSwipeHandled)
+            if (isSwipeHandled)
                 return false;
 
             float diffX = e2.getX() - e1.getX();
@@ -115,7 +119,7 @@ public class MainActivity extends ComponentActivity {
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     return true;
-                } else if(diffX < 0){
+                } else if (diffX < 0) {
                     // Right swipe
                     Intent intent = new Intent(MainActivity.this, AlarmActivity.class);
                     startActivity(intent);
@@ -154,5 +158,48 @@ public class MainActivity extends ComponentActivity {
             Log.e("Firebase Init", "Firebase is not initialized.", e);
             return false;
         }
+    }
+
+    public void getChallengeList(Long memberId) {
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(memberId, 2);
+        call.enqueue(new Callback<List<Challenge>>() {
+            @Override
+            public void onResponse(Call<List<Challenge>> call, Response<List<Challenge>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    challenges = new ArrayList<>();
+                    challenges.addAll(response.body());
+
+                    setChallengeText(challenges.size());
+                } else {
+                    Toast.makeText(MainActivity.this, "Failed to fetch challenges Main", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Challenge>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "An error occurred during network communication Main", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void setChallengeText(int value) {
+        TextView speechBubble = findViewById(R.id.speechBubble);
+        String colorText = String.valueOf(value) + "개";
+        String text = "오늘의 챌린지가 " + colorText + " 남아있어요!";
+        SpannableString spannableString = new SpannableString(text);
+
+        // "2개" 부분에 다른 색상을 적용
+        int start = text.indexOf(colorText);
+        int end = start + colorText.length();
+        spannableString.setSpan(new ForegroundColorSpan(Color.rgb(255, 107, 0)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        speechBubble.setText(spannableString);
     }
 }

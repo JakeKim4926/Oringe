@@ -1,9 +1,14 @@
 package com.ssafy.oringewatch.presentation.activity.challenge;
 
+import static com.ssafy.oringewatch.presentation.common.Util.API_URL;
+import static com.ssafy.oringewatch.presentation.common.Util.memberId;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,10 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ssafy.oringewatch.R;
 import com.ssafy.oringewatch.presentation.activity.MainActivity;
+import com.ssafy.oringewatch.presentation.api.TrustOkHttpClientUtil;
 import com.ssafy.oringewatch.presentation.api.challenge.Challenge;
+import com.ssafy.oringewatch.presentation.api.challenge.ChallengeService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChallengeActivity extends ComponentActivity {
 
@@ -28,24 +42,10 @@ public class ChallengeActivity extends ComponentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge);
 
-
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Initialize your data here
-        challenges = new ArrayList<>();
-        challenges.add(Challenge.builder()
-                        .challengeTitle("자존감 챌린지")
-                        .challengeStart("2024-04-25")
-                        .challengeEnd("2024-06-30")
-                        .build());
-        challenges.add(Challenge.builder()
-                        .challengeTitle("플로깅 챌린지")
-                        .challengeStart("2024-05-23")
-                        .challengeEnd("2024-08-30")
-                        .build());
-        adapter = new ChallengeAdapter(challenges);
-        recyclerView.setAdapter(adapter);
+        getChallengeList(memberId);
 
         gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
     }
@@ -76,5 +76,35 @@ public class ChallengeActivity extends ComponentActivity {
             }
             return false;
         }
+    }
+
+    public void getChallengeList(Long memberId) {
+        OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(memberId, 2);
+        call.enqueue(new Callback<List<Challenge>>() {
+            @Override
+            public void onResponse(Call<List<Challenge>> call, Response<List<Challenge>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    challenges = new ArrayList<>();
+                    challenges.addAll(response.body());
+
+                    adapter = new ChallengeAdapter(challenges);
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    Toast.makeText(ChallengeActivity.this, "Failed to fetch challenges", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Challenge>> call, Throwable t) {
+                Toast.makeText(ChallengeActivity.this, "An error occurred during network communication", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
