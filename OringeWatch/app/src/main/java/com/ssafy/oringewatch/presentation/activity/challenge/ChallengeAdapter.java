@@ -3,6 +3,7 @@ package com.ssafy.oringewatch.presentation.activity.challenge;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,20 +18,25 @@ import java.util.List;
 
 public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ViewHolder> {
     private List<Challenge> challenges;
+    private OnItemClickListener listener;
 
-    public ChallengeAdapter(List<Challenge> challenges) {
-        this.challenges = challenges;
+    public interface OnItemClickListener {
+        void onItemClick(Challenge challenge);
     }
-
+    public ChallengeAdapter(List<Challenge> challenges, OnItemClickListener listener) {
+        this.challenges = challenges;
+        this.listener = listener;
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_challenge_item, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, listener);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Challenge challenge = challenges.get(position);
+        holder.itemView.setTag(challenge);
         holder.title.setText(challenge.getChallengeTitle());
 
         // 날짜 계산을 위한 formatter 설정
@@ -65,12 +71,18 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title, dDay, days, date;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, OnItemClickListener listener) {
             super(itemView);
             title = itemView.findViewById(R.id.challengeTitle);
             dDay = itemView.findViewById(R.id.challengeDDay);
             days = itemView.findViewById(R.id.challengeDay);
             date = itemView.findViewById(R.id.challengeDate);
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    listener.onItemClick((Challenge) itemView.getTag());
+                }
+            });
         }
     }
 }

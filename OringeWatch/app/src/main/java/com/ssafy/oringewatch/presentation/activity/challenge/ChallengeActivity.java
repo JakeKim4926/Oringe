@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ssafy.oringewatch.R;
 import com.ssafy.oringewatch.presentation.activity.MainActivity;
+import com.ssafy.oringewatch.presentation.activity.record.RecordActivity;
 import com.ssafy.oringewatch.presentation.api.TrustOkHttpClientUtil;
 import com.ssafy.oringewatch.presentation.api.challenge.Challenge;
 import com.ssafy.oringewatch.presentation.api.challenge.ChallengeService;
@@ -46,8 +47,6 @@ public class ChallengeActivity extends ComponentActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getChallengeList(memberId);
-
-        gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
     }
 
     @Override
@@ -78,6 +77,7 @@ public class ChallengeActivity extends ComponentActivity {
         }
     }
 
+
     public void getChallengeList(Long memberId) {
         OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
@@ -85,6 +85,7 @@ public class ChallengeActivity extends ComponentActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
+
 
         Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(memberId, 2);
         call.enqueue(new Callback<List<Challenge>>() {
@@ -94,7 +95,7 @@ public class ChallengeActivity extends ComponentActivity {
                     challenges = new ArrayList<>();
                     challenges.addAll(response.body());
 
-                    adapter = new ChallengeAdapter(challenges);
+                    adapter = new ChallengeAdapter(challenges, ChallengeActivity.this::onChallengeClicked);
                     recyclerView.setAdapter(adapter);
                 } else {
                     Toast.makeText(ChallengeActivity.this, "Failed to fetch challenges", Toast.LENGTH_SHORT).show();
@@ -106,5 +107,13 @@ public class ChallengeActivity extends ComponentActivity {
                 Toast.makeText(ChallengeActivity.this, "An error occurred during network communication", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
+
+    private void onChallengeClicked(Challenge challenge) {
+        Intent intent = new Intent(ChallengeActivity.this, RecordActivity.class);
+        intent.putExtra("challengeId", challenge.getChallengeId());
+        startActivity(intent);
+    }
+
 }
