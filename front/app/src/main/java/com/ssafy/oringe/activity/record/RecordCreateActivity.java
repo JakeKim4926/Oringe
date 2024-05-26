@@ -238,9 +238,10 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                 }
                 buttonToAdd.setVisibility(View.VISIBLE);
                 buttonContainer.addView(buttonToAdd);
+                // 로그 추가
+                Log.d("RecordCreateActivity", "Button added: " + buttonToAdd.getId());
             }
         }
-
     }
 
     public void sendData() {
