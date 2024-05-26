@@ -1,6 +1,7 @@
 package com.ssafy.oringe.activity.record;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_AUDIO;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_CONTENT;
@@ -25,11 +26,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -104,13 +108,13 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
     private File videoFile;
     private File STTFile;
 
-    Button buttonTitle;
-    Button buttonContent;
+    EditText buttonTitle;
+    EditText buttonContent;
     Button buttonImage;
     Button buttonAudio;
     Button buttonVideo;
     Button buttonSTT;
-    Button buttonTTS;
+    EditText buttonTTS;
     Button buttonOK;
     VideoView videoView;
 
@@ -164,19 +168,31 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         spinner = findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
 
-        buttonTitle.setOnClickListener(new View.OnClickListener() {
+        buttonTitle.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            public void onClick(View v) {
-                showEditTitleDialog(CHALLENGE_DETAIL_TITLE);
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String inputText = s.toString();
+                if (inputText.length() > 100) {
+                    Toast.makeText(RecordCreateActivity.this, "제목은 100자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                recordCreateReqDtoSave.setRecordTitle(inputText);
             }
         });
 
-        buttonContent.setOnClickListener(new View.OnClickListener() {
+        buttonContent.addTextChangedListener(new SimpleTextWatcher() {
             @Override
-            public void onClick(View v) {
-                showEditTitleDialog(CHALLENGE_DETAIL_CONTENT);
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String inputText = s.toString();
+                if (inputText.length() > 1000) {
+                    Toast.makeText(RecordCreateActivity.this, "본문은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                recordCreateReqDtoSave.setRecordContent(inputText);
             }
         });
+
+
 
         buttonImage.setOnClickListener(v -> openImageSelector());
 
@@ -186,7 +202,28 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
         buttonSTT.setOnClickListener(v -> openSTTSelector());
 
-        buttonTTS.setOnClickListener(v -> showEditTitleDialog(CHALLENGE_DETAIL_TTS));
+        buttonTTS.addTextChangedListener(new SimpleTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String inputText = s.toString();
+
+                    if (inputText.length() > 1000) {
+                        Toast.makeText(RecordCreateActivity.this, "해당 내용은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Pattern pattern = Pattern.compile("^[가-힣0-9,.'\"!?\\s]+$");
+                    if (!pattern.matcher(inputText).matches()) {
+                        Toast.makeText(RecordCreateActivity.this, "한글과 숫자만 입력 가능합니다", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    recordCreateTTSDto.setRecordTTS(inputText);
+//                    updateButtonTitle(inputText, CHALLENGE_DETAIL_TTS);
+
+
+            }
+        });
 
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,6 +238,13 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         memberId = savedLoginId;
 
         getChallengeList(savedLoginId);
+    }
+    private abstract class SimpleTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void afterTextChanged(Editable s) {}
     }
 
     @Override
@@ -222,13 +266,14 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
 
         for (int value : challengeDetailOrder) {
             Button buttonToAdd = null;
-            if (value == CHALLENGE_DETAIL_TITLE.getOrderCode())      buttonToAdd = buttonTitle;
-            if (value == CHALLENGE_DETAIL_CONTENT.getOrderCode())    buttonToAdd = buttonContent;
+            EditText editToAdd = null;
+            if (value == CHALLENGE_DETAIL_TITLE.getOrderCode())      editToAdd = buttonTitle;
+            if (value == CHALLENGE_DETAIL_CONTENT.getOrderCode())    editToAdd = buttonContent;
             if (value == CHALLENGE_DETAIL_IMAGE.getOrderCode())      buttonToAdd = buttonImage;
             if (value == CHALLENGE_DETAIL_AUDIO.getOrderCode())      buttonToAdd = buttonAudio;
             if (value == CHALLENGE_DETAIL_VIDEO.getOrderCode())      buttonToAdd = buttonVideo;
             if (value == CHALLENGE_DETAIL_STT.getOrderCode())        buttonToAdd = buttonSTT;
-            if (value == CHALLENGE_DETAIL_TTS.getOrderCode())        buttonToAdd = buttonTTS;
+            if (value == CHALLENGE_DETAIL_TTS.getOrderCode())        editToAdd = buttonTTS;
 
             // Remove the button from its parent before adding it to the new container
             if (buttonToAdd != null) {
@@ -238,8 +283,13 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                 }
                 buttonToAdd.setVisibility(View.VISIBLE);
                 buttonContainer.addView(buttonToAdd);
-                // 로그 추가
-                Log.d("RecordCreateActivity", "Button added: " + buttonToAdd.getId());
+            } else if (editToAdd != null) {
+                ViewGroup parent = (ViewGroup) editToAdd.getParent();
+                if (parent != null) {
+                    parent.removeView(editToAdd);
+                }
+                editToAdd.setVisibility(View.VISIBLE);
+                buttonContainer.addView(editToAdd);
             }
         }
     }
@@ -364,77 +414,86 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
         });
     }
 
-    private void showEditTitleDialog(ChallengeDetailOrders challengeDetailOrders) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//    private void showEditTitleDialog(ChallengeDetailOrders challengeDetailOrders) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//
+//        // Set up the input
+//        final EditText input = new EditText(this);
+//        input.setInputType(InputType.TYPE_CLASS_TEXT);
+//        builder.setView(input);
+//
+//        // Set up the buttons
+//        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                String inputText = input.getText().toString();
+//
+//                if (challengeDetailOrders == CHALLENGE_DETAIL_TITLE) {
+//                    if (inputText.length() > 100) {
+//                        Toast.makeText(RecordCreateActivity.this, "제목은 100자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//
+//                    recordCreateReqDtoSave.setRecordTitle(inputText);
+//                } else if (challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
+//                    if ( inputText.length() > 1000 ) {
+//                        Toast.makeText(RecordCreateActivity.this, "본문은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//
+//                    recordCreateReqDtoSave.setRecordContent(inputText);
+//                } else if (challengeDetailOrders == CHALLENGE_DETAIL_TTS) {
+//                    if (inputText.length() > 1000) {
+//                        Toast.makeText(RecordCreateActivity.this, "해당 내용은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//
+//                    Pattern pattern = Pattern.compile("^[가-힣0-9,.'\"!?\\s]+$");
+//                    if (!pattern.matcher(inputText).matches()) {
+//                        Toast.makeText(RecordCreateActivity.this, "한글과 숫자만 입력 가능합니다", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//
+//                    recordCreateTTSDto.setRecordTTS(inputText);
+//                }
+//
+//                updateButtonTitle(inputText, challengeDetailOrders);
+//            }
+//        });
+//        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+//
+//        builder.show();
+//    }
 
-        // Set up the input
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String inputText = input.getText().toString();
-
-                if (challengeDetailOrders == CHALLENGE_DETAIL_TITLE) {
-                    if (inputText.length() > 100) {
-                        Toast.makeText(RecordCreateActivity.this, "제목은 100자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    recordCreateReqDtoSave.setRecordTitle(inputText);
-                } else if (challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
-                    if ( inputText.length() > 1000 ) {
-                        Toast.makeText(RecordCreateActivity.this, "본문은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    recordCreateReqDtoSave.setRecordContent(inputText);
-                } else if (challengeDetailOrders == CHALLENGE_DETAIL_TTS) {
-                    if (inputText.length() > 1000) {
-                        Toast.makeText(RecordCreateActivity.this, "해당 내용은 1000자 이하만 가능합니다", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    Pattern pattern = Pattern.compile("^[가-힣0-9,.'\"!?\\s]+$");
-                    if (!pattern.matcher(inputText).matches()) {
-                        Toast.makeText(RecordCreateActivity.this, "한글과 숫자만 입력 가능합니다", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    recordCreateTTSDto.setRecordTTS(inputText);
-                }
-
-                updateButtonTitle(inputText, challengeDetailOrders);
-            }
-        });
-        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-    }
-
-    private void updateButtonTitle(String text, ChallengeDetailOrders challengeDetailOrders) {
-        Button buttonTextTemp = null;
-        if (challengeDetailOrders == CHALLENGE_DETAIL_TITLE) {
-            buttonTextTemp = findViewById(R.id.button_title);
-        } else if (challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
-            buttonTextTemp = findViewById(R.id.button_content);
-        } else if (challengeDetailOrders == CHALLENGE_DETAIL_TTS) {
-            buttonTextTemp = findViewById(R.id.button_tts);
-        }
-        buttonTextTemp.setText(text);
-        // Adjust button width based on the text length
-        ViewGroup.LayoutParams params = buttonTextTemp.getLayoutParams();
-        params.width = ViewGroup.LayoutParams.WRAP_CONTENT; // Allow the button to size itself
-        buttonTextTemp.setLayoutParams(params);
-    }
+//    private void updateButtonTitle(String text, ChallengeDetailOrders challengeDetailOrders) {
+//        if (challengeDetailOrders == CHALLENGE_DETAIL_TITLE) {
+//            buttonTitle.setText(text);
+//        } else if (challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
+//            buttonContent.setText(text);
+//        } else if (challengeDetailOrders == CHALLENGE_DETAIL_TTS) {
+//            buttonTTS.setText(text);
+//        }
+//    }
+//    private void updateButtonTitle(String text, ChallengeDetailOrders challengeDetailOrders) {
+//        Button buttonTextTemp = null;
+//        if (challengeDetailOrders == CHALLENGE_DETAIL_TITLE) {
+//            buttonTextTemp = findViewById(R.id.button_title);
+//        } else if (challengeDetailOrders == CHALLENGE_DETAIL_CONTENT) {
+//            buttonTextTemp = findViewById(R.id.button_content);
+//        } else if (challengeDetailOrders == CHALLENGE_DETAIL_TTS) {
+//            buttonTextTemp = findViewById(R.id.button_tts);
+//        }
+//        buttonTextTemp.setText(text);
+//        // Adjust button width based on the text length
+//        ViewGroup.LayoutParams params = buttonTextTemp.getLayoutParams();
+//        params.width = ViewGroup.LayoutParams.WRAP_CONTENT; // Allow the button to size itself
+//        buttonTextTemp.setLayoutParams(params);
+//    }
 
     private static final int PICK_IMAGE_REQUEST = 1;  // Request code for picking an image
 

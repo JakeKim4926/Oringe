@@ -82,7 +82,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <Button
+            <EditText
                 android:id="@+id/button_title"
                 style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
@@ -91,13 +91,14 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:padding="16dp"
-                android:text="제목을 입력해주세요!"
+                android:hint="제목을 입력해주세요!"
+                android:gravity="center"
                 android:stateListAnimator="@null"
                 android:elevation="0dp"
                 android:textColor="#999999"
                 android:textSize="16sp" />
 
-            <Button
+            <EditText
                 android:id="@+id/button_content"
                 style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
@@ -106,9 +107,10 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:padding="16dp"
-                android:text="본문을 입력해주세요!"
+                android:hint="본문을 입력해주세요!"
                 android:stateListAnimator="@null"
                 android:elevation="0dp"
+                android:gravity="center"
                 android:textColor="#999999"
                 android:textSize="16sp" />
 
@@ -191,7 +193,7 @@
                 android:textColor="#999999"
                 android:textSize="16sp" />
 
-            <Button
+            <EditText
                 android:id="@+id/button_tts"
                 style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
@@ -204,7 +206,8 @@
                 android:drawableTop="@drawable/tts"
                 android:padding="60dp"
                 android:drawablePadding="0dp"
-                android:text="텍스트를 입력해주세요!"
+                android:hint="텍스트를 입력해주세요!"
+                android:gravity="center"
                 android:textColor="#999999"
                 android:textSize="16sp" />
 
