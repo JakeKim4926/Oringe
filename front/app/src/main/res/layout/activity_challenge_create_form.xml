@@ -60,6 +60,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
+                        android:fontFamily="@font/suite"
                         android:text="*"
                         android:textColor="@color/oringe_main" />
 
@@ -81,6 +82,7 @@
                             android:id="@+id/challengeCreate_title_setting"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/suite"
                             android:text="* 제목을 입력해주세요."
                             android:textColor="@color/oringe_sub"
                             android:textSize="14sp"
@@ -100,6 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="7dp"
+                        android:fontFamily="@font/suite"
                         app:text="기간"
                         app:textColor="@color/gray_600"
                         app:textSize="4.5sp" />
@@ -108,6 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
+                        android:fontFamily="@font/suite"
                         android:text="*"
                         android:textColor="@color/oringe_main" />
 
@@ -135,6 +139,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
+                                android:fontFamily="@font/suite"
                                 android:text="~"
                                 android:textAlignment="center"
                                 android:textStyle="bold" />
@@ -150,6 +155,7 @@
                             android:id="@+id/challengeCreate_during_setting"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/suite"
                             android:text="* 기간을 입력해주세요."
                             android:textColor="@color/oringe_sub"
                             android:textSize="14sp"
@@ -183,6 +189,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/suite"
                             android:text="*"
                             android:textColor="@color/oringe_main" />
                     </LinearLayout>
@@ -288,6 +295,7 @@
                         android:id="@+id/challengeCreate_day_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/suite"
                         android:text="* 요일을 설정해주세요."
                         android:textColor="@color/oringe_sub"
                         android:textSize="14sp"
@@ -318,15 +326,34 @@
                         android:backgroundTint="@color/oringe_main"
                         android:checked="false" />
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/challnegeCreate_input_alarmTime"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/alarm_add"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/challnegeCreate_input_formatTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/suite"
                         android:padding="5dp"
-                        android:text="시간설정"
                         android:textColor="@color/oringe_main"
-                        android:textStyle="bold|italic"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/challengeCreate_time_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:fontFamily="@font/suite"
+                        android:text="* 시간을 설정해주세요."
+                        android:textColor="@color/oringe_sub"
+                        android:textSize="14sp"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -388,6 +415,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/suite"
                             android:text="*"
                             android:textColor="@color/oringe_main" />
 
@@ -396,6 +424,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
+                            android:fontFamily="@font/suite"
                             android:text="* 템플릿을 설정해주세요."
                             android:textColor="@color/oringe_sub"
                             android:textSize="14sp"
