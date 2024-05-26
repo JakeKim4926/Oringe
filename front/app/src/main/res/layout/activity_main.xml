@@ -7,7 +7,11 @@
     android:background="@color/background_color"
     android:gravity="center_horizontal"
     tools:context=".activity.common.MainActivity">
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footerBar"
+        android:orientation="vertical">
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -33,7 +37,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:layout_marginVertical="25dp">
 
                 <ImageView
                     android:id="@+id/image_main_org"
@@ -98,7 +103,16 @@
 
         </LinearLayout>
     </ScrollView>
+        <com.ssafy.oringe.ui.component.common.MenuView
+            android:id="@+id/menu_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            app:src="@drawable/plus_btn" />
 
+    </FrameLayout>
     <com.ssafy.oringe.ui.component.common.FooterBarView
         android:id="@+id/footerBar"
         android:layout_width="match_parent"

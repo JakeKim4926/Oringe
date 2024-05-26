@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
             View challengeView = inflater.inflate(R.layout.sample_main_list_view, challengeListContainer, false);
 
             titleView = challengeView.findViewById(R.id.main_list_title);
-            titleView.setText("오늘의 챌린지가 없어요 \n 챌린지를 생성해 보세요!");
+            titleView.setText("오늘의 챌린지가 없어요 \n챌린지를 생성해 보세요!");
             challengeListContainer.addView(challengeView);
             return;
         }
