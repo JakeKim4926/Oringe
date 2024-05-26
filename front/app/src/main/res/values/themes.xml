@@ -9,7 +9,7 @@
     <style name="Theme.Oringe" parent="Base.Theme.Oringe" />
 
     <style name="CommonMarginLayout">
-        <item name="android:layout_marginLeft">30dp</item>
-        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:layout_marginLeft">28dp</item>
+        <item name="android:layout_marginRight">28dp</item>
     </style>
 </resources>
