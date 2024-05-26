@@ -45,6 +45,10 @@ public class ChallengeActivity extends ComponentActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Add item decoration
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.item_spacing);
+        recyclerView.addItemDecoration(new SpacingItemDecoration(spacingInPixels));
+
         gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
 
         getChallengeList(memberId);

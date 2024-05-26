@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/toast_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:src="@drawable/oringe_charecter" />
 
     <TextView
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:textColor="@android:color/black"
-        android:textSize="16sp"
+        android:textSize="10sp"
         android:text="Toast Message" />
 
 </LinearLayout>
