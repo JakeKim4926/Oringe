@@ -60,6 +60,11 @@
             android:name=".presentation.activity.common.AlarmActivity"
             android:exported="false" />
 
+        <!-- RecordActivity -->
+        <activity
+            android:name=".presentation.activity.record.RecordActivity"
+            android:exported="false" />
+
         <!-- Firebase -->
         <!-- Ensure that the service is enabled on devices running Android O or later -->
         <service

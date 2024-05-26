@@ -4,4 +4,24 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="white">#FFFFFF</color> <!-- Ensure you have a white color for the splash screen background -->
+    <color name="black">#FF000000</color>
+    <color name="background_color">#FFFFFF</color>
+    <color name="background_color_deep">#D8D8D8</color>
+    <color name="light_blue_400">#FF29B6F6</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="gray_200">#D8D8D8</color>
+    <color name="gray_400">#FFBDBDBD</color>
+    <color name="gray_600">#FF757575</color>
+    <color name="oringe_main">#FF6B00</color>
+    <color name="semi_oringe">#FFAC70</color>
+    <color name="mid_oringe">#FFEFE4</color>
+    <color name="light_oringe">#fff8f3</color>
+    <color name="oringe_text">#FF9344</color>
+    <color name="oringe_sub">#49CC4E</color>
+    <color name="pink">#FFB5B5</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color>
 </resources>

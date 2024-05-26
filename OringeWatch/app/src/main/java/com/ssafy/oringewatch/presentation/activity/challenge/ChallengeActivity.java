@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -46,12 +45,16 @@ public class ChallengeActivity extends ComponentActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
+
         getChallengeList(memberId);
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        gestureDetector.onTouchEvent(event);
+        if (gestureDetector != null && gestureDetector.onTouchEvent(event)) {
+            return true;
+        }
         return super.dispatchTouchEvent(event);
     }
 
@@ -61,7 +64,6 @@ public class ChallengeActivity extends ComponentActivity {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
             float diffX = e2.getX() - e1.getX();
             if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                 if (diffX < 0) {
@@ -70,13 +72,11 @@ public class ChallengeActivity extends ComponentActivity {
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     return true;
-                } else
-                    return false;
+                }
             }
             return false;
         }
     }
-
 
     public void getChallengeList(Long memberId) {
         OkHttpClient client = TrustOkHttpClientUtil.getUnsafeOkHttpClient();
@@ -85,7 +85,6 @@ public class ChallengeActivity extends ComponentActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
-
 
         Call<List<Challenge>> call = retrofit.create(ChallengeService.class).getData(memberId, 2);
         call.enqueue(new Callback<List<Challenge>>() {
@@ -107,7 +106,6 @@ public class ChallengeActivity extends ComponentActivity {
                 Toast.makeText(ChallengeActivity.this, "An error occurred during network communication", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private void onChallengeClicked(Challenge challenge) {
@@ -115,5 +113,4 @@ public class ChallengeActivity extends ComponentActivity {
         intent.putExtra("challengeId", challenge.getChallengeId());
         startActivity(intent);
     }
-
 }
