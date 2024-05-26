@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,23 +19,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ssafy.oringewatch.R;
 import com.ssafy.oringewatch.presentation.activity.alarm.AlarmReceiver;
-import com.ssafy.oringewatch.presentation.activity.alarm.NotifyWorker;
 import com.ssafy.oringewatch.presentation.activity.common.AlarmActivity;
-import com.ssafy.oringewatch.presentation.activity.common.LogoActivity;
+import com.ssafy.oringewatch.presentation.activity.challenge.ChallengeActivity;
 
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends ComponentActivity {
 
@@ -119,7 +111,7 @@ public class MainActivity extends ComponentActivity {
             if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                 if (diffX > 0) {
                     // Right swipe
-                    Intent intent = new Intent(MainActivity.this, LogoActivity.class);
+                    Intent intent = new Intent(MainActivity.this, ChallengeActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     return true;

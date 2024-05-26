@@ -1,25 +1,51 @@
-package com.ssafy.oringewatch.presentation.activity.common;
+package com.ssafy.oringewatch.presentation.activity.challenge;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 
 import androidx.activity.ComponentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.ssafy.oringewatch.R;
 import com.ssafy.oringewatch.presentation.activity.MainActivity;
+import com.ssafy.oringewatch.presentation.api.challenge.Challenge;
 
-public class LogoActivity extends ComponentActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ChallengeActivity extends ComponentActivity {
 
     private GestureDetector gestureDetector;
+    private RecyclerView recyclerView;
+    private ChallengeAdapter adapter;
+    private List<Challenge> challenges;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logo);
+        setContentView(R.layout.activity_challenge);
+
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Initialize your data here
+        challenges = new ArrayList<>();
+        challenges.add(Challenge.builder()
+                        .challengeTitle("자존감 챌린지")
+                        .challengeStart("2024-04-25")
+                        .challengeEnd("2024-06-30")
+                        .build());
+        challenges.add(Challenge.builder()
+                        .challengeTitle("플로깅 챌린지")
+                        .challengeStart("2024-05-23")
+                        .challengeEnd("2024-08-30")
+                        .build());
+        adapter = new ChallengeAdapter(challenges);
+        recyclerView.setAdapter(adapter);
 
         gestureDetector = new GestureDetector(this, new SwipeGestureDetector());
     }
@@ -41,7 +67,7 @@ public class LogoActivity extends ComponentActivity {
             if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                 if (diffX < 0) {
                     // Left swipe
-                    Intent intent = new Intent(LogoActivity.this, MainActivity.class);
+                    Intent intent = new Intent(ChallengeActivity.this, MainActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     return true;

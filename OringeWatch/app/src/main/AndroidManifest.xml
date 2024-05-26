@@ -52,7 +52,7 @@
 
         <!-- LogoActivity 선언 -->
         <activity
-            android:name=".presentation.activity.common.LogoActivity"
+            android:name=".presentation.activity.challenge.ChallengeActivity"
             android:exported="false" />
 
         <!-- AlarmActivity 선언 -->
