@@ -95,7 +95,8 @@
                 android:gravity="center"
                 android:stateListAnimator="@null"
                 android:elevation="0dp"
-                android:textColor="#999999"
+                android:textColor="#555555"
+                android:textColorHint="#999999"
                 android:textSize="16sp" />
 
             <EditText
@@ -111,7 +112,8 @@
                 android:stateListAnimator="@null"
                 android:elevation="0dp"
                 android:gravity="center"
-                android:textColor="#999999"
+                android:textColor="#555555"
+                android:textColorHint="#999999"
                 android:textSize="16sp" />
 
             <Button
@@ -208,7 +210,8 @@
                 android:drawablePadding="0dp"
                 android:hint="텍스트를 입력해주세요!"
                 android:gravity="center"
-                android:textColor="#999999"
+                android:textColorHint="#999999"
+                android:textColor="#555555"
                 android:textSize="16sp" />
 
         </LinearLayout>

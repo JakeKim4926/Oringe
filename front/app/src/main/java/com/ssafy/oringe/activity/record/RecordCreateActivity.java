@@ -212,7 +212,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                         return;
                     }
 
-                    Pattern pattern = Pattern.compile("^[가-힣0-9,.'\"!?\\s]+$");
+                    Pattern pattern = Pattern.compile("^[가-힣ㄱ-ㅎㅏ-ㅣ0-9,.'\"!?\\s]+$");
                     if (!pattern.matcher(inputText).matches()) {
                         Toast.makeText(RecordCreateActivity.this, "한글과 숫자만 입력 가능합니다", Toast.LENGTH_SHORT).show();
                         return;
