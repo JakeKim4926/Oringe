@@ -7,102 +7,106 @@
     android:background="@color/background_color"
     android:gravity="center_horizontal"
     tools:context=".activity.common.MainActivity">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/footerBar"
         android:orientation="vertical">
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/footerBar"
-        style="@style/CommonMarginLayout">
 
-        <LinearLayout
-            android:id="@+id/challengeList"
+        <ScrollView
+            android:id="@+id/scrollView"
+            style="@style/CommonMarginLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/image_logo_org"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_marginBottom="15dp"
-                android:gravity="center_horizontal"
-                android:src="@drawable/logo_org" />
+            android:layout_height="match_parent"
+            android:layout_above="@+id/footerBar"
+            android:scrollbars="none">
 
             <LinearLayout
+                android:id="@+id/challengeList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:layout_marginVertical="25dp">
-
-                <ImageView
-                    android:id="@+id/image_main_org"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/main_org" />
-
-                <FrameLayout
-                    android:id="@+id/frameLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp">
-
-                    <ImageView
-                        android:id="@+id/image_bubble"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginStart="10dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/bubble_shadow"/>
-
-                    <TextView
-                        android:id="@+id/text_nickname_hi"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="15dp"
-                        android:fontFamily="@font/suite"
-                        android:gravity="center"
-                        android:lineSpacingExtra="10dp"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:elevation="5dp"
-                        android:textStyle="bold"/>
-                </FrameLayout>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="20dp"
-                android:text="오늘의 챌린지"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/suite"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
                 android:orientation="vertical">
 
+                <ImageView
+                    android:id="@+id/image_logo_org"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/logo_org" />
+
                 <LinearLayout
-                    android:id="@+id/main_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="25dp"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_main_org"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/main_org" />
+
+                    <FrameLayout
+                        android:id="@+id/frameLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp">
+
+                        <ImageView
+                            android:id="@+id/image_bubble"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:layout_marginStart="10dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/bubble_shadow" />
+
+                        <TextView
+                            android:id="@+id/text_nickname_hi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="15dp"
+                            android:elevation="5dp"
+                            android:fontFamily="@font/suite"
+                            android:gravity="center"
+                            android:lineSpacingExtra="10dp"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/suite"
+                    android:text="오늘의 챌린지"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/main_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                </LinearLayout>
 
             </LinearLayout>
+        </ScrollView>
 
-        </LinearLayout>
-    </ScrollView>
         <com.ssafy.oringe.ui.component.common.MenuView
             android:id="@+id/menu_btn"
             android:layout_width="60dp"
@@ -113,13 +117,14 @@
             app:src="@drawable/plus_btn" />
 
     </FrameLayout>
+
     <com.ssafy.oringe.ui.component.common.FooterBarView
         android:id="@+id/footerBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
         android:elevation="24dp"
-        android:paddingTop="8dp"
-        android:background="@android:color/white"/>
+        android:paddingTop="8dp" />
 
 </RelativeLayout>
