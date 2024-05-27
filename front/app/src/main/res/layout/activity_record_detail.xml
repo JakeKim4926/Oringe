@@ -3,14 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
-    android:background="@drawable/background_white"
+    android:background="@color/background_color"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.record.RecordDetailActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <com.ssafy.oringe.ui.component.common.BackView
             android:id="@+id/challengeCreate_header"
             android:layout_width="wrap_content"
@@ -24,7 +26,9 @@
             android:layout_alignParentStart="true"
             android:textSize="16sp"
             android:paddingHorizontal="10dp"
+            android:layout_marginLeft="32dp"
             android:textColor="@android:color/black"
+            android:textStyle="bold"
             android:background="@drawable/date_color_lightorange"
             android:text="--월 --일" />
 
@@ -42,7 +46,5 @@
         </ScrollView>
 
     </LinearLayout>
-
-
 
 </RelativeLayout>

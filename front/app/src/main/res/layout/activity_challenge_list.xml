@@ -8,27 +8,36 @@
     android:background="@color/background_color"
     tools:context=".activity.challenge.ChallengeListActivity">
 
-
-    <!--텍스트-->
-    <TextView
-        android:id="@+id/challengeList_who"
-        style="@style/CommonMarginLayout"
+    <!--헤더 레이아웃-->
+    <RelativeLayout
+        android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/suite"
-        android:textAlignment="center"
-        android:textColor="@color/oringe_main"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:background="#FFFFFF"
+        android:elevation="1dp"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/challengeList_who"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="0dp"
+            android:paddingTop="20dp"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/suite"
+            android:textAlignment="center"
+            android:textColor="@color/oringe_main"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <FrameLayout
         style="@style/CommonMarginLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/footerBar"
-        android:layout_below="@+id/challengeList_who"
+        android:layout_below="@+id/header_layout"
         android:orientation="vertical">
 
         <LinearLayout

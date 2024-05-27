@@ -1,12 +1,14 @@
 package com.ssafy.oringe.activity.record;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -186,10 +188,13 @@ public class RecordDetailActivity extends AppCompatActivity {
     private View createTitleView(String content) {
         Button button = new Button(this);
         button.setText(content);
+        button.setStateListAnimator(null);
         button.setTextSize(18);
+        button.setBackgroundColor(Color.parseColor("#FDFDFD"));
         button.setTextColor(getResources().getColor(android.R.color.black));
         button.setTypeface(null, Typeface.BOLD);
-        button.setBackgroundResource(R.drawable.button_color_light_huge);
+//button.setBackgroundResource(R.drawable.button_color_light_huge);
+
         button.setPadding(16, 16, 16, 16);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -204,7 +209,13 @@ public class RecordDetailActivity extends AppCompatActivity {
         Button button = new Button(this);
         button.setText(content);
         button.setTextSize(18);
-        button.setBackgroundResource(R.drawable.button_color_light_huge);
+        button.setBackgroundColor(Color.parseColor("#FDFDFD"));
+
+        button.setStateListAnimator(null);
+        button.setBackgroundColor(Color.parseColor("#FDFDFD"));
+
+//button.setBackgroundResource(R.drawable.button_color_light_huge);
+
         button.setPadding(16, 16, 16, 16);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -271,6 +282,7 @@ public class RecordDetailActivity extends AppCompatActivity {
         Button button = new Button(this);
         button.setText("Play Audio");
         button.setTextSize(18);
+        button.setBackgroundColor(Color.parseColor("#FDFDFD"));
         button.setBackgroundResource(R.drawable.button_color_gray_huge);
         button.setPadding(16, 16, 16, 16);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -382,7 +394,7 @@ public class RecordDetailActivity extends AppCompatActivity {
         Button button = new Button(this);
         button.setText(content);
         button.setTextSize(18);
-        button.setBackgroundResource(R.drawable.button_color_gray_huge);
+//        button.setBackgroundResource(R.drawable.button_color_gray_huge);
         button.setPadding(16, 16, 16, 16);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -395,15 +407,18 @@ public class RecordDetailActivity extends AppCompatActivity {
 
     private View createTTSView(String content) {
         Button button = new Button(this);
-        button.setText("Play TTS Audio");
+        button.setText("TTS 재생하기");
         button.setTextSize(18);
+        button.setBackgroundColor(Color.parseColor("#F5F5F5"));
         button.setBackgroundResource(R.drawable.button_color_gray_huge);
-        button.setPadding(16, 16, 16, 16);
+        button.setPadding(8, 8, 8, 8);
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                dpToPx(193)
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
         );
         params.setMargins(20, 20, 20, 20);
+        params.gravity = Gravity.CENTER_HORIZONTAL; // 버튼을 수평으로 가운데에 배치
         button.setLayoutParams(params);
 
         MediaPlayer mediaPlayer = new MediaPlayer();
@@ -425,12 +440,13 @@ public class RecordDetailActivity extends AppCompatActivity {
         });
 
         mediaPlayer.setOnCompletionListener(mp -> {
-            button.setText("Play TTS Audio");
+            button.setText("TTS 재생하기");
             mediaPlayer.reset();
         });
 
         return button;
     }
+
 
     private int dpToPx(int dp) {
         return (int) (dp * getResources().getDisplayMetrics().density);

@@ -16,26 +16,41 @@
 
         <ScrollView
             android:id="@+id/scrollView"
-            style="@style/CommonMarginLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/footerBar"
             android:scrollbars="none">
 
+        <LinearLayout
+            android:id="@+id/challengeList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <LinearLayout
-                android:id="@+id/challengeList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:background="#FFFFFF"
+                android:layout_gravity="center_vertical"
+                android:elevation="1dp">
                 <ImageView
                     android:id="@+id/image_logo_org"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="16dp"
                     android:gravity="center_horizontal"
                     android:src="@drawable/logo_org" />
 
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="24dp"
+                style="@style/CommonMarginLayout">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,12 +104,13 @@
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                style="@style/CommonMarginLayout">
 
                     <LinearLayout
                         android:id="@+id/main_list"
@@ -123,8 +139,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
         android:elevation="24dp"
-        android:paddingTop="8dp" />
+        android:paddingTop="8dp"
+        android:background="@android:color/white"/>
 
 </RelativeLayout>

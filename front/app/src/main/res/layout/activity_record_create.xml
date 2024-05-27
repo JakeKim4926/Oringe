@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -62,7 +63,6 @@
 
     </LinearLayout>
 
-
     <!-- ScrollView for the content in between -->
     <ScrollView
         android:id="@+id/scroll_view"
@@ -83,103 +83,137 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <Button
+            <EditText
                 android:id="@+id/button_title"
                 style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="64dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:padding="16dp"
-                android:text="제목 입력"
-                android:textSize="18sp" />
+                android:hint="제목을 입력해주세요!"
+                android:gravity="center"
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
+                android:textColor="#555555"
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
 
-
-            <Button
+            <EditText
                 android:id="@+id/button_content"
                 style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
-                android:layout_height="193dp"
+                android:layout_height="192dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:padding="16dp"
-                android:text="본문 입력"
-                android:textSize="18sp" />
+                android:hint="본문을 입력해주세요!"
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:textColor="#555555"
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/button_image"
                 style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
-                android:layout_height="193dp"
+                android:layout_height="192dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:drawableTop="@drawable/camera"
-                android:padding="16dp"
-                android:text="이미지 입력"
-                android:textSize="18sp" />
+                android:padding="60dp"
+                android:drawablePadding="-8dp"
+                android:text="사진을 업로드해주세요!"
+                android:textColor="#999999"
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/button_audio"
                 style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
-                android:layout_height="193dp"
+                android:layout_height="192dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:drawableTop="@drawable/audio"
-                android:padding="16dp"
-                android:text="오디오 입력"
-                android:textSize="18sp" />
+                android:padding="60dp"
+                android:drawablePadding="0dp"
+                android:text="녹음을 진행해주세요!"
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
+                android:textColor="#999999"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/button_video"
                 style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
-                android:layout_height="193dp"
+                android:layout_height="192dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:drawableTop="@drawable/video"
-                android:padding="16dp"
-                android:text="비디오 입력"
-                android:textSize="18sp" />
+                android:padding="60dp"
+                android:drawablePadding="-8dp"
+                android:text="비디오를 업로드해주세요!"
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
+                android:textColor="#999999"
+                android:textSize="16sp" />
 
             <VideoView
                 android:id="@+id/video_view"
-                style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
-                android:layout_height="193dp"
+                android:layout_height="192dp"
+                style="@style/CommonMarginLayout"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp" />
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_color_light_huge"/>
 
             <Button
                 android:id="@+id/button_stt"
                 style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
-                android:layout_height="193dp"
+                android:layout_height="192dp"
                 android:layout_marginTop="8dp"
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:drawableTop="@drawable/stt"
-                android:padding="16dp"
-                android:text="Speech to text (.wav)"
-                android:textSize="18sp" />
+                android:padding="60dp"
+                android:drawablePadding="0dp"
+                android:text="녹음을 진행해주세요!"
+                android:textColor="#999999"
+                android:textSize="16sp" />
 
-            <Button
+            <EditText
                 android:id="@+id/button_tts"
                 style="@style/CommonMarginLayout"
                 android:layout_width="match_parent"
-                android:layout_height="193dp"
+                android:layout_height="192dp"
                 android:layout_marginTop="8dp"
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/button_color_light_huge"
                 android:drawableTop="@drawable/tts"
-                android:padding="16dp"
-                android:text="Text to speech"
-                android:textSize="18sp" />
+                android:padding="60dp"
+                android:drawablePadding="0dp"
+                android:hint="텍스트를 입력해주세요!"
+                android:gravity="center"
+                android:textColorHint="#999999"
+                android:textColor="#555555"
+                android:textSize="16sp" />
 
         </LinearLayout>
     </ScrollView>

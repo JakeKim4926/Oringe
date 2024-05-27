@@ -22,6 +22,8 @@ public class BackView extends LinearLayout {
     private ImageButton backButton;
     private OnBackButtonClickListener onBackButtonClickListener;
 
+    private TextView headerTextView;
+
     public BackView(Context context) {
         super(context);
         init(context);
@@ -62,7 +64,9 @@ public class BackView extends LinearLayout {
             }
         });
     }
-
+    public void setHeaderText(String text) {
+        headerTextView.setText(text);
+    }
     public void setOnBackButtonClickListener(OnBackButtonClickListener listener) {
         this.onBackButtonClickListener = listener;
     }
