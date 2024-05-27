@@ -1,5 +1,7 @@
 package com.ssafy.oringewatch.presentation.activity.common;
 
+import static com.ssafy.oringewatch.presentation.common.Util.alarmState;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -23,7 +25,7 @@ public class AlarmActivity extends ComponentActivity {
         CustomToggleButton customToggleButton = findViewById(R.id.custom_toggle_button);
 //        customToggleButton.setChecked(false); // 초기 상태 설정
         if (savedInstanceState == null) {
-            customToggleButton.setChecked(false); // 초기 상태 설정
+            customToggleButton.setChecked(alarmState); // 초기 상태 설정
         }
         Log.d(TAG, "CustomToggleButton 초기 상태: " + customToggleButton.isChecked());
 

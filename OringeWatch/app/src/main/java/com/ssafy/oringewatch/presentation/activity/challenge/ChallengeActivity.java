@@ -1,12 +1,21 @@
 package com.ssafy.oringewatch.presentation.activity.challenge;
 
 import static com.ssafy.oringewatch.presentation.common.Util.API_URL;
+import static com.ssafy.oringewatch.presentation.common.Util.alarmState;
 import static com.ssafy.oringewatch.presentation.common.Util.memberId;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -113,8 +122,36 @@ public class ChallengeActivity extends ComponentActivity {
     }
 
     private void onChallengeClicked(Challenge challenge) {
-        Intent intent = new Intent(ChallengeActivity.this, RecordActivity.class);
-        intent.putExtra("challengeId", challenge.getChallengeId());
-        startActivity(intent);
+//        Intent intent = new Intent(ChallengeActivity.this, RecordActivity.class);
+//        intent.putExtra("challengeId", challenge.getChallengeId());
+//        startActivity(intent);
+        showCustomToast(ChallengeActivity.this, challenge);
+    }
+
+    private void showCustomToast(Context context, Challenge challenge) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View layout = inflater.inflate(R.layout.activity_toast, (ViewGroup) findViewById(R.id.toast_container));
+
+        TextView text = layout.findViewById(R.id.toast_text);
+        ImageView icon = layout.findViewById(R.id.toast_icon);
+
+        text.setText(challenge.getChallengeTitle());
+        icon.setImageResource(R.drawable.oringe_charecter);
+
+        text.setTextSize(11);
+        text.setTypeface(null, Typeface.BOLD); // 텍스트 스타일을 굵게 설정
+
+
+        Toast toast = new Toast(context);
+        toast.setDuration(Toast.LENGTH_SHORT);
+
+        // 위치와 오프셋 설정
+        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 100);
+
+        // 사용자 정의 뷰 설정
+        toast.setView(layout);
+
+        toast.show();
+
     }
 }

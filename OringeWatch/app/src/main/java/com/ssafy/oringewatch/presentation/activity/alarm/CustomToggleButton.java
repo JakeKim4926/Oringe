@@ -1,9 +1,16 @@
 package com.ssafy.oringewatch.presentation.activity.alarm;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+import static com.ssafy.oringewatch.presentation.common.Util.alarmState;
+
 import android.content.Context;
 import android.graphics.drawable.TransitionDrawable;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,11 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import com.ssafy.oringewatch.R;
+import androidx.core.content.ContextCompat;
 
-import android.os.Parcelable;
-import android.os.Parcel;
-import android.view.View.BaseSavedState;
+import com.ssafy.oringewatch.R;
 
 public class CustomToggleButton extends ConstraintLayout {
 
@@ -77,9 +82,22 @@ public class CustomToggleButton extends ConstraintLayout {
         if (isChecked) {
             text.setText("챌린지 알람을 수신합니다.");
             icon.setImageResource(R.drawable.oringe_charecter);
+
+            Vibrator vibrator = ContextCompat.getSystemService(context, Vibrator.class);
+            if (vibrator != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    // deprecated in API 26
+                    vibrator.vibrate(500);
+                }
+            }
+
+            alarmState = true;
         } else {
             text.setText("챌린지 알람을 수신하지 않습니다.");
             icon.setImageResource(R.drawable.oringe_charecter);
+            alarmState = false;
         }
 
         Toast toast = new Toast(context);

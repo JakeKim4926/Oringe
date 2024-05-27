@@ -76,15 +76,15 @@ public class MainActivity extends ComponentActivity {
 //                        // Log or toast the message
 //                        Toast.makeText(MainActivity.this, "알람!aaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
                         // 진동 발생
-                        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        if (vibrator != null) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-                            } else {
-                                //deprecated in API 26
-                                vibrator.vibrate(500);
-                            }
-                        }
+//                        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+//                        if (vibrator != null) {
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                                vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+//                            } else {
+//                                //deprecated in API 26
+//                                vibrator.vibrate(500);
+//                            }
+//                        }
 
 
                     });
@@ -115,12 +115,14 @@ public class MainActivity extends ComponentActivity {
             if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                 if (diffX > 0) {
                     // Right swipe
+                    isSwipeHandled = true;
                     Intent intent = new Intent(MainActivity.this, ChallengeActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     return true;
                 } else if (diffX < 0) {
                     // Right swipe
+                    isSwipeHandled = true;
                     Intent intent = new Intent(MainActivity.this, AlarmActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
