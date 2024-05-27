@@ -452,7 +452,7 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
         }
 
         // 알람
-        if (formattedTime == null) {
+        if (formattedTime == null && isAlarm) {
             timeView.setVisibility(View.VISIBLE);
             return 1005;
         } else {
