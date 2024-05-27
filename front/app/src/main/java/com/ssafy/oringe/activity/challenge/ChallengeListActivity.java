@@ -182,6 +182,7 @@ public class ChallengeListActivity extends AppCompatActivity {
                 dDayView = challengeView.findViewById(R.id.challengeList_dDay);
                 cycleView = challengeView.findViewById(R.id.challengeList_cycle);
                 dateRangeView = challengeView.findViewById(R.id.challengeList_dateRange);
+                TextView timeView = challengeView.findViewById(R.id.challengeList_alarmTime);
 
                 LocalDate startDate = LocalDate.parse(challenge.getChallengeStart());
                 LocalDate endDate = LocalDate.parse(challenge.getChallengeEnd());
@@ -222,8 +223,14 @@ public class ChallengeListActivity extends AppCompatActivity {
                 alarmView.setVisibility(challenge.getChallengeAlarm() ? View.VISIBLE : View.GONE);
                 if (daysBetween < 0 && daysBetween2 > 0) {
                     dDayView.setText("D" + daysBetween);
+                    dDayView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
                 } else if (daysBetween > 0 && daysBetween2 < 0) {
                     dDayView.setText("완료");
+                    dDayView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_blue_A400));
+                } else {
+                }
+                if (challenge.getChallengeAlarm()) {
+                    timeView.setText(challenge.getChallengeAlarmTime());
                 }
                 cycleView.setText(str.toString());
                 dateRangeView.setText(challenge.getChallengeStart() + " ~ " + challenge.getChallengeEnd());

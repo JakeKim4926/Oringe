@@ -1,29 +1,16 @@
 package com.ssafy.oringe.activity.challenge;
 
 import android.app.Activity;
-import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.NumberPicker;
-import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -38,10 +25,8 @@ import com.ssafy.oringe.api.member.Member;
 import com.ssafy.oringe.api.member.MemberService;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -90,15 +75,7 @@ public class TemplateActivity extends AppCompatActivity {
 
         // 선택완료
         TextView create = findViewById(R.id.template_create);
-        create.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            HashMap<String, Integer> orderMap = setOrder();
-            intent.putExtra("orderMap", orderMap);
-            intent.putExtra("normalTemplates", normalTemplates);
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-
-        });
+        create.setClickable(false);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.template), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -252,7 +229,7 @@ public class TemplateActivity extends AppCompatActivity {
         chooseView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("선택한 템플릿: "+chooseView.getText().toString());
+                System.out.println("선택한 템플릿: " + chooseView.getText().toString());
                 boolean clicked = (boolean) v.getTag();
                 clicked = !clicked;
 
@@ -265,14 +242,13 @@ public class TemplateActivity extends AppCompatActivity {
 
     // UI 업데이트 메소드
     private void updateUIForSelection(View v, boolean isSelected) {
-        int textColor = ContextCompat.getColor(getApplicationContext(), R.color.gray_600);
-        int bgDrawable = isSelected ? R.drawable.category_color_gray : R.drawable.category_color_mid;
+        int textColor = isSelected ? ContextCompat.getColor(getApplicationContext(), R.color.black)
+            : ContextCompat.getColor(getApplicationContext(), R.color.gray_600);
+        int bgDrawable = isSelected ? R.drawable.category_color_semi : R.drawable.category_color_mid;
+
+        TextView create = findViewById(R.id.template_create);
 
         if (isSelected) {
-            if (chooseTemplates.size() >= 5) {
-                Toast.makeText(TemplateActivity.this, "템플릿은 최대 5개까지만 선택 가능합니다.", Toast.LENGTH_SHORT).show();
-                return;
-            }
             chooseTemplates.add(((TextView) v).getText().toString());
         } else {
             chooseTemplates.remove(((TextView) v).getText().toString());
@@ -280,6 +256,34 @@ public class TemplateActivity extends AppCompatActivity {
 
         ((TextView) v).setTextColor(textColor);
         ((TextView) v).setBackground(ContextCompat.getDrawable(getApplicationContext(), bgDrawable));
+
+        if (chooseTemplates.isEmpty()) {
+            create.setBackgroundResource(R.drawable.button_color_gray); // Gray and non-clickable
+            create.setClickable(false);
+        } else {
+            create.setBackgroundResource(R.drawable.button_color_orange); // Orange and clickable
+            create.setClickable(true);
+            create.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    HashMap<String, Integer> orderMap = setOrder();
+                    intent.putExtra("orderMap", orderMap);
+                    intent.putExtra("normalTemplates", normalTemplates);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
+            });
+        }
+
+        if (chooseTemplates.size() > 5) {
+            Toast.makeText(TemplateActivity.this, "템플릿은 최대 5개까지만 선택 가능합니다.", Toast.LENGTH_SHORT).show();
+            // Optionally revert the last selection if needed
+            v.setTag(false); // revert tag
+            chooseTemplates.remove(((TextView) v).getText().toString());
+            ((TextView) v).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray_600));
+            ((TextView) v).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.category_color_mid));
+        }
 
     }
 

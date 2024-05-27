@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
             View challengeView = inflater.inflate(R.layout.sample_main_list_view, challengeListContainer, false);
 
             titleView = challengeView.findViewById(R.id.main_list_title);
-            titleView.setText("오늘의 챌린지가 없어요 \n 챌린지를 생성해 보세요!");
+            titleView.setText("오늘의 챌린지가 없어요 \n챌린지를 생성해 보세요!");
             challengeListContainer.addView(challengeView);
             return;
         }
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                     progressBarView.setProgress((int) ((double) nowdate / totaldate * 100));
                 }
             }
-            getSuccessToday(memberId, challenge.getChallengeId(), orgView, successView);
+            getSuccessToday(memberId, challenge.getChallengeId(), orgView, successView, nowdate, challengeView);
 
             challengeView.setOnClickListener(v -> {
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getSuccessToday(Long memberId, Long challengeId, ImageView imageView, TextView textView) {
+    private void getSuccessToday(Long memberId, Long challengeId, ImageView imageView, TextView textView, Long nowdate, View challengeView) {
         int TRUE = 1;
         Call<Integer> call = recordService.getTodaySuccess(memberId, challengeId);
         call.enqueue(new Callback<Integer>() {
@@ -281,6 +281,10 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             imageView.setImageResource(R.drawable.main_org);
                             textView.setText("오늘의 챌린지 성공 !  ");
+                            if(nowdate==0){
+                                progressView = challengeView.findViewById(R.id.main_list_progress);
+                                progressView.setText("1% 진행중");
+                            }
                         });
                     } else {
                         runOnUiThread(() -> {
