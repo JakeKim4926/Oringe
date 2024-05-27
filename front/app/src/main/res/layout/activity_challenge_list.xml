@@ -64,7 +64,7 @@
                     android:paddingBottom="10dp"
                     app:text="진행예정"
                     app:textColor="@color/gray_600"
-                    app:textSize="5.5sp"
+                    app:textSize="6.5sp"
                     tools:ignore="SmallSp" />
 
                 <View
@@ -81,7 +81,7 @@
                     android:padding="10dp"
                     app:text="진행중"
                     app:textColor="@color/oringe_sub"
-                    app:textSize="5.5sp"
+                    app:textSize="6.5sp"
                     tools:ignore="SmallSp" />
 
                 <View
@@ -98,7 +98,7 @@
                     android:paddingBottom="10dp"
                     app:text="진행완료"
                     app:textColor="@color/gray_600"
-                    app:textSize="5.5sp"
+                    app:textSize="6.5sp"
                     tools:ignore="SmallSp" />
             </LinearLayout>
 
