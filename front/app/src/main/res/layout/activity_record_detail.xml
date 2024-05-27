@@ -19,32 +19,40 @@
             android:layout_height="wrap_content"
             app:headerText="인증 상세보기" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
         <TextView
             android:id="@+id/text_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:textSize="16sp"
-            android:paddingHorizontal="10dp"
-            android:layout_marginLeft="32dp"
-            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:paddingHorizontal="12dp"
+            android:textColor="@android:color/darker_gray"
             android:textStyle="bold"
             android:background="@drawable/date_color_lightorange"
             android:text="--월 --일" />
 
         <ScrollView
             android:layout_width="match_parent"
+            style="@style/CommonMarginLayout"
             android:layout_height="wrap_content"
             android:layout_below="@id/text_date"
-            android:background="@color/white"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
+            android:elevation="8dp"
+            android:background="@drawable/rounded_corner_background">
+
             <LinearLayout
                 android:id="@+id/content_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
         </ScrollView>
 
+    </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

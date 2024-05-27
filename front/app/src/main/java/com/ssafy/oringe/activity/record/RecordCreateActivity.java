@@ -10,6 +10,7 @@ import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_STT
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_TITLE;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_TTS;
 import static com.ssafy.oringe.common.ChallengeDetailOrders.CHALLENGE_DETAIL_VIDEO;
+import static com.ssafy.oringe.common.Util.comment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -219,8 +220,6 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                     }
 
                     recordCreateTTSDto.setRecordTTS(inputText);
-//                    updateButtonTitle(inputText, CHALLENGE_DETAIL_TTS);
-
 
             }
         });
@@ -1027,6 +1026,7 @@ public class RecordCreateActivity extends AppCompatActivity implements AdapterVi
                 checkIfAllCallsCompleted(completedCalls, totalCalls);
             }
         });
+        comment = recordCreateTTSDto.getRecordTTS();
     }
 
     private void checkIfAllCallsCompleted(AtomicInteger completedCalls, int totalCalls) {

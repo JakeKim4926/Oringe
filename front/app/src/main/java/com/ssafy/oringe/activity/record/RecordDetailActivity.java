@@ -1,5 +1,8 @@
 package com.ssafy.oringe.activity.record;
 
+import static com.ssafy.oringe.common.Util.comment;
+
+import android.animation.StateListAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -185,16 +188,35 @@ public class RecordDetailActivity extends AppCompatActivity {
         }
     }
 
+    private View createLabeledView(String labelText, View viewContent) {
+        // 라벨 생성
+        TextView label = new TextView(this);
+        label.setText(labelText);
+        label.setTextSize(14);
+        label.setTextColor(Color.parseColor("#BBBBBB"));
+        label.setPadding(8, 8, 8, 8);
+
+        // 레이아웃 생성
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setGravity(Gravity.CENTER_HORIZONTAL);
+        layout.setPadding(20, 20, 20, 20);
+        layout.setBackgroundResource(R.drawable.rounded_corner_background);
+        // 라벨과 콘텐츠 뷰를 레이아웃에 추가
+        layout.addView(label);
+        layout.addView(viewContent);
+
+        return layout;
+    }
+
     private View createTitleView(String content) {
         Button button = new Button(this);
         button.setText(content);
         button.setStateListAnimator(null);
-        button.setTextSize(18);
+        button.setTextSize(20);
         button.setBackgroundColor(Color.parseColor("#FDFDFD"));
-        button.setTextColor(getResources().getColor(android.R.color.black));
+        button.setTextColor(Color.parseColor("#FF6B00"));
         button.setTypeface(null, Typeface.BOLD);
-//button.setBackgroundResource(R.drawable.button_color_light_huge);
-
         button.setPadding(16, 16, 16, 16);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -202,7 +224,8 @@ public class RecordDetailActivity extends AppCompatActivity {
         );
         params.setMargins(20, 20, 20, 20);
         button.setLayoutParams(params);
-        return button;
+
+        return createLabeledView("제목", button);
     }
 
     private View createContentView(String content) {
@@ -210,12 +233,8 @@ public class RecordDetailActivity extends AppCompatActivity {
         button.setText(content);
         button.setTextSize(18);
         button.setBackgroundColor(Color.parseColor("#FDFDFD"));
-
         button.setStateListAnimator(null);
         button.setBackgroundColor(Color.parseColor("#FDFDFD"));
-
-//button.setBackgroundResource(R.drawable.button_color_light_huge);
-
         button.setPadding(16, 16, 16, 16);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -223,7 +242,8 @@ public class RecordDetailActivity extends AppCompatActivity {
         );
         params.setMargins(20, 20, 20, 20);
         button.setLayoutParams(params);
-        return button;
+
+        return createLabeledView("내용", button);
     }
 
     private View createImageView(String content) {
@@ -275,7 +295,7 @@ public class RecordDetailActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        return imageView;
+        return createLabeledView("이미지", imageView);
     }
 
     private View createAudioView(String content) {
@@ -315,7 +335,7 @@ public class RecordDetailActivity extends AppCompatActivity {
             mediaPlayer.reset();
         });
 
-        return button;
+        return createLabeledView("오디오", button);
     }
 
     private View createVideoView(String content) {
@@ -387,14 +407,13 @@ public class RecordDetailActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        return videoLayout;
+        return createLabeledView("비디오", videoLayout);
     }
 
     private View createSTTView(String content) {
         Button button = new Button(this);
         button.setText(content);
         button.setTextSize(18);
-//        button.setBackgroundResource(R.drawable.button_color_gray_huge);
         button.setPadding(16, 16, 16, 16);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -402,25 +421,43 @@ public class RecordDetailActivity extends AppCompatActivity {
         );
         params.setMargins(20, 20, 20, 20);
         button.setLayoutParams(params);
-        return button;
+
+        return createLabeledView("STT", button);
     }
 
     private View createTTSView(String content) {
-        Button button = new Button(this);
-        button.setText("TTS 재생하기");
-        button.setTextSize(18);
-        button.setBackgroundColor(Color.parseColor("#F5F5F5"));
-        button.setBackgroundResource(R.drawable.button_color_gray_huge);
-        button.setPadding(8, 8, 8, 8);
+        // TextView 생성
+        TextView textView = new TextView(this);
+        String quotedComment = "\"" + comment + "\"";
+        textView.setText(quotedComment);
+        textView.setTextSize(20);
+        textView.setTextColor(Color.parseColor("#555555"));
+        textView.setPadding(8, 8, 8, 8);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+        // TextView의 레이아웃 매개변수 설정
+        LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        params.setMargins(20, 20, 20, 20);
-        params.gravity = Gravity.CENTER_HORIZONTAL; // 버튼을 수평으로 가운데에 배치
-        button.setLayoutParams(params);
+        textViewParams.gravity = Gravity.CENTER_HORIZONTAL; // TextView를 수평으로 가운데에 배치
+        textView.setLayoutParams(textViewParams);
 
+        // Button 생성
+        Button button = new Button(this);
+        button.setBackgroundResource(R.drawable.play); // Ripple 효과 적용
+        button.setPadding(8, 8, 8, 8);
+
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                120,
+                120
+        );
+
+        buttonParams.setMargins(20, 20, 20, 20);
+        buttonParams.gravity = Gravity.CENTER_HORIZONTAL; // 버튼을 수평으로 가운데에 배치
+        button.setLayoutParams(buttonParams);
+
+
+        // 미디어 플레이어 설정
         MediaPlayer mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource(content);
@@ -432,21 +469,30 @@ public class RecordDetailActivity extends AppCompatActivity {
         button.setOnClickListener(v -> {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
-                button.setText("Resume TTS Audio");
+                button.setBackgroundResource(R.drawable.resume);
             } else {
                 mediaPlayer.start();
-                button.setText("Pause TTS Audio");
+                button.setBackgroundResource(R.drawable.pause);
             }
         });
 
         mediaPlayer.setOnCompletionListener(mp -> {
-            button.setText("TTS 재생하기");
+            button.setBackgroundResource(R.drawable.play);
             mediaPlayer.reset();
         });
 
-        return button;
-    }
+        // LinearLayout 생성 및 설정
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setGravity(Gravity.CENTER_HORIZONTAL);
+        layout.setPadding(20, 20, 20, 20);
 
+        // TextView와 Button을 레이아웃에 추가
+        layout.addView(button); // Button을 TextView 위에 추가
+        layout.addView(textView);
+
+        return createLabeledView("TTS", layout);
+    }
 
     private int dpToPx(int dp) {
         return (int) (dp * getResources().getDisplayMetrics().density);
