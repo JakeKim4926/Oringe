@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
 import com.kizitonwose.calendar.view.ViewContainer;
 import com.ssafy.oringe.R;
 import com.ssafy.oringe.activity.record.RecordCreateActivity;
-import com.ssafy.oringe.activity.record.RecordDetailDialogFragment;
+import com.ssafy.oringe.activity.record.RecordDetailActivity;
 import com.ssafy.oringe.api.RetrofitClient;
 import com.ssafy.oringe.api.TrustOkHttpClientUtil;
 import com.ssafy.oringe.api.challenge.ChallengeService;
@@ -84,6 +83,7 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
     private List<Integer> cycleDays = new ArrayList<>();
     private LocalDate challengeStartDate;
     private LocalDate challengeEndDate;
+    private YearMonth currentMonth;
 
     public static ChallengeDetailFragment newInstance(long challengeId, String challengeTitle, String challengeMemo, String challengeStart, String challengeEnd, int challengeStatus) {
         ChallengeDetailFragment fragment = new ChallengeDetailFragment();
@@ -184,6 +184,26 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
             }
         });
 
+        setupTouchListeners(view);
+    }
+    private void setupTouchListeners(View view) {
+        ImageView leftTouchArea = view.findViewById(R.id.left_touch_area);
+        ImageView rightTouchArea = view.findViewById(R.id.right_touch_area);
+
+        leftTouchArea.setOnClickListener(v -> navigateToPreviousMonth());
+        rightTouchArea.setOnClickListener(v -> navigateToNextMonth());
+    }
+
+    private void navigateToPreviousMonth() {
+        currentMonth = calendarView.findFirstVisibleMonth().getYearMonth();
+        YearMonth previousMonth = currentMonth.minusMonths(1);
+        calendarView.smoothScrollToMonth(previousMonth);
+    }
+
+    private void navigateToNextMonth() {
+        currentMonth = calendarView.findFirstVisibleMonth().getYearMonth();
+        YearMonth nextMonth = currentMonth.plusMonths(1);
+        calendarView.smoothScrollToMonth(nextMonth);
     }
     private void setDefaultInfo(View view) {
 
@@ -264,7 +284,7 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
 
             @Override
             public void bind(@NonNull MonthViewContainer container, CalendarMonth month) {
-                container.monthText.setText(String.format(Locale.ENGLISH, "<   %s   >", month.getYearMonth().getMonth()));
+                container.monthText.setText(String.format(Locale.ENGLISH, "%s", month.getYearMonth().getMonth()));
             }
         });
 
@@ -359,7 +379,10 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
 
             view.setOnClickListener(v -> {
                 if (recordId != null) {
-                    RecordDetailDialogFragment.newInstance(recordId).show(getChildFragmentManager(), "recordDetails");
+                    Intent intent = new Intent(getActivity(), RecordDetailActivity.class);
+                    intent.putExtra("record_id", recordId);
+                    startActivity(intent);
+
                 }
             });
         }
@@ -389,6 +412,8 @@ public class ChallengeDetailFragment extends BottomSheetDialogFragment {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Toast.makeText(getContext(), "삭제되었습니다!", Toast.LENGTH_SHORT).show();
                 dismiss();
+                Intent intent = new Intent(getContext(), ChallengeListActivity.class);
+                startActivity(intent);
             }
 
             @Override

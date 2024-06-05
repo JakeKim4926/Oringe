@@ -183,14 +183,16 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
     // 알람 설정
     private void setAlarm() {
         Switch toggle = findViewById(R.id.challengeCreate_alarm);
-        TextView textView = findViewById(R.id.challnegeCreate_input_alarmTime);
+        ImageView imgView = findViewById(R.id.challnegeCreate_input_alarmTime);
+        TextView txtView = findViewById(R.id.challnegeCreate_input_formatTime);
+        TextView timeView = findViewById(R.id.challengeCreate_time_setting);
         Calendar myCalendar = Calendar.getInstance();
 
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    textView.setVisibility(View.VISIBLE);
+                    imgView.setVisibility(View.VISIBLE);
                     View.OnClickListener timeClickListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -199,18 +201,23 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                     formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
-                                    textView.setText(formattedTime);
+                                    txtView.setText(formattedTime);
                                 }
                             }, myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), true);
 
                             timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             timePickerDialog.show();
+                            imgView.setVisibility(View.GONE);
+                            txtView.setVisibility(View.VISIBLE);
+                            timeView.setVisibility(View.GONE);
                         }
                     };
                     isAlarm = isChecked;
-                    textView.setOnClickListener(timeClickListener);
+                    imgView.setOnClickListener(timeClickListener);
+
                 } else {
-                    textView.setVisibility(View.GONE);
+                    imgView.setVisibility(View.GONE);
+                    txtView.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "알람이 꺼졌습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -281,8 +288,6 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
         if (orderMap.isEmpty()) {
             View addInstance = inflater.inflate(R.layout.sample_add_template_view, templateListContainer, false);
             ImageView plusView = addInstance.findViewById(R.id.addTemplate_add);
-//            ImageView plusView = addInstance.findViewById(R.id.plus_template);
-//            plusView.setText("템플릿 설정하러 가기");
             plusView.setOnClickListener(moveTemplate);
             modifyContainer.addView(addInstance);
         } else {
@@ -360,7 +365,7 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
         }
 
         int resultCode = checkInputs();
-        if (resultCode == 1001 || resultCode == 1002 || resultCode == 1003 || resultCode == 1004 || resultCode == 1005) {
+        if (resultCode == 1001 || resultCode == 1002 || resultCode == 1003 || resultCode == 1004 || resultCode == 1005 || resultCode == 1006) {
             return;
         } else {
             System.out.println("challengeDetail: " + templates);
@@ -412,12 +417,15 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
 
     private int checkInputs() {
         View view = findViewById(R.id.challnegeCreate);
-        TextView createView = findViewById(R.id.challnegeCreate_create);
 
         TextView titleView = view.findViewById(R.id.challengeCreate_title_setting);
         TextView duringView = view.findViewById(R.id.challengeCreate_during_setting);
         TextView dayView = view.findViewById(R.id.challengeCreate_day_setting);
+        TextView timeView = view.findViewById(R.id.challengeCreate_time_setting);
         TextView templateView = view.findViewById(R.id.challengeCreate_template_setting);
+
+        System.out.println("포맷시간 : " + formattedTime);
+
 
         // 제목
         if (title.isEmpty()) {
@@ -430,7 +438,6 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
         // 기간
         if (start.isEmpty() || end.isEmpty()) {
             duringView.setVisibility(View.VISIBLE);
-
             return 1002;
         } else {
             duringView.setVisibility(View.GONE);
@@ -439,12 +446,18 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
         // 요일
         if (cycle.isEmpty()) {
             dayView.setVisibility(View.VISIBLE);
-
             return 1004;
         } else {
             dayView.setVisibility(View.GONE);
         }
 
+        // 알람
+        if (formattedTime == null && isAlarm) {
+            timeView.setVisibility(View.VISIBLE);
+            return 1005;
+        } else {
+            timeView.setVisibility(View.GONE);
+        }
 
         // 템플릿
         boolean isTemplate = false;
@@ -457,10 +470,11 @@ public class ChallengeCreateActivity extends AppCompatActivity implements OnBack
 
         if (!isTemplate) {
             templateView.setVisibility(View.VISIBLE);
-            return 1005;
+            return 1006;
         } else {
             templateView.setVisibility(View.GONE);
         }
+
         return 2001;
     }
 

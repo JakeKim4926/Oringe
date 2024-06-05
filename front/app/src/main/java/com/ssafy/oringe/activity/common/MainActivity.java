@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -97,18 +100,13 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
 
         challengeListContainer = findViewById(R.id.main_list);
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-//        Button btn_record = findViewById(R.id.btn_record);
-//        btn_record.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecordCreateActivity.class)));
 
-//        MenuView btn_list = findViewById(R.id.btn_list);
-//        btn_list.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChallengeListActivity.class)));
     }
 
     @Override
@@ -216,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
             View challengeView = inflater.inflate(R.layout.sample_main_list_view, challengeListContainer, false);
 
             titleView = challengeView.findViewById(R.id.main_list_title);
-            titleView.setText("오늘의 챌린지가 없어요 \n 챌린지를 생성해 보세요!");
+            titleView.setText("오늘의 챌린지가 없어요 \n챌린지를 생성해 보세요!");
             challengeListContainer.addView(challengeView);
             return;
         }
@@ -249,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
                     progressBarView.setProgress((int) ((double) nowdate / totaldate * 100));
                 }
             }
-            getSuccessToday(memberId, challenge.getChallengeId(), orgView, successView);
+            getSuccessToday(memberId, challenge.getChallengeId(), orgView, successView, nowdate, challengeView);
 
             challengeView.setOnClickListener(v -> {
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -269,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getSuccessToday(Long memberId, Long challengeId, ImageView imageView, TextView textView) {
+    private void getSuccessToday(Long memberId, Long challengeId, ImageView imageView, TextView textView, Long nowdate, View challengeView) {
         int TRUE = 1;
         Call<Integer> call = recordService.getTodaySuccess(memberId, challengeId);
         call.enqueue(new Callback<Integer>() {
@@ -281,6 +279,10 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             imageView.setImageResource(R.drawable.main_org);
                             textView.setText("오늘의 챌린지 성공 !  ");
+                            if(nowdate==0){
+                                progressView = challengeView.findViewById(R.id.main_list_progress);
+                                progressView.setText("1% 진행중");
+                            }
                         });
                     } else {
                         runOnUiThread(() -> {
