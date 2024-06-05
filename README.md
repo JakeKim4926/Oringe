@@ -29,6 +29,8 @@
 <img src="./assets/인증_생성.gif" height="800px" >
 <h3>인증 확인</h3>
 <img src="./assets/인증_확인.gif" height="800px" >
+<h3>워치 연동</h3>
+<img src="./assets/Watch_test22.gif" height="400px" >
 
 
 <br />
@@ -38,15 +40,15 @@
 
 <h3>Mobile</h3>
 <hr>
-<img src="/uploads/d25a6ba17a536edc56035a44c598e84e/image.png">
+<img src="./assets/Android.png">
 
 <h3>Backend</h3>
 <hr>
-<img src="/uploads/e497006aba24beff43f8ee1ca20960e9/image.png">
+<img src="./assets/Backend.png">
 
 <h3>Devops</h3>
 <hr>
-<img src="/uploads/c663c5af0dc4d22b6b1d8b1fc9303145/image.png">
+<img src="./assets/Devops.png">
 
 ## 🎈 개발자 소개
 
@@ -64,7 +66,7 @@
         <td align="center">Spring-boot<br/>Android-native with Java<br/></td>
         <td align="center">Spring-boot<br/>Android-native with Java<br/></td>
         <td align="center">Spring-boot<br/>Android-native with Java<br/></td>
-        <td align="center">Spring-boot<br/>Android-native with Java<br/>Nginx<br/>Docker<br/>Jenkins<br/></td>    
+        <td align="center">Spring-boot<br/>Android-native/wearOS with Java<br/>Nginx<br/>Docker<br/>Jenkins<br/></td>    
     </tr>
 </table>
 
